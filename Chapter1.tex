@@ -1,0 +1,66 @@
+%======================================================================
+\chapter{Introduction}
+%======================================================================
+Traditional modelling approaches tend to focus only on one scale. For example, when considering the macroscale response of a system, the effect of the microscale mechanics are described implicitly by macroscale phenomenological constitutive relations. Conversely, when interested in the microscale behaviour, macroscale features are assumed to be homogeneous and irrelevant to the microscale response. 
+
+These macroscale constitutive relationships are obtained empirically based on simple methods such as linearization, Taylor series expansion, and symmetry \cite{weinan_principles_2011}. For simple systems, this approach can yield sufficiently accurate approximations of the overall behaviour. However, this approach is often insufficient to capture an accurate constitutive response of complex systems with materials containing key physical behaviour over multiple length scales (multi-scale material). 
+
+Alternatively, one can model the microscale behaviour explicitly throughout the system in order to accommodate complex systems and multi-scale materials. This approach is far more accurate, however the degree of complexity is orders of magnitudes higher, making solutions difficult to find and often becoming computationally prohibitive. 
+
+To overcome these limitations of single-scale models, multi-scale approaches have been developed. Multi-scale methods attempt to model a system at both the microscale an the macroscale in such a means that shares the computational efficiency of the macroscale models and the accuracy of the microscale models.
+
+The most common types of multiscale methods are hierarchical and concurrent \citep{Gracie_2011}. In concurrent multiscale models, different scales are used in different regions of the domain; the solution of the coupled model proceeds by solving both scales simultaneously. This approach is computationally expensive since the time step of the entire simulation is controlled by requirements of the fine-scale model; however, the solution is often more accurate.  In hierarchical multiscale methods, the constitutive behavior at the coarser scale is determined by exercising a finer scale Representative Elementary Volume (REV) \citep{Li_2014}. The finer scale models vary from relatively simple models, as in micromechanics, to complex nonlinear models such as FE\textsuperscript{2} models \citep{Feyel_2003}. This approach is much more efficient, but can be less accurate, and furthermore  presents challenges when the REV loses stability \citep{Belytschko_2008}. Up-scaling in this investigation can be considered to be a hierarchical multiscale method using computational homogenization. 
+
+Many homogenization techniques have been developed and proposed in the past, but none have presented algorithms for homogenizing DEM simulations with deformable blocks. The homogenization algorithms presented here are based on the work of \citet{daddetta_particle_2004} and \citet{wellmann_homogenization_2008} in which homogenization is applied to rigid body DEM simulations and focused on the computation of the homogenized stress and strain. 
+
+\section{Context and Research Motivation}
+
+Naturally Fractured Rock (NFR) is often modeled as a multiscale material because of the vastly different length and time scales involved in the deformation process \citep{zhou_flow_2003}. At the fracture scale (10\textsuperscript{-2} m), the physics is dominated by brittle fracture propagation and fracture-to-fracture contact force interaction. However, one is normally interested in the reservoir scale (10\textsuperscript{3} m) response as a result of the spatial extension of the fractures. Because these length scales of interest span approximately five orders of magnitude, multiscale methods may aid in assessing the overall response, as models with natural fracture scale resolution at the reservoir scale becomes computationally prohibitive.
+
+When dealing with reservoir scale geomechanics problems, the complex behaviour of pre-existing fractures become influential upon and indeed may dominate the constitutive response of the rock mass because of strain localization, stress redistribution, and damage-induced anisotropy \citep{Petracca_2015}. However, attempting to capture the constitutive response of the NFR in a laboratory context becomes impractical because of the prohibitively large samples required to obtain a representative response. Since natural fracture spacing in a stiff sedimentary rock can be between $0.1$ m to $1$m \citep{Nelson_2001}, samples required to obtain a response representative of the macroscale could be as large as $1000 m^3$, an impossible scale for testing. 
+
+There exist methods to estimate constitutive parameters of rock masses, but their validity can be tenuous and methods exist only to estimate some of the parameters. These methods can either be based directly from in-situ geophysical measurements, or deduced indirectly through small scale laboratory testing and empirical correlations. A common way to estimate the elastic properties is through the use of seismic methods by comparing the seismic wave velocities measured in-situ to the seismic velocities of the intact rock mass \citep{SJOGREN_1979}. These in-situ methods however, do not have the capacity to estimate the plastic parameters very well, and it is well-known that seismically deduced elastic parameters invariably over-estimate the system stiffness exhibited in response to static stress changes \citep{Barton_2006}. Attempts to estimate the plastic properties of the rock mass through small scale lab testing and qualitative assessments of the rock mass have been presented such as the Geological Strength Index (GSI) proposed by \citet{Hoek_1997}. These methods are limited by the necessarily qualitative aspect of the rock mass classification systems employed. More recently, others \citep{Min_2003,Chen_2012,Bidgoli_2013} have used numerical methods to estimate the elastic properties of the rock mass using prescribed fracture networks. These methods are again limited by the lack of plastic behaviour characterization. 
+
+To address this limitation of continuum models, Discrete Element Method (DEM) models are used commonly in geomechanics to explicitly model the mechanics of Naturally Fractured Rock (NFR) masses to capture the constitutive response of the rock mass indirectly \citep{jing_review_2003}. 
+
+DEM models, unlike standard continuum models, consider the fractures within the rock mass as a Discrete Fracture Network (DFN) which explicitly defines the geometry of the rock blocks. The physics of block interaction is then governed by the motion, contact forces and traction-separation laws between the rock blocks and the fractures \citep{Thallak_1990}. Because NFR behavior is complex, even sophisticated phenomenological constitutive relationships may be inadequate to describe the complete rock mass behavior. The DEM approach aims to address this deficiency by requiring only constitutive relations for the block interactions and the intact rock \citep{Barbosa_1990}. In this paper,  deformable DEM blocks are considered which require the constitutive parameters of the intact rock to be specified, but these parameters are more easily acquired from lab testing. 
+
+However, the main issue with DEM models is primarily the computational demands. Because of the large number of degrees of freedom in the models and the requirement for very small time steps --- because of the constant need for contact detection between blocks --- running reservoir-scale models is computationally prohibitive. The intent of this article is to develop a framework that incorporates the response of DEM models while harnessing the computational speed of continuum models. The general goal of up-scaling is to formulate simplified coarse-scale governing equations that approximate the fine-scale behavior of a material \citep{Geers_2010}. In the case of the DEM simulations in this investigation, the aim of up-scaling is to identify the parameters of a continuum model that best mimic the response of the DEM model.  Up-scaling is accomplished in this paper by 'calibrating' a continuum model with DEM virtual experimental data using a combination of a heuristic optimization algorithm and an iterative least squares regression algorithm.
+
+The general goal of up-scaling is to formulate simplified coarse-scale governing equations that approximate the fine-scale behavior of a material \citep{Geers_2010}. In the case of the DEM simulations in this investigation, the aim of up-scaling is to identify the parameters of a continuum model that best mimic the response of the DEM model.
+
+\section{Research Objectives}
+
+In this thesis, a multi-scale up-scaling framework is developed to address the computational demands of simulating microscale phenomenon in a macroscale domain in the context of NFR. The primary contributions of the framework are a) the application of homogenization to DEM models with deformable blocks; b) the presentation of a methodology to parameterize complex nonlinear continuum constitutive models based on the DEM homogenized stress and strain curves; and c) the demonstration that the performance of the up-scaled continuum FEA models are accurate and significantly more computationally efficient.
+
+The research objectives of this thesis revolve around developing and validating aspects of the proposed up-scaling framework. Here, four key research objective have been identified.  
+
+\begin{enumerate}
+\item Develop and implement a modular framework for up-scaling DEM simulations.
+\item Develop discrete homogenization algorithms for DEM simulations with deformable bodies.
+\item Identify appropriate parameterized macroscale constitutive relationships to describe the up-scaled NFR.
+\item Identify an appropriate parameter estimation algorithm to accurately and efficiently estimate an optimal parameter set.
+\end{enumerate}
+
+\subsection*{Up-Scaling Framework}
+More specifically, an automated framework for up-scaling DEM simulations is to be developed. It is required that the key aspects of the framework remain modular, so as to facilitate extensibility for future applications. Furthermore, the framework must have the flexibility to drive the different modules individually, based on saved states in order to modify the results without having to redo the entire analysis.
+
+\subsection*{Homogenization Algorithms}
+Algorithms to assess the homogenized stress and strain tensors of DEM simulations with deformable blocks are to be developed. As part of the homogenization algorithm, a method to automatically assess the RVE of the given rock mass is also necessary.
+
+\subsection*{Macroscale Constitutive Relationship}
+A macroscale constitutive relationship that represents the homogenized DEM response is to be identified. The constitutive relationship must be able to capture all the salient features of the discrete system. Furthermore, this constitutive relationship is to be parameterized by as few scalar parameters as possible while representing the rock mass accurately.
+
+\subsection*{Parameter Estimation Algorithms}
+An appropriate parameter estimation algorithm is to be identified that converges to the optimal solution most of the time, while minimizing the required number of iterations. 
+
+\section{Scope of Study and Research Limitations}
+The scope of this research is to present an up-scaling framework and a simple implementation as a proof of concept. Here, the goal is to provide all the necessary pieces using in-house and third-party software to show the up-scaling process from DEM to optimal parameter set. 
+
+For simplicity, the DEM simulations considered are isotropic, two-dimensional and purely mechanical (not thermo-hydro-mechanically coupled). These simplifications reduce the complexity of the implementation significantly. As a result, the homogenization algorithms presented are designed for two-dimensional DEM simulations, though they can easily be adapted for three-dimensional problems.
+
+The macroscale constitutive models that are used are also following an isotropic medium assumption and do not account for any thermal or hydraulic coupling effects. These macroscale models used are pre-implemented materials, but custom material subroutines are likely required for more sophisticated constitutive responses. 
+
+There are countless different optimization algorithms to investigate along with their respective optimization parameters. Exhaustively searching for the most efficient and accurate algorithm for this particular application in a quantitative capacity was not a focus of this thesis. As such, a couple different algorithms are presented and compared in their capacity to accurately and efficiently converge to the optimal parameter set.
+
+Ultimately, the research presented in this thesis aims to show the efficacy of a modular up-scaling framework for DEM simulations that can facilitate upgraded modules in the future to account for more sophisticated physics.

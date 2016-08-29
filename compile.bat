@@ -1,0 +1,2 @@
+pdflatex UpScalingDEMSimulations
+pdflatex UpScalingDEMSimulations

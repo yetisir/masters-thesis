@@ -1,0 +1,69 @@
+%======================================================================
+\chapter{Background in Geomechanics}
+%======================================================================
+In a general sense, the study of geomechanics aims to understand (in theory and in practice) the behavioural response of a geological system subjected to an applied disturbance. These disturbances can either be anthropogenic or naturogenic. Though the mechanics of these two types of loads should be the same, the difference in magnitude between the disturbance that can be applied manually, and that which is applied tectonically span several order of magnitude. The presence of scale effect, combined with the uncertainty of geosystems, results in necessarily different approaches to understanding the expected behaviour of the systems. 
+
+Geomechanics can be considered to consist of two subdisciplines: rock mechanics and soil mechanics. Where rock mechanics is concerned with the study of intact rock, soil mechanics is concerned with the behaviour of unconsolidated material. The difference between what constitutes soil and rock is arbitrary and can be highly nuanced in some cases (e.g. a highly weathered/fractured rock or a partially lithified soil). The transition from rock to soil (and \textit{vice versa}) can be considered to be a continuous process whereby unfractured intact rock is at one end of the spectrum and fine grained unconsolidated soil is at the other. Whether or not one uses rock mechanics or soil mechanics for a particular engineering application is decided in a discretionary manner depending on which system features are more dominant.
+
+In the context of this thesis, the focus of geomechanics considered here is rock mechanics subjected to anthropogenic loading. That being said, the up-scaling methodology may be applicable to soil mechanics and naturogenic loading as well.  
+Rock mechanics is a special discipline of mechanics which presents a unique set of challenges. Challenges such as uncertainty, fractures, scale effects and heterogeneities can quickly lead to very complex engineering problems. 
+
+Uncertainty is probably the most challenging aspect of engineering rock mechanics. etc..
+
+Complexities such as fracture and scale effects are important challenged to consider as well. etc...
+
+
+\section{Geomechanics of Naturally Fractured Rock}
+
+
+\subsection{Intact Rock}
+To understand the behaviour of naturally fractured rock masses, it is first necessary to understand how the rock behaves without fractures. Unfractured rock can be referred to in this context as intact rock. 
+
+\subsection{Rock Fractures and Discontinuities}
+
+
+\subsection{In-Situ Stress}
+
+
+
+\subsection{Pore Pressure and Fluid Flow}
+
+\section{Computational Geomechanics}
+
+Numerical modelling of naturally fractured geomechanical systems can be approached in two ways: by considering the constitutive relationship of the rock mass to be either continuous or discontinuous. The difference between these methods is a function of how one decides to conceptualize the rock mass. In a rock mass modelled as a continuum, the average macroscale response is considered while a rock mass modelled as a discontinuum is modelled by explicitly representing the natural fractures. 
+
+\subsection{Continuum Modelling}
+
+\subsection{Discontinuum Modelling}
+
+\section{Slope Stability Analysis}
+Slope stability analysis is an important aspect of geotechnical engineering as it allows one to determine how susceptible a given engineered or natural slope is to failure. The primary purpose of slope stability analysis is often to contribute to the safe and economic design of slopes. There are a number of parameters that affect the stability of a slope. When assessing the stability of a slope, one needs to be aware of the impact that these parameters have on the overall system stability and how to account for them in the model (ref):
+
+\begin{itemize}
+\item Geological discontinuities such as joints, faults, and bedding planes
+\item Groundwater, drainage patterns, and rainfall events
+\item Strength parameters of the material comprising the slope
+\item Slope construction method
+\item Applied forces such as structures on top, or seismic events
+\item Geometry of the slope
+\end{itemize}
+
+As such, a thorough understanding of geology, hydrogeology, and geotechnical engineering principles are required in order to apply slope stability principles properly. Even with a working knowledge of all the required areas of expertise, there is always a certain level of uncertainty with respect to these parameters such that any slope stability model will always be insufficient to accurately model the real system. However, very good approximations can be made with properly conducted slope stability analysis.
+
+The determination of the stability of a slope is by no means a trivial task. To accurately and effectively determine the stability of a given slope, one must identify and understand the impact of the various factors that affect slope stability as outlined in Section 1.0. In addition, one must recognize that there exists multiple mechanisms of failure such that even if the slope is stable with respect to one failure mechanism, there is still a possibility of the slope failing through a different mechanism. Due to the complexity of the analysis, many assumptions are often made to simplify the solution. 
+
+In practice, there are two main approaches to assessing the stability of a given slope: the limit equilibrium method (LEM), and the shear strength reduction method (SSRM). The former can be achieved analytically, and therefore much faster, but also has to make assumptions about the nature of the failure surface a priori and can only address one failure mechanism at a time, which limits its applicability and efficacy. The SSRM addresses these issues, but is more difficult to implement and more costly in terms of computational time. 
+
+
+\subsection{Mechanisms of Slope Failure}
+
+\subsection{Factor of Safety for Slope Stability}
+
+In slope stability analysis, the factor of safety (FOS) is the primary metric used to assess the slope stability. Fundamentally, the FOS is a system parameter which describes the capacity of a static system to perform under a given load. By definition, a FOS above 1.0 would describe a slope with a low susceptibility to failure such that it is stable under greater loads. Conversely, a FOS below 1.0 would describe a slope in a state of failure, while a FOS of 1.0 would indicate a slope on the verge of failure. In general, a FOS of at least 1.5 under maximum expected load is required for slopes in order to be considered sufficiently stable \citep{das_principles_2009}.
+
+Assessing the FOS for a slope is not a trivial task and functions on numerous parameters. Conventional analysis methods are based on limit equilibrium methods (LEM) which require several \textit{a priori} assumptions which, if not correctly chosen, can result in inaccurate solutions. The main drawback of these methods is the requirement to assume a failure surface, which quite often does not accurately represent the actual failure surface. Alternatively, with the advent of FEA, it becomes possible to conduct slope stability analysis of these systems in such a way that the weakest failure surface or failure mechanism will prevail inherently.
+
+
+\subsection{Limit Equilibrium Methods (LEM)}
+
+\subsection{Shear Strength Reduction Methods (SSRM)}
