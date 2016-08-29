@@ -183,7 +183,9 @@ One can conceptualize an REV to be "statistically representative" in two primari
 The alternative means of conceptualizing "statistically representative", and arguably a more pragmatic way, proposes that the constitutive response of the REV should be statistically representative of the domain. In other words, as one increases the size of a sample domain, the point at which the constitutive response within the domain becomes sensibly constant can be referred to as the REV. Thus, the subdomain constitutive response is quantifiable through resultant model properties and parameters. This REV interpretation has been widely used because of its quantifiability \citep{Kanit_2003, Gitman_2005, Gusev_1997, M_ller_2010}, and is adopted for this work.
 
 \subsection{Spatial Variance of RVE}
+***
 \subsection{RVE Size Convergence}
+***
 
 \section{Macroscale Constitutive Model}
 
@@ -557,7 +559,7 @@ For a particle swarm containing an arbitrary number of particle, the optimal par
 \item If current iteration is greater than the maximum number of iterations or solution is stable, iteration is complete. Otherwise, go to step 2
 \end{enumerate}
 
-\subsection{Asynchronous Parallel Particle Swarm Optimization (APPSO)}
+\subsection{Asynchronous Parallel PSO (APPSO)}
 
 The PSO described above possesses a large number of attractive qualities for parameter estimation which make it desirable to for up-scaling.  However, the main drawback of the PSO is the large computational costs in terms of total elapsed time primarily due to the fact that the algorithm was originally designed for a serial implementation. The serial implementation, although effective in it's own right, can be dramatically improved through parallelization. 
 
@@ -850,7 +852,6 @@ At this point, there are some parameter constraints for the damage evolution tha
 \bar{\epsilon}_{t}^{pl}=\bar{\epsilon}^{ck}-\frac{D_{t}}{1-D_{t}}\frac{\sigma_{t}^{iy}}{E}
 \end{equation}
 
-
 The numerical issues with this formulation arise due to the fact that it is very possible for the converted plastic strain to not be monotonically increasing with respect to the tensile damage. By having a damage evolution curve with a sufficiently steep slope, such that the second term in equation \ref{eqn:param11} increases faster than the first term, it becomes mathematically possible to have decreasing and/or negative plastic strains in the damage evolution definition. As such, the following conditions is applied to constrain the damage evolution to always yield monotonically increasing plastic strains as damage increases:
 
 \begin{equation}
@@ -862,7 +863,6 @@ The numerical issues with this formulation arise due to the fact that it is very
 \label{eqn:param6-2}
 \frac{d\bar{\epsilon}_{t}^{pl}}{dD_{t}}>0
 \end{equation}
-
 
 For the compressive damage evolution, we can substitute (\ref{eqn:param3}) into (\ref{eqn:param11}) to get the following expression of plastic strain as a function of the compressive damage rate parameter:
 
@@ -885,13 +885,11 @@ m=d_{c}\min_{\bar{\epsilon}^{in}}\left\{\frac{\sigma_{c}^{iy}+2E\bar{\epsilon}^{
 \label{eqn:param14}
 \end{equation}
 
-
 Where the compressive damage scaling factor has the following limits:
 
 \begin{equation}
 0<d_{c}<1\label{eqn:param15}
 \end{equation}
-
 
 The tensile damage evolution curve has the same numerical constraints when converting form cracking strain to plastic strain. Substituting (\ref{eqn:param4}) into (\ref{eqn:param11}) yields the following expression for the plastic strain:
 

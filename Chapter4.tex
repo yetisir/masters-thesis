@@ -1,104 +1,207 @@
 %======================================================================
-\chapter{Software Implementation}
+\chapter{Software Implementation (MAUSE)}
 %======================================================================
 
-Python notation
+The Modular Automated Up-Scaling softwarE (MAUSE) for DEM simulations was created and written in Python\textsuperscript{TM} to provide an implementation of the up-scaling framework presented in the previous chapter using third-party software. The software itself aims to provide a platform through which the four software elements of the up-scaling framework can communicate with each other. The communication is facilitated by MAUSE through modules which wrap the third party software in such a way that the inputs and outputs to and from the modules are in a consistent structure regardless of the third party software being used. 
+
+The general idea with the up-scaling framework developed in this thesis is that it is model independant. Because of this, it is important that MAUSE was written in such a way that allowed for different models (both DEM and macroscale) to be implemented without rewriting the up-scaling algorithms. As such, a modular approach was taken such that each module is isolated from the others and only communicates data through strict protocols set out by MAUSE.
+
+There exists four base classes that are used as parents to the third-party software modules. Because each software compent has distinct I/O protocols, the base classes serve as a collection of usefull methods which the software module can inherit to ensure compatibility with MAUSE. Each of these four component base classes inherit from a base module class. Figure \ref{fig:moduleClass} indicates this class heirarchy as well as where each method and attribute definition falls in the heirarchy.
+
+\begin{figure}[!htb]
+\begin{center}
+\includegraphics[width=\textwidth]{figures/moduleClassUML/moduleClassUML}
+\caption{{\label{fig:moduleClass} Module class structure.%
+}}
+\end{center}
+\end{figure}
 
 \section{Base Module Class}
 
-A base module class is implemented to provide a framework containing required methods and attributes for the UpFrac modules to inherit.
+A base module class, \textbf{BaseModuleClass}, is implemented to provide a framework containing required methods and attributes for the MAUSE modules to inherit. The module class contains methods pertaining to I/O routines associated with the module so that each module that is written behaves in a consistent manner and to avoid reimplementation of certain methods. 
 
 \subsection{Attributes}
 
+Attributes are assigned to \textbf{BaseModuleClass} through the constructor method (\textbf{\_\_init\_\_}) when the class is initialized. The following attributes are passed as arguments through instantiation of the class children. 
+
+The \textbf{program} attribute is a string that contains the name of the software excecutable associated with the given module. This parmeter allows the module the capacity to run the program through a command line interface (CLI) As such, the program must be able to accept command line arguments.
+
+\begin{lstlisting}[frame=single]  
+#String containing name of module software executable file. 
+self.program = program
+\end{lstlisting}
+
+The \textbf{parameters} attribute is a dictionary that contains all the command line parameters and corresponding arguments. Here, the parameters are the dictionary keys and the arguments are the dictionary values. If no arguments are required, then an empty dictionary is acceptable aswell. 
+
 \begin{lstlisting}[frame=single]   
-    self.program = program
-    self.parameters = parameters
-    
-    self.suppressText = suppressText
-    self.suppressErrors = suppressErrors
-    
-    topDirectory = os.path.realpath(os.path.dirname(os.path.dirname(__file__)))
-    dataDirectory =  os.path.join(topDirectory, 'Data')
-    self.binaryDirectory = os.path.join(dataDirectory, 'Binary')
-    self.textDirectory = os.path.join(dataDirectory, 'Text')
+#Dictionary of command line parameters and corresponding arguments
+self.parameters = parameters
+\end{lstlisting}
+
+The \textbf{supressText} and \textbf{supressErrors} attributes are Boolean parameters that, when true, allow for the suppression of command line output of text and errors, respectively.
+
+\begin{lstlisting}[frame=single]   
+#Boolean parameter that allows text output to CMD to be supressed
+self.suppressText = suppressText
+
+#Boolean parameter that allows errors to be supressed
+self.suppressErrors = suppressErrors
+\end{lstlisting}
+
+The \textbf{binaryDirectory} and \textbf{textDirectory} attributes are strings that refer to file folders in which the binary and text data are to be saved, respectively. these values are determined through relative directory parsing, rather than as an initialization argument. 
+
+\begin{lstlisting}[frame=single]   	
+#String that indicates where to store the binary data
+self.binaryDirectory = os.path.join(dataDirectory, 'Binary')
+
+#String that indicates where to store the text data
+self.textDirectory = os.path.join(dataDirectory, 'Text')
 \end{lstlisting}
 
 
 \subsection{Defined Methods}
-Discontinuous systems are characterized by the existence of discontinuities that separate discrete domains within the system. In order to effectively model a discontinuous system, it is necessary to represent two distinct types of mechanical behaviour: the behaviour of the discontinuities and the behaviour of the solid material.
+Methods in \textbf{BaseModuleClass} are divided into two types: defined and undefined. Defined methods are methods that are common to all the module classes and are thus able to be defined at the parent level. The undefined methods are methods that require overloading, so they are defined at the child level. 
+
+The \textbf{\_\_init\_\_} method is a built-in contructor method that is automatically called when the class is initialized. The only required argument for this method is \textbf{parameter}, with the other three being optional arguments. 
 
 \begin{lstlisting}[frame=single]
+#Contructor method that is called when the class is initialized
 def __init__(self, program, parameters={}, suppressText=False, suppressErrors=True):
+	"""
+	program:	string of program name
+	parameters:	dictionary of parameter-argument pairs
+	suppressText:	boolean
+	suppressErrors:	boolean
+	"""
 \end{lstlisting}
 
-Discontinuous systems are characterized by the existence of discontinuities that separate discrete domains within the system. In order to effectively model a discontinuous system, it is necessary to represent two distinct types of mechanical behaviour: the behaviour of the discontinuities and the behaviour of the solid material.
+A series of printing methods are included in \textbf{BaseModuleClass} to allow each module to route command line output through the parent module for consistent output formatting. The \textbf{printText}, \textbf{printTitle}, \textbf{printSection}, \textbf{printStatus}, \textbf{printDone}, and \textbf{printErrors} methods are implemented to give a large degree of flexibility in the displayed output.
 
 \begin{lstlisting}[frame=single]
+#Method to print text to command line if text supression is off
 def printText(self, text):
-
+	"""
+	text:		string of text to print
+	"""
+	
+#Method to format primary title in command line output 
 def printTitle(self, title):
-
+	"""
+	title:		string of primary title to print
+	"""
+	
+#Method to format section title in command line output 
 def printSection(self, section):
-
+	"""
+	section:	string of section title to print
+	"""
+	
+#Method to format status update in command line output 
 def printStatus(self, status):
-
+	"""
+	status:		string of status to print
+	"""
+	
+#Method to print 'Done' when section is finished 
 def printDone(self):
-
-def clearScreen(self):
-
+	"""
+	"""
+	
+#Method to control and print errors if error supression is off
 def printErrors(self, error):
+	"""
+	error:		error to print
+	"""
 \end{lstlisting}
 
-Discontinuous systems are characterized by the existence of discontinuities that separate discrete domains within the system. In order to effectively model a discontinuous system, it is necessary to represent two distinct types of mechanical behaviour: the behaviour of the discontinuities and the behaviour of the solid material.
+The \textbf{saveData} and \textbf{loadData} methods use binary serialization methods to write and load specified data structures to and from file. Saving and loading serialized binary data is much faster and more compact than unicode.
 
 \begin{lstlisting}[frame=single]        
+#Method to save serialized data structures as output
 def saveData(self, data):
+	"""
+	data:		Data format specified by module type
+	"""
 
+#Method to load serialized data structures as input
 def loadData(self):
+	"""
+	"""
 \end{lstlisting}
 
+The \textbf{updateParameters} method allows for the dynamic updating of module input parameters. This allows for the module to run the program multiple times without being reinstantiated.
 
 \begin{lstlisting}[frame=single]    
+#Method that allows dynamic updating of parameters.
 def updateParameters(self, parameters):
+	"""
+	parameters:	dictionary of parameter-argument pairs
+	"""
 \end{lstlisting}
 
+The \textbf{commandLineArguments} method takes the \textbf{parameters} dictionary attribute and converts it to a string which can be passed to the command line when running the specified program.
 
 \begin{lstlisting}[frame=single]
+#Method to create a string of command line arguments from parameters
 def commandLineArguments(self):
+	"""
+	"""
 \end{lstlisting}
 
+The \textbf{run} method simply runs the specified program with the specified parameters. 
 
 \begin{lstlisting}[frame=single]    
+#method to run the program with the specified parameters
 def run(self):
+	"""
+	"""
 \end{lstlisting}
 
 \subsection{Undefined Methods}
+
+The undefined methods listed here are required to be defined in the child classes. These methods are different for each type of module or even each module implementation, which does not allow them to be written in \textbf{baseModuleClass}. 
+
+The \textbf{createArgumentParser} method creates an argument parser that allows the module to parse any command line arguments passed to it if the module is run in an isolated environment, While the \textbf{parseArguments} method parses the command line arguments derived from \textbf{createArgumentParser}.
 
 \begin{lstlisting}[frame=single]    
 def createArgumentParser(self):
     
 def parseArguments(self):
+\end{lstlisting}
 
+The \textbf{inputFileName} and \textbf{outputFileName} methods provide the formatting for the fileNames in a means that is consistent amongst modules.
+
+\begin{lstlisting}[frame=single]
 def inputFileName(self):
         
 def outputFileName(self):
-    
-def setParameters(self):
 \end{lstlisting}
 
 
 \section{DEM Module}
+***
 \subsection{Base DEM Module Class}
-\subsection{UDEC\textsuperscript{TM} Module}
+***
+\subsection{UDEC Module}
+***
 \section{Homogenization Module}
+***
 \subsection{Base Homogenization Module Class}
-\subsection{HODS\textsuperscript{TM} Module}
+***
+\subsection{HODS Module}
+***
 \section{Parameter Estimation Module}
+***
 \subsection{Base Parameter Estimation Module Class}
-\subsection{OSTRICH\textsuperscript{TM} Module}
+***
+\subsection{OSTRICH Module}
+***
 \section{Macroscale Module}
+***
 \subsection{Base Macroscale Module Class}
-\subsection{ABAQUS\textsuperscript{TM} Module}
+***
+\subsection{ABAQUS Module}
+***
 
 
 \section{Data Architechture}
@@ -147,13 +250,12 @@ For example, accessing the list of grid points associatied with block ID 2543465
 gridPoints = blockData[1.0][2543465]['gridPoints']
 \end{lstlisting}
 
-
-block stuff Table \ref{tab3}
+The keys of each of the third level dictionaries for each comonent are presented in Table \ref{tab:keys1}, Table \ref{tab:keys2}, Table \ref{tab:keys3}, Table \ref{tab:keys4}, Table \ref{tab:keys5}, and Table \ref{tab:keys6} for the block data, contact data, corner data, domain data, gridpoint data, and zone data, respectively.
 
 \begin{table}[!htb]
 \centering
 \caption{{Block data attributes in third level hash}}
-\label{tab1}
+\label{tab:keys1}
 \begin{tabularx}{\textwidth}{@{}Yp{0.75\textwidth}@{}}
 \toprule
 \textbf{Parameter} & \textbf{Description (Data Type)}                            \\ \midrule
@@ -170,7 +272,7 @@ gridPoints         & Grid points associated with this block (list of corner IDs)
 \begin{table}[!htb]
 \centering
 \caption{{Contact data attributes in third level hash}}
-\label{tab2}
+\label{tab:keys2}
 \begin{tabularx}{\textwidth}{@{}Yp{0.75\textwidth}@{}}
 \toprule
 \textbf{Parameter} & \textbf{Description (Data Type)}                          \\ \midrule
@@ -191,7 +293,7 @@ corners            & Corners associated with this contact (list of corner IDs) \
 \begin{table}[!htb]
 \centering
 \caption{Corner data attributes in third level hash}
-\label{tab3}
+\label{tab:keys3}
 \begin{tabularx}{\textwidth}{@{}Yp{0.75\textwidth}@{}}
 \toprule
 \textbf{Parameter} & \textbf{Description (Data Type)}                                 \\ \midrule
@@ -202,7 +304,7 @@ gridPoint          & Grid points associated with this corner (list of grid point
 \begin{table}[!htb]
 \centering
 \caption{Domain data attributes in third level hash}
-\label{tab4}
+\label{tab:keys4}
 \begin{tabularx}{\textwidth}{@{}Yp{0.75\textwidth}@{}}
 \toprule
 \textbf{Parameter} & \textbf{Description (Data Type)}            \\ \midrule
@@ -216,7 +318,7 @@ porePressure      & Average pore pressure in the domain (float)\\ \bottomrule
 \begin{table}[!htb]
 \centering
 \caption{Gridpoint data attributes in third level hash}
-\label{tab5}
+\label{tab:keys5}
 \begin{tabularx}{\textwidth}{@{}Yp{0.75\textwidth}@{}}
 \toprule
 \textbf{Parameter} & \textbf{Description (Data Type)}                             \\ \midrule
@@ -236,7 +338,7 @@ corner             & Corner associated with this grid point (corner ID)\\ \botto
 \begin{table}[!htb]
 \centering
 \caption{{My caption}}
-\label{tab6}
+\label{tab:keys6}
 \begin{tabularx}{\textwidth}{@{}Yp{0.75\textwidth}@{}}
 \toprule
 \textbf{Parameter} & \textbf{Description (Data Type)}                                \\ \midrule
@@ -264,9 +366,15 @@ gridPoints         & Grid points associated with this grid point (list of block 
 
 
 
-\section{HODS\textsuperscript{TM} Homogenization}
+\section{HODS Homogenization}
+***
 \subsection{Class Attributes}
+***
 \subsection{Class Boundary Methods}
+***
 \subsection{Class Manipulation Methods}
+***
 \subsection{Class Homogenization Methods}
-
+***
+\section{MAUSE Usage Examples}
+***

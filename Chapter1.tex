@@ -31,36 +31,34 @@ The general goal of up-scaling is to formulate simplified coarse-scale governing
 
 \section{Research Objectives}
 
-In this thesis, a multi-scale up-scaling framework is developed to address the computational demands of simulating microscale phenomenon in a macroscale domain in the context of NFR. The primary contributions of the framework are a) the application of homogenization to DEM models with deformable blocks; b) the presentation of a methodology to parameterize complex nonlinear continuum constitutive models based on the DEM homogenized stress and strain curves; and c) the demonstration that the performance of the up-scaled continuum FEA models are accurate and significantly more computationally efficient.
-
-The research objectives of this thesis revolve around developing and validating aspects of the proposed up-scaling framework. Here, four key research objective have been identified.  
+In this thesis, a multi-scale up-scaling framework is developed to address the computational demands of simulating microscale phenomenon in a macroscale domain in the context of NFR. The primary research objectives of this research revolve around developing and validating aspects of the proposed up-scaling framework. Here, four key research objective have been identified:
 
 \begin{enumerate}
-\item Develop and implement a modular framework for up-scaling DEM simulations.
-\item Develop discrete homogenization algorithms for DEM simulations with deformable bodies.
-\item Identify appropriate parameterized macroscale constitutive relationships to describe the up-scaled NFR.
-\item Identify an appropriate parameter estimation algorithm to accurately and efficiently estimate an optimal parameter set.
+\item the application of homogenization to DEM models with deformable blocks.
+\item the presentation of a methodology to parameterize complex nonlinear continuum constitutive models based on the DEM homogenized stress and strain curves.
+\item the demonstration that the performance of the up-scaled continuum FEA models are accurate and significantly more computationally efficient.
+\item the development and implementation of a modular software framework for up-scaling DEM simulations.
 \end{enumerate}
 
-\subsection*{Up-Scaling Framework}
-More specifically, an automated framework for up-scaling DEM simulations is to be developed. It is required that the key aspects of the framework remain modular, so as to facilitate extensibility for future applications. Furthermore, the framework must have the flexibility to drive the different modules individually, based on saved states in order to modify the results without having to redo the entire analysis.
-
-\subsection*{Homogenization Algorithms}
-Algorithms to assess the homogenized stress and strain tensors of DEM simulations with deformable blocks are to be developed. As part of the homogenization algorithm, a method to automatically assess the RVE of the given rock mass is also necessary.
+\subsection*{Homogenizing DEM simulations with deformable blocks}
+***Algorithms to assess the homogenized stress and strain tensors of DEM simulations with deformable blocks are to be developed. As part of the homogenization algorithm, a method to automatically assess the RVE of the given rock mass is also necessary.
 
 \subsection*{Macroscale Constitutive Relationship}
-A macroscale constitutive relationship that represents the homogenized DEM response is to be identified. The constitutive relationship must be able to capture all the salient features of the discrete system. Furthermore, this constitutive relationship is to be parameterized by as few scalar parameters as possible while representing the rock mass accurately.
+***A macroscale constitutive relationship that represents the homogenized DEM response is to be identified. The constitutive relationship must be able to capture all the salient features of the discrete system. Furthermore, this constitutive relationship is to be parameterized by as few scalar parameters as possible while representing the rock mass accurately.
 
 \subsection*{Parameter Estimation Algorithms}
-An appropriate parameter estimation algorithm is to be identified that converges to the optimal solution most of the time, while minimizing the required number of iterations. 
+***An appropriate parameter estimation algorithm is to be identified that converges to the optimal solution most of the time, while minimizing the required number of iterations. 
+
+\subsection*{Up-Scaling Framework}
+***More specifically, an automated framework for up-scaling DEM simulations is to be developed. It is required that the key aspects of the framework remain modular, so as to facilitate extensibility for future applications. Furthermore, the framework must have the flexibility to drive the different modules individually, based on saved states in order to modify the results without having to redo the entire analysis.
 
 \section{Scope of Study and Research Limitations}
-The scope of this research is to present an up-scaling framework and a simple implementation as a proof of concept. Here, the goal is to provide all the necessary pieces using in-house and third-party software to show the up-scaling process from DEM to optimal parameter set. 
+The scope of this research is to present an up-scaling framework and a simple implementation as a proof of concept. Here, the goal is to provide all the necessary pieces using in-house and third-party software to show the up-scaling process from DEM simulations to optimal macroscale parameter set. 
 
-For simplicity, the DEM simulations considered are isotropic, two-dimensional and purely mechanical (not thermo-hydro-mechanically coupled). These simplifications reduce the complexity of the implementation significantly. As a result, the homogenization algorithms presented are designed for two-dimensional DEM simulations, though they can easily be adapted for three-dimensional problems.
+For simplicity, the DEM simulations considered here are isotropic, two-dimensional, and purely mechanical (not thermo-hydro-mechanically coupled). These simplifications reduce the complexity of the implementation significantly. As a result, the homogenization algorithms presented are designed for two-dimensional DEM simulations, though they can easily be adapted for three-dimensional problems.
 
-The macroscale constitutive models that are used are also following an isotropic medium assumption and do not account for any thermal or hydraulic coupling effects. These macroscale models used are pre-implemented materials, but custom material subroutines are likely required for more sophisticated constitutive responses. 
+The macroscale constitutive models that are used are also following an isotropic medium assumption and do not account for any thermal or hydraulic coupling effects. These macroscale models used are pre-implemented materials, but custom material subroutines are required for more sophisticated constitutive responses. 
 
 There are countless different optimization algorithms to investigate along with their respective optimization parameters. Exhaustively searching for the most efficient and accurate algorithm for this particular application in a quantitative capacity was not a focus of this thesis. As such, a couple different algorithms are presented and compared in their capacity to accurately and efficiently converge to the optimal parameter set.
 
-Ultimately, the research presented in this thesis aims to show the efficacy of a modular up-scaling framework for DEM simulations that can facilitate upgraded modules in the future to account for more sophisticated physics.
+Ultimately, the research presented in this thesis aims to show the efficacy of a modular up-scaling framework for DEM simulations that can facilitate installation of upgraded modules in the future to account for more sophisticated physics.
