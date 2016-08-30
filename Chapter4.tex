@@ -1,24 +1,26 @@
 %======================================================================
-\chapter{Software Implementation (MAUSE)}
+\chapter{Software Implementation (MOUSE)}
 %======================================================================
 
-The Modular Automated Up-Scaling softwarE (MAUSE) for DEM simulations was created and written in Python\textsuperscript{TM} to provide an implementation of the up-scaling framework presented in the previous chapter using third-party software. The software itself aims to provide a platform through which the four software elements of the up-scaling framework can communicate with each other. The communication is facilitated by MAUSE through modules which wrap the third party software in such a way that the inputs and outputs to and from the modules are in a consistent structure regardless of the third party software being used. 
+The Modular autOmated Up-Scaling softwarE (MOUSE) for DEM simulations was created and written in Python\textsuperscript{TM} to provide an implementation of the up-scaling framework presented in the previous chapter using third-party software. The software itself aims to provide a platform through which the four software elements of the up-scaling framework (DEM, homogenization, parameter estimation, and macroscale model) can communicate with each other. The communication is facilitated by MOUSE through modules which wrap the third party software in such a way that the inputs and outputs to and from the modules are in a consistent structure regardless of the third party software being used. 
 
-The general idea with the up-scaling framework developed in this thesis is that it is model independant. Because of this, it is important that MAUSE was written in such a way that allowed for different models (both DEM and macroscale) to be implemented without rewriting the up-scaling algorithms. As such, a modular approach was taken such that each module is isolated from the others and only communicates data through strict protocols set out by MAUSE.
+This chapter of the thesis aims to provide a very high level overview of the key aspects of the MOUSE software implementation without getting into any of the fine details. The programatic structure of some of the important software components is presented to illustrate the software design, but a complete discussion on the construction of all the specific wrappers gets unweildly.
 
-There exists four base classes that are used as parents to the third-party software modules. Because each software compent has distinct I/O protocols, the base classes serve as a collection of usefull methods which the software module can inherit to ensure compatibility with MAUSE. Each of these four component base classes inherit from a base module class. Figure \ref{fig:moduleClass} indicates this class heirarchy as well as where each method and attribute definition falls in the heirarchy.
+The general idea with the up-scaling framework developed in this thesis is that it is model independant. Because of this, it is important that MOUSE was written in such a way that allowed for different models (both DEM and macroscale) to be implemented without rewriting the up-scaling algorithms. As such, a modular approach was taken such that each module is isolated from the others and only communicates data through strict protocols set out by MOUSE.
+
+There exists four base classes that are used as parents to the third-party software modules. Because each software compent has distinct I/O protocols, the base classes serve as a collection of usefull methods which the software module can inherit to ensure compatibility with MOUSE. Each of these four component base classes inherit from a base module class. Figure \ref{fig:moduleClass} indicates this class heirarchy as well as where each method and attribute definition falls in the heirarchy.
 
 \begin{figure}[!htb]
 \begin{center}
 \includegraphics[width=\textwidth]{figures/moduleClassUML/moduleClassUML}
-\caption{{\label{fig:moduleClass} Module class structure.%
+\caption{{\label{fig:moduleClass} Module class inheritence structure.%
 }}
 \end{center}
 \end{figure}
 
 \section{Base Module Class}
 
-A base module class, \textbf{BaseModuleClass}, is implemented to provide a framework containing required methods and attributes for the MAUSE modules to inherit. The module class contains methods pertaining to I/O routines associated with the module so that each module that is written behaves in a consistent manner and to avoid reimplementation of certain methods. 
+A base module class, \textbf{BaseModuleClass}, is implemented to provide a framework containing required methods and attributes for the MOUSE modules to inherit. The module class contains methods pertaining to I/O routines associated with the module so that each module that is written behaves in a consistent manner and to avoid reimplementation of certain methods. 
 
 \subsection{Attributes}
 
@@ -151,7 +153,7 @@ def commandLineArguments(self):
 The \textbf{run} method simply runs the specified program with the specified parameters. 
 
 \begin{lstlisting}[frame=single]    
-#method to run the program with the specified parameters
+#Method to run the program with the specified parameters
 def run(self):
 	"""
 	"""
@@ -177,47 +179,36 @@ def inputFileName(self):
 def outputFileName(self):
 \end{lstlisting}
 
-
-\section{DEM Module}
-***
-\subsection{Base DEM Module Class}
-***
-\subsection{UDEC Module}
-***
-\section{Homogenization Module}
-***
-\subsection{Base Homogenization Module Class}
-***
-\subsection{HODS Module}
-***
-\section{Parameter Estimation Module}
-***
-\subsection{Base Parameter Estimation Module Class}
-***
-\subsection{OSTRICH Module}
-***
-\section{Macroscale Module}
-***
-\subsection{Base Macroscale Module Class}
-***
-\subsection{ABAQUS Module}
-***
-
+% \section{Specific Module Implementation}
+% ***
+% \subsection{UDEC Module}
+% ***
+% \subsection{HODS Module}
+% ***
+% \subsection{OSTRICH Module}
+% ***
+% \subsection{ABAQUS Module}
+% ***
 
 \section{Data Architechture}
+
 This section aims to explain the data structures used to store and transfer data between the modules in the up-scaling framework presented in this thesis.  Three fundamental data structures are used for the storage of data in conjunction with each other: hash tables, lists, and arrays. Using these three structures, three distinct types of data in the up-scaling framework are used to transfer between the modules in a consistent manner: constitutive parameters, DEM data, and continuum data.
 
 \subsubsection*{Python Lists}
+
 The list in Python\textsuperscript{TM} is one of the most versatile data structures. The list treats the data as a sequence such that each element in the list is assigned a number referring to its position or index.  The implementation of the list structure in python contains a number of unique features. The main feature of python lists is that the elements within the lists are not required to be of the same data type. Additionally, these lists are mutable, allowing for more advanced manipulation of the data structure. Because of this flexibility, the list structure is slow and unsuitable for large data sets. 
 
 \subsubsection*{Numpy Arrays}
+
 Numpy arrays are a specific implementation of a python list which are optimized for numerical operations on large datasets. Here the numpy arrays are much more compact by using a sequence of uniform values, rather than a sequence of pointers as is the case for the list structure.
 
 \subsubsection*{Python Dictionaries (Hash Tables)}
+
 In general, a hash table is a data structure that maps keys to values. The implementation of hash tables in Python\textsuperscript{TM}, are referred to as dictionaries. Similar to a python list, a python dictionary is a mutable structure that does not require the elements to be of the same type. However, instead of accessing the element value through an index argument, the data is accessed through a key argument. This unordered structure is usefull for storing non-sequential data.
 
 \subsection{Data Storage Structures}
 
+Three distinct types of data are used in the information tranfer protocols between modules: constitutive parameter data, DEM data, and continuum data. these different types fo data require different data structure which are explained in more detail below. The constitutive parameter data is stored in a hash table, the DEM data is stored in a three level nested hash table, and the continuum data is stored in a list of arrays.
 
 \subsubsection*{Hash Tables for Constitutive Parameters}
 
@@ -232,7 +223,6 @@ For example, accessing the value of the elastic modulus from a hash table named 
 \begin{lstlisting}[frame=single]
 elasticModulus = constitutiveParameters['elasticModulus']
 \end{lstlisting}
-
 
 \subsubsection*{Nested Hash Tables for DEM Data}
 The raw DEM Data is considered to be comprised of six distinct types: block data, contact data, corner data, domain data, grid point data, and zone data. Here, each block, contact, corner, domain, grid point, and zone is assigned a unique 7 digit numeric identifier (assuming here that the number of components in the system does not exceed 10 million) by which the associated data can be accessed. The same identifier may be repeated for different data types.
@@ -350,31 +340,203 @@ gridPoints         & Grid points associated with this grid point (list of block 
 \end{tabularx}
 \end{table}
 
-
-
-
 \subsubsection*{Nested List of Arrays for Continuum Data}
 
-% \begin{equation}
-
-% \left[ \begin{array}{cc} b & c \\ e & f \\ h & i \end{array}\right]
-
-% \end{equation}
+The continuum data is stored in three lists: a normal list and two nested lists of arrays. The three lists contain the time data, stress data, and strain data. The time data is in the normal list, with each element representing a different time step. The other two lists contain two-dimensional nested arrays representing the stress and strain tensors respectively. Each array element within within these lists represents the stress or strain tensors for the corresponding timestep.
 
 \subsection{Binary Serialization}
 
+These data structures mentioned above are great for efficiently accessing the desired data, but cannot easily be saved to file in standard unicode. In the event that this is possible, formatting and parsing large data sets from file becomes slow and increases the possibility of data corruption. To speed up the data access and increase the integrity of the data, binary serialization is employed. 
 
-
+Binary serialization stores the state of any given object by converting the public and private fields of the class to a stream of bytes, which is then written to the data stream. This data stream can easily be written to a binary file and subsequently read at any later date. The deserialization of this data stream takes the stream of bytes and reconstructs an exact clone of the original object whenever it is required. This method is usefull when attemping to store large non-linear data structures to file.
 
 \section{HODS Homogenization}
-***
+HODS homogeniziation module....
 \subsection{Class Attributes}
-***
+
+
+\begin{lstlisting}[frame=single] 
+self.fileName = fileName
+\end{lstlisting}
+
+
+\begin{lstlisting}[frame=single] 
+self.centre = centre
+self.radius = radius
+\end{lstlisting}
+
+
+\begin{lstlisting}[frame=single] 
+self.blockData = self.parseDataFile(blockFileName)
+self.contactData = self.parseDataFile(contactFileName)
+self.cornerData = self.parseDataFile(cornerFileName)
+self.zoneData = self.parseDataFile(zoneFileName)
+self.gridPointData = self.parseDataFile(gridPointFileName)
+self.domainData = self.parseDataFile(domainFileName)
+\end{lstlisting}
+
+
+\begin{lstlisting}[frame=single] 
+self.boundaryBlocks = self.blocksOnBoundary()
+self.insideBlocks = self.blocksInsideBoundary()
+self.outsideBlocks = self.blocksOutsideBoundary()
+self.insideBoundaryBlocks = self.boundaryBlocks + self.insideBlocks
+self.boundaryContacts = self.contactsBetweenBlocks(self.outsideBlocks, self.boundaryBlocks)
+self.boundaryContactCorners = self.cornersOnContacts(self.boundaryContacts)
+self.boundaryContactBlocks = self.blocksWithContacts(self.boundaryBlocks, self.boundaryContacts)
+self.outsideCorners = self.cornersOutsideBoundary()
+self.outsideContacts = self.contactsOutsideBoundary()
+self.boundaryBlockCorners = self.cornersOnBlocks(self.boundaryContactBlocks)
+self.boundaryCorners = common.listIntersection(self.boundaryContactCorners, self.boundaryBlockCorners)
+self.allBoundaryCorners = self.boundaryCorners
+self.boundaryBlocksOrdered = self.orderBlocks(self.boundaryContactBlocks, self.outsideContacts)
+self.boundaryCornersOrdered = self.orderCorners(self.boundaryBlocksOrdered, self.allBoundaryCorners)
+\end{lstlisting}
+
+\subsection{Class Data Methods}
+
+\begin{lstlisting}[frame=single] 
+def parseDataFile(self, fileName):
+	"""
+	fileName:	Name of file that contains DEM data
+	"""
+	return data
+\end{lstlisting}
+
+\begin{lstlisting}[frame=single] 
+def cornersOnContacts(self, contacts):
+	"""
+	contacts:	list of contact IDs
+	"""
+	return corners
+
+def zonesInBlocks(self, blocks):
+	"""
+	blocks:		list of block IDs
+	"""
+	return zones
+
+def cornersOnBlocks(self, blocks):
+	"""
+	blocks:		list of block IDs
+	"""
+	return corners
+
+def contactsOnBlocks(self, blocks):
+	"""
+	blocks:		list of block IDs
+	"""
+	return contacts
+\end{lstlisting}
+
+\begin{lstlisting}[frame=single] 
+def contactsBetweenBlocks(self, blocks1, blocks2):
+	"""
+	blocks1:	list of block IDs
+	blocks2: 	list of block IDs
+	"""
+	return contacts
+
+def blocksWithContacts(self, blocks, contacts):
+	"""
+	blocks:		list of block IDs
+	contacts:	list of contact IDs
+	"""
+	return newBlocks
+
+def blocksWithCorners(self, blocks, corners):
+	"""
+	blocks:		list of block IDs
+	corners:	list of corner IDs
+	"""
+	return newBlocks
+	
+def orderBlocks(self, blocks, relaventContacts):
+	"""
+	blocks:		list of block IDs
+	relContacts:	list of contact IDs
+	"""
+	return orderedBlocks
+	
+def orderCorners(self, orderedBlocks, corners):
+	"""
+	orderedBlocks:	list of block IDs
+	corners:	list of corner IDs
+	"""
+	return orderedCorners
+\end{lstlisting}
+	
 \subsection{Class Boundary Methods}
-***
-\subsection{Class Manipulation Methods}
-***
+
+\begin{lstlisting}[frame=single] 
+def blocksOnBoundary(self):
+	"""
+	"""
+	return blocks
+
+def blocksOutsideBoundary(self):
+	"""
+	"""
+	return blocks
+        
+def blocksInsideBoundary(self):
+	"""
+	"""
+	return blocks
+            
+def cornersOutsideBoundary(self):
+	"""
+	"""
+	return corners
+	
+def cornersInsideBoundary(self):
+	"""
+	"""
+	return corners
+	
+def contactsOutsideBoundary(self):
+	"""
+	"""
+	return contacts
+	
+def contactsInsideBoundary(self):
+	"""
+	"""
+	return contacts
+\end{lstlisting}
+    
 \subsection{Class Homogenization Methods}
-***
-\section{MAUSE Usage Examples}
-***
+
+def calculateHomogenizationParameters(self):
+
+                   
+def stress(self):
+	"""
+	"""
+	return stressHistory
+	
+def strain(self):
+	"""
+	"""
+	return strainHistory
+
+def time(self):
+	"""
+	"""
+	return timeHistory
+
+\section{MOUSE Usage Example}
+
+MOUSE can be
+\begin{lstlisting}[frame=single, language=bash]
+python MOUSE.py -n voronoiGranite -o APPSO
+\end{lstlisting}
+
+\begin{figure}[!htb]
+\begin{center}
+\includegraphics[width=\textwidth]{figures/homogenizeCMD/homogenizeCMD}
+\caption{{\label{fig:homCMD} MOUSE Outputs from HODS Module.%
+}}
+\end{center}
+\end{figure}
+
