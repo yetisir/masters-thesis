@@ -8,17 +8,19 @@ This chapter of the thesis aims to provide a very high level overview of the key
 
 The general idea with the up-scaling framework developed in this thesis is that it is model independant. Because of this, it is important that MOUSE was written in such a way that allowed for different models (both DEM and macroscale) to be implemented without rewriting the up-scaling algorithms. As such, a modular approach was taken such that each module is isolated from the others and only communicates data through strict protocols set out by MOUSE.
 
-There exists four base classes that are used as parents to the third-party software modules. Because each software compent has distinct I/O protocols, the base classes serve as a collection of usefull methods which the software module can inherit to ensure compatibility with MOUSE. Each of these four component base classes inherit from a base module class. Figure \ref{fig:moduleClass} indicates this class heirarchy as well as where each method and attribute definition falls in the heirarchy.
+There exists four base classes that are used as parents to the third-party software module classes. Because each software compent has distinct I/O protocols, the base classes serve as a collection of usefull methods which the software module can inherit to ensure compatibility with MOUSE. Each of these four component base classes inherit from a base module class. Figure \ref{fig:moduleClass} indicates this class heirarchy as well as where each method and attribute definition falls in the heirarchy.
 
 \begin{figure}[!htb]
 \begin{center}
-\includegraphics[width=\textwidth]{figures/moduleClassUML/moduleClassUML}
+\includegraphics[width=\textwidth]{figures/Chapter4/ModuleClassUML}
 \caption{{\label{fig:moduleClass} Module class inheritence structure.%
 }}
 \end{center}
 \end{figure}
 
+%----------------------------------------------------------------------
 \section{Base Module Class}
+%----------------------------------------------------------------------
 
 A base module class, \textbf{BaseModuleClass}, is implemented to provide a framework containing required methods and attributes for the MOUSE modules to inherit. The module class contains methods pertaining to I/O routines associated with the module so that each module that is written behaves in a consistent manner and to avoid reimplementation of certain methods. 
 
@@ -50,7 +52,7 @@ self.suppressText = suppressText
 self.suppressErrors = suppressErrors
 \end{lstlisting}
 
-The \textbf{binaryDirectory} and \textbf{textDirectory} attributes are strings that refer to file folders in which the binary and text data are to be saved, respectively. these values are determined through relative directory parsing, rather than as an initialization argument. 
+The \textbf{binaryDirectory} and \textbf{textDirectory} attributes are strings that refer to file folders in which the binary and text data are to be saved, respectively. these values are determined through relative directory parsing, rather than as an initialization argument. \\\\
 
 \begin{lstlisting}[frame=single]   	
 #String that indicates where to store the binary data
@@ -73,8 +75,8 @@ def __init__(self, program, parameters={}, suppressText=False, suppressErrors=Tr
 	program:	string of program name
 	parameters:	dictionary of parameter-argument pairs
 	suppressText:	boolean
-	suppressErrors:	boolean
-	"""
+	suppressErrors:	boolean"""
+	
 \end{lstlisting}
 
 A series of printing methods are included in \textbf{BaseModuleClass} to allow each module to route command line output through the parent module for consistent output formatting. The \textbf{printText}, \textbf{printTitle}, \textbf{printSection}, \textbf{printStatus}, \textbf{printDone}, and \textbf{printErrors} methods are implemented to give a large degree of flexibility in the displayed output.
@@ -83,37 +85,32 @@ A series of printing methods are included in \textbf{BaseModuleClass} to allow e
 #Method to print text to command line if text supression is off
 def printText(self, text):
 	"""
-	text:		string of text to print
-	"""
+	text:		string of text to print """
 	
 #Method to format primary title in command line output 
 def printTitle(self, title):
 	"""
-	title:		string of primary title to print
-	"""
+	title:		string of primary title to print"""
 	
 #Method to format section title in command line output 
 def printSection(self, section):
 	"""
-	section:	string of section title to print
-	"""
+	section:	string of section title to print"""
 	
 #Method to format status update in command line output 
 def printStatus(self, status):
 	"""
-	status:		string of status to print
-	"""
+	status:		string of status to print"""
 	
 #Method to print 'Done' when section is finished 
 def printDone(self):
-	"""
+	"""	
 	"""
 	
 #Method to control and print errors if error supression is off
 def printErrors(self, error):
 	"""
-	error:		error to print
-	"""
+	error:		error to print"""
 \end{lstlisting}
 
 The \textbf{saveData} and \textbf{loadData} methods use binary serialization methods to write and load specified data structures to and from file. Saving and loading serialized binary data is much faster and more compact than unicode.
@@ -122,9 +119,8 @@ The \textbf{saveData} and \textbf{loadData} methods use binary serialization met
 #Method to save serialized data structures as output
 def saveData(self, data):
 	"""
-	data:		Data format specified by module type
-	"""
-
+	data:		Data format specified by module type"""
+	
 #Method to load serialized data structures as input
 def loadData(self):
 	"""
@@ -137,8 +133,7 @@ The \textbf{updateParameters} method allows for the dynamic updating of module i
 #Method that allows dynamic updating of parameters.
 def updateParameters(self, parameters):
 	"""
-	parameters:	dictionary of parameter-argument pairs
-	"""
+	parameters:	dictionary of parameter-argument pairs	"""
 \end{lstlisting}
 
 The \textbf{commandLineArguments} method takes the \textbf{parameters} dictionary attribute and converts it to a string which can be passed to the command line when running the specified program.
@@ -179,18 +174,9 @@ def inputFileName(self):
 def outputFileName(self):
 \end{lstlisting}
 
-% \section{Specific Module Implementation}
-% ***
-% \subsection{UDEC Module}
-% ***
-% \subsection{HODS Module}
-% ***
-% \subsection{OSTRICH Module}
-% ***
-% \subsection{ABAQUS Module}
-% ***
-
+%----------------------------------------------------------------------
 \section{Data Architechture}
+%----------------------------------------------------------------------
 
 This section aims to explain the data structures used to store and transfer data between the modules in the up-scaling framework presented in this thesis.  Three fundamental data structures are used for the storage of data in conjunction with each other: hash tables, lists, and arrays. Using these three structures, three distinct types of data in the up-scaling framework are used to transfer between the modules in a consistent manner: constitutive parameters, DEM data, and continuum data.
 
@@ -327,7 +313,7 @@ corner             & Corner associated with this grid point (corner ID)\\ \botto
 
 \begin{table}[!htb]
 \centering
-\caption{{My caption}}
+\caption{Zone data attributes in third level hash}
 \label{tab:keys6}
 \begin{tabularx}{\textwidth}{@{}Yp{0.75\textwidth}@{}}
 \toprule
@@ -350,7 +336,25 @@ These data structures mentioned above are great for efficiently accessing the de
 
 Binary serialization stores the state of any given object by converting the public and private fields of the class to a stream of bytes, which is then written to the data stream. This data stream can easily be written to a binary file and subsequently read at any later date. The deserialization of this data stream takes the stream of bytes and reconstructs an exact clone of the original object whenever it is required. This method is usefull when attemping to store large non-linear data structures to file.
 
+
+%----------------------------------------------------------------------
+% \section{Specific Module Implementation}
+%----------------------------------------------------------------------
+% ***
+% \subsection{UDEC Module}
+% ***
+% \subsection{HODS Module}
+% ***
+% \subsection{OSTRICH Module}
+% ***
+% \subsection{ABAQUS Module}
+% ***
+
+
+%----------------------------------------------------------------------
 \section{HODS Homogenization}
+%----------------------------------------------------------------------
+
 HODS homogeniziation module....
 \subsection{Class Attributes}
 
@@ -525,7 +529,9 @@ def time(self):
 	"""
 	return timeHistory
 
+%----------------------------------------------------------------------
 \section{MOUSE Usage Example}
+%----------------------------------------------------------------------
 
 MOUSE can be
 \begin{lstlisting}[frame=single, language=bash]
@@ -534,7 +540,7 @@ python MOUSE.py -n voronoiGranite -o APPSO
 
 \begin{figure}[!htb]
 \begin{center}
-\includegraphics[width=\textwidth]{figures/homogenizeCMD/homogenizeCMD}
+\includegraphics[width=\textwidth]{figures/Chapter4/HODSOutput}
 \caption{{\label{fig:homCMD} MOUSE Outputs from HODS Module.%
 }}
 \end{center}

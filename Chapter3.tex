@@ -1,6 +1,7 @@
 %======================================================================
 \chapter{Up-Scaling Methodology}
 %======================================================================
+
 The goal of the up-scaling methodology is to identify the parameters of a continuum constitutive model (macroscale model) that best emulates the average response in the DEM REV (microscale model). Let the displacement, strain and stress of the DEM REV (microscale) model be denoted by $\mathbf{u}^m$, $\boldsymbol{\epsilon}^m$, and $\boldsymbol{\sigma}^m$, respectively. Let the homogenized (averaged) strain and stress in the DEM REV model be denoted by  $\left<\boldsymbol{\epsilon}\right>$ and $\left<\boldsymbol{\sigma}\right>$, respectively.  Finally, let the strain and stress from the continuum (macroscale) constitutive model be denoted as $\boldsymbol{\epsilon}^M$ and $\boldsymbol{\sigma}^M$, respectively. The rate of macroscale stress, $\dot{\boldsymbol{\sigma}}^M=\dot{\boldsymbol{\sigma}}^M\left(\dot{\boldsymbol{\epsilon}}^M, \boldsymbol{\chi},\mathbf{h}\right)$, is defined in terms of the rate of macroscale strain, $\dot{\boldsymbol{\epsilon}}^M$, a set of material parameters $\boldsymbol{\chi}$ and a set of internal history variables $\mathbf{h}$.
 
 The up-scaling methodology has five steps: 
@@ -14,17 +15,28 @@ The up-scaling methodology has five steps:
 
 Once an optimal parameter set, $\boldsymbol{\chi}$, for the desired model, $\dot{\boldsymbol{\sigma}}^M=\dot{\boldsymbol{\sigma}}^M\left(\dot{\boldsymbol{\epsilon}}^M, \boldsymbol{\chi},\mathbf{h}\right)$, has been identified, the newly established constitutive model can be used in Finite Element Method (FEM) models or with other suitable numerical or analytical simulations.
 
+%----------------------------------------------------------------------
 \section{Up-Scaling Implementation Overview}
-The up-scaling framework that is presented here consists of four main software components (Figure \ref{fig:workflow}): a DEM simulator, a homogenization module, a FEM simulator, and a parameter estimation module. In procedural order, the first software component involved is a DEM simulation package, which is used to directly model the NFR. The DEM software accepts as inputs the geometry of the DFN, the material properties of the rock and the natural fractures, and the load paths. The DEM REV is exercised for different load-paths in a way that is akin to conducting multiple triaxial tests on physical specimens to characterize the full range of material behaviour. The DEM software outputs the microscale displacement, $\mathbf{u}^m$, and stress-strain, $\boldsymbol{\sigma}^m$-$\boldsymbol{\epsilon}^m$, responses for each load path.  This microscale data is subsequently fed into the homogenization module to compute the average stress-strain response, $\left<\boldsymbol{\sigma}\right>$-$\left<\boldsymbol{\epsilon}\right>$,  for each load path. Next, the homogenized stress-strain data, $\left<\boldsymbol{\sigma}\right>$-$\left<\boldsymbol{\epsilon}\right>$, is used by the parameter estimation software as observation data (i.e., laboratory/field data). The parameter estimation module iteratively executes a constitutive model, $\dot{\boldsymbol{\sigma}}^M=\dot{\boldsymbol{\sigma}}^M\left(\dot{\boldsymbol{\epsilon}}^M, \boldsymbol{\chi},\mathbf{h}\right)$, embedded in the FEM simulator for each load path using different parameter sets, $\boldsymbol{\chi}^i$, while attempting to minimize the error between the homogenized microscale, $\left<\boldsymbol{\sigma}\right>$-$\left<\boldsymbol{\epsilon}\right>$, and macroscale, $\boldsymbol{\sigma}^M$-$\boldsymbol{\epsilon}^M$,  stress-strain curves. Eventually, the algorithm converges to a near-optimal parameter set, $\boldsymbol{\chi}$, that can be viewed to be the best estimate of the NFR responses by the given continuum model. In our implementation, UDEC\textsuperscript{TM} was used as the DEM simulator and ABAQUS\textsuperscript{TM} was used as the FEM simulator. In ABAQUS\textsuperscript{TM}, single element simulations were performed with a strain-history prescribed through displacement boundary conditions for a given set of material parameters and the stress is obtained as the output. There is nothing particularly special about the DEM or FEM simulators chosen; each could easily be replaced to overcome any inherent limitations.  Moreover, a FEM simulator is not actually needed, since its inclusion in this framework is simply to gain access to the constitutive models within. The FEM simulator could easily be replaced by a FDM simulator or simply by a material subroutine.  OSTRICH\textsuperscript{TM}, a model-independent optimization package \citep{matott_ostrich:_2016}, is used for the parameter estimation module. The homogenization module was written in-house in Python\textsuperscript{TM}. Python\textsuperscript{TM} was also used to interface and drive the various components of the up-scaling framework. 
+%----------------------------------------------------------------------
+
+The up-scaling framework that is presented here consists of four main software components (Figure \ref{fig:workflow}): a DEM simulator, a homogenization module, a FEM simulator, and a parameter estimation module. In procedural order, the first software component involved is a DEM simulation package, which is used to directly model the NFR. 
 
 \begin{figure}[p]
 \begin{center}
-\includegraphics[width=0.7\textwidth]{figures/upscalingworkflow/UpScaling Flow Chart-1}
+\includegraphics[width=0.8\textwidth]{figures/Chapter3/UpScalingFlowChart}
 \caption{{\label{fig:workflow}Up-scaling workflow used to estimate the optimal continuum model parameter set. The DEM software (a) produces a data set which is run through homogenization software (b) which in turn produces another dataset that is fed into the parameter estimation program (c). This parameter estimation program drives the CDM simulations (d) iteratively in order to find an optimal parameter set for the fitted model.%
 }}
 \end{center}
 \end{figure}
+
+The DEM software accepts as inputs the geometry of the DFN, the material properties of the rock and the natural fractures, and the load paths. The DEM REV is exercised for different load-paths in a way that is akin to conducting multiple triaxial tests on physical specimens to characterize the full range of material behaviour. The DEM software outputs the microscale displacement, $\mathbf{u}^m$, and stress-strain, $\boldsymbol{\sigma}^m$-$\boldsymbol{\epsilon}^m$, responses for each load path.  This microscale data is subsequently fed into the homogenization module to compute the average stress-strain response, $\left<\boldsymbol{\sigma}\right>$-$\left<\boldsymbol{\epsilon}\right>$,  for each load path. Next, the homogenized stress-strain data, $\left<\boldsymbol{\sigma}\right>$-$\left<\boldsymbol{\epsilon}\right>$, is used by the parameter estimation software as observation data (i.e., laboratory/field data). The parameter estimation module iteratively executes a constitutive model, $\dot{\boldsymbol{\sigma}}^M=\dot{\boldsymbol{\sigma}}^M\left(\dot{\boldsymbol{\epsilon}}^M, \boldsymbol{\chi},\mathbf{h}\right)$, embedded in the FEM simulator for each load path using different parameter sets, $\boldsymbol{\chi}^i$, while attempting to minimize the error between the homogenized microscale, $\left<\boldsymbol{\sigma}\right>$-$\left<\boldsymbol{\epsilon}\right>$, and macroscale, $\boldsymbol{\sigma}^M$-$\boldsymbol{\epsilon}^M$,  stress-strain curves. Eventually, the algorithm converges to a near-optimal parameter set, $\boldsymbol{\chi}$, that can be viewed to be the best estimate of the NFR responses by the given continuum model. 
+
+In our implementation, UDEC\textsuperscript{TM} was used as the DEM simulator and ABAQUS\textsuperscript{TM} was used as the FEM simulator. In ABAQUS\textsuperscript{TM}, single element simulations were performed with a strain-history prescribed through displacement boundary conditions for a given set of material parameters and the stress is obtained as the output. There is nothing particularly special about the DEM or FEM simulators chosen; each could easily be replaced to overcome any inherent limitations.  Moreover, a FEM simulator is not actually needed, since its inclusion in this framework is simply to gain access to the constitutive models within. The FEM simulator could easily be replaced by a FDM simulator or simply by a material subroutine.  OSTRICH\textsuperscript{TM}, a model-independent optimization package \citep{matott_ostrich:_2016}, is used for the parameter estimation module. The homogenization module was written in-house in Python\textsuperscript{TM}. Python\textsuperscript{TM} was also used to interface and drive the various components of the up-scaling framework.
+
+%----------------------------------------------------------------------
 \section{Distinct Element Method}
+%----------------------------------------------------------------------
+
 Discontinuous systems are characterized by the existence of discontinuities that separate discrete domains within the system. In order to effectively model a discontinuous system, it is necessary to represent two distinct types of mechanical behaviour: the behaviour of the discontinuities and the behaviour of the solid material.
 
 There exists a set of methods, referred to as discrete element methods, which provide the capacity to explicitly represent the behaviour of multiple intersecting discontinuities. The methods allow for the modelling of finite displacements and rotations of discrete bodies, including contact detachment as well as automatic detection of new contacts. Within the set of Discrete Element Methods, there are four subsets \citep{CUNDALL_1992}: Modal Methods, Discontinuous Deformation Analysis Methods, Momentum Exchange Methods, and Distinct Element Methods (DEM). In this paper, the discrete element method used is DEM.
@@ -40,7 +52,7 @@ Consider an arbitrary deformable domain, $\Omega$, with a boundary, $\Gamma$, th
 
 \begin{figure}[!htb]
 \begin{center}
-\includegraphics[width=0.7\textwidth]{figures/DEM/demnew}
+\includegraphics[width=0.8\textwidth]{figures/Chapter3/DEMSchematic}
 \caption{{\label{fig:DEM}DEM block formulation for an arbitrary domain, $\Omega$, with a set of subdomains, $\Omega_i$.%
 }}
 \end{center}
@@ -68,30 +80,53 @@ Futhermore, the shear stress, $\tau$, over any $\Gamma_{ij}$ can be written in t
 
 The microscale stress field, $\boldsymbol{\sigma}^m$, within $\Omega_i$ is described by standard continuum constitutive relationships. With the constitutive behaviour of the discontinuities and the constitutive behaviour of the continuum blocks, the overall behaviour of the rock mass can be characterized through material properties of the rock discontinuities and the intact rock.
 
-\subsection{Block Model}
-
-\subsection{Joint Model}
-
-
+%----------------------------------------------------------------------
 \section{Homogenization Approach}
+%----------------------------------------------------------------------
 
 The main objective of up-scaling DEM simulations is to be able to describe the  behavior of the discontinuous medium in terms of a more computationally efficient continuum model. The homogenization algorithms used herein to determine the average stress-strain behaviour, $\left<\boldsymbol{\sigma}\right>$-$\left<\boldsymbol{\epsilon}\right>$, of the REV from the microscale displacements $\mathbf{u}^m$, strain $\boldsymbol{\epsilon}^m$, and stresses $\boldsymbol{\sigma}^m$ are based on the methods developed by \citet{daddetta_particle_2004} and \citet{wellmann_homogenization_2008}. In this homogenization process, the resultant inter-block contact forces and block displacement from the DEM simulations are converted to average stresses and strains.
 
-For the homogenization procedure to yield meaningful results, it should be applied to a Representative Elementary Volume (REV). The exact size of the REV depends on the geometry and mechanical properties of the DEM model. For the homogenization approach to hold, the REV of size $d$ within a system with a characteristic length $D$ and consisting of blocks with a characteristic diameter $\delta$, must satisfy scale separation: $D\gg d\gg\delta$ \citep{wellmann_homogenization_2008}. 
+For the homogenization procedure to yield meaningful results, it should be applied to a Representative Elementary Volume (REV). The exact size of the REV depends on the geometry and mechanical properties of the DEM model. For the homogenization approach to hold, the REV of size $d$ within a system with a characteristic length $D$ and consisting of blocks with a characteristic diameter $\delta$, must satisfy scale separation \citep{wellmann_homogenization_2008}:
+ 
+\begin{equation}
+\label{eqn:scalesep}
+D\gg d\gg\delta
+\end{equation}
 
 In the following sections, all deformations are assumed to be small, such that there is no need to differentiate between the deformed and undeformed configurations.  
 
 We begin by defining a $L\times L$ square DEM simulation domain over which mixed-boundary conditions will be applied. The REV is taken as a circular domain of radius $R$, $2R<L$.  The REV is taken to be a subdomain of the actual DEM simulation domain to eliminate any boundary effects.  As will be seen below, it is convenient to take the boundary of the domain used for homogenization as a slightly larger domain encompassing the REV boundary. The boundary of the homogenization domain, denoted as $\Gamma_h$, is defined by the outer edges of the deformable blocks, i.e., the cohesive/contact surfaces between deformable blocks, which intersect a circle of radius $R$ located in the center of the DEM simulation domain. Let the homogenization domain, the domain bounded by $\Gamma_h$, be denoted by $\Omega_h$. These definitions are illustrated in Figure \ref{fig:homoarea} for a $10$m $\times$ $10$m DEM domain, where the deformable blocks are defined through a Voronoi tessellation. The radius of the REV domain is $2.5$m.  It can be seen that the actual domain used for homogenization is non-circular and larger than the REV domain. 
 
-\begin{figure}[!tbp]
+\begin{figure}[!htb]
 \begin{center}
-\includegraphics[width=\textwidth]{figures/homogenizationarea/homoarea}
+\includegraphics[width=\textwidth]{figures/Chapter3/HomogenizationArea}
 \caption{{\label{fig:homoarea}Assessment of the homogenization boundary given a circular REV.%
 }}
 \end{center}
 \end{figure}
 
-%In this homogenization method, the aim is to obtain the spatially averaged stress and strain tensors at any prescribed time. An important aspect of this homogenization method is in the treatment of discontinuities between the blocks. In the case where the blocks become physically separated, there exists voids within the homogenization domain and discontinuities along the homogenization boundary as can be seen in Figure \ref{fig:homoboundary}. These discontinuities along the homogenization boundary are important to consider as most of the strain in the model is manifested in theses fractures. To account for these boundary discontinuities, discontinuity boundary segments are added to the homogenization boundary between the corners of the adjacent blocks to account for this strain. Within the homogenization domain, it is important to account for the voids as they are assumed to have a zero stress state, which becomes influential when assessing the homogenized stress tensor.
+Given a circular REV, due to the discontinuous nature of the DEM simulations, the circular REV cannot be used directly. Because the calculated displacements and contact forces from the DEM are known at the block edges, the homogenization domain boundary must follow the block boundaries. The homogenization domain is characterized by a series of block corners which are identified at the initial (zero strain) state. These corners continue to define the homogenization domain once deformation occurs, allowing for a consistent homogenization domain definition as the model is deformed. The algorithm that was developed to assess the homogenization domain boundary is presented as follows: 
+
+\begin{enumerate}
+\item \label{hli:1} Identify all blocks that lie on the REV boundary. 
+\item \label{hli:2} Identify all blocks that lie completely outside the
+REV boundary. 
+\item \label{hli:3} Find all contacts corresponding to the intersection
+between blocks in \ref{hli:1} and \ref{hli:2}. 
+\item \label{hli:4} Find all corners corresponding to the contacts in \ref{hli:3}. 
+\item \label{hli:5} Find all contacts of blocks in \ref{hli:1}. 
+\item \label{hli:6} Find all blocks corresponding to the intersection of
+contacts in \ref{hli:3} and \ref{hli:5}. 
+\item \label{hli:7} Find all corners corresponding to blocks in \ref{hli:6}. 
+\item \label{hli:8} Find intersection of corners in \ref{hli:4} and \ref{hli:7}. 
+\item \label{hli:9} Find corners that initially (at zero strain) coincided
+with the corners in \ref{hli:8} 
+\item \label{hli:10} Find union of corners in \ref{hli:8} and \ref{hli:9}. 
+\item \label{hli:11} Order corners from \ref{hli:10} such that they form
+the boundary of the homogenization area
+\end{enumerate}
+
+This algorithm for defining the homogenization domain was developed to provide an unambiguous method for assessing a unique homogenization domain for a given circle radius and location. In steps \ref{hli:1} and \ref{hli:2}, two mutually exclusive block sets are identified, which necessarily share contacts. It is the boundary between these two block sets that is the homogenization domain boundary which is characterized by this algorithm. Ultimately, the goal of this process is to identify the corners on this boundary that are on the blocks that intersect with the REV boundary and not the blocks that are outside the REV boundary. As such, the corners (step \ref{hli:4}) corresponding to the contacts (step \ref{hli:3}) between the two sets of blocks are determined. Step \ref{hli:5} is necessary to help eliminate some blocks from the set of boundary block which intersect the REV boundary, but only have contact with blocks inside the homogenization domain boundary, and thus do not have any overall contribution to the definition. Step \ref{hli:6} determines this resultant set of boundary blocks of which every member is connected to the boundary in some capacity. Finding the set of corners that is mutually shared by these blocks in step \ref{hli:7} and the boundary contact corners in step \ref{hli:4} allow for the determination of the initial set of boundary corners (step \ref{hli:8}).
 
 The homogenization boundary, $\Gamma_{h}$, can be described in terms of $n$ ordered boundary vertices, $V_{i}^{h}=(x_{i}^{h},y_{i}^{h})$, representing the $i$-th set of vertex coordinates along the boundary, such that the area of the homogenization domain, $A^{h}$, can be calculated using the following formulation for the area of an arbitrary, non-self-intersecting polygon \citep{Zwillinger_1995}: 
 
@@ -100,23 +135,6 @@ A^{h}=\dfrac{1}{2}\sum_{i=1}^{n}x_{i}^{h}(y_{i+1}^{h}-y_{i-1}^{h})
 \label{eqn:hom1}
 \end{equation}
 
-%At this point, within the homogenization domain, one must differentiate between the blocks and the void space between the blocks as they have fundamentally different behaviour. As such, the homogenization domain can be decomposed into two mutually exclusive subdomains representing the voids and blocks, $\Omega^{v}$ and $\Omega^{b}$, respectively. The total block area associated with the block subdomain, $A^{b}$, can be assessed as a summation of $m$ block areas within the homogenization domain, while the individual block area can be assessed in a similar manner to (\ref{eqn:hom1}). For $n^{j}$ block boundary vertices, $V_{i,j}^{b}=(x_{i,j}^{b},y_{i,j}^{b})$ representing the $i$th set of vertex coordinates on the $j$th block, the total block area can be calculated as: 
-
-%\begin{equation}
-%A^{b}=\dfrac{1}{2}\sum_{j=0}^{m}\sum_{i=1}^{n_{j}}x_{i,j}^{b}(y_{i+1,j}^{b}-y_{i-1,j}^{b})\label{eqn:hom2}
-%\end{equation}
-
-
-%Assuming that the block domain and the void domain are jointly exhaustive of the total homogenization domain, the total area associated with the void subdomain, $A^{v}$, can be written as the difference of the homogenization domain area and the block subdomain area: 
-
-%\begin{equation}
-%A^{v}=A^{h}-A^{b}\label{eqn:hom3}
-%\end{equation}
-%\begin{equation}
-%A^{v}=\dfrac{1}{2}\sum_{i=1}^{n}x_{i}^{h}(y_{i+1}^{h}-y_{i-1}^{h})-\dfrac{1}{2}\sum_{j=0}^{m}\sum_{i=1}^{n_{j}}x_{i,j}^{b}(y_{i+1,j}^{b}-y_{i-1,j}^{b})\label{eqn:hom4}
-%\end{equation}
-
-
 \subsection{Stress Homogenization}
 
 The homogenized Cauchy stress, $\langle\boldsymbol{\sigma}\rangle$, is derived from the definition of the spatial average of the microscale stress of the deformable blocks of the DEM simulation, $\boldsymbol{\sigma}^m$, over the homogenization domain $\Omega^{h}$. 
@@ -124,20 +142,19 @@ The homogenized Cauchy stress, $\langle\boldsymbol{\sigma}\rangle$, is derived f
 \langle\boldsymbol{\sigma}\rangle=\frac{1}{A^{h}}\int_{\Omega^{h}}\boldsymbol{\sigma}^m dA\label{eqn:stress1}
 \end{equation}
 
+Since the block subdomain is inherently discretized, the integration of the stress over the homogenization domain in can be written as a summation of the average stress in each block. Let $\boldsymbol{\sigma}_{I}^{m}$ denote the average stress in block $I$ with an area $A_{I}$ and let $N^{b}$ represent the number of blocks in the homognenization domain. The homogenized stress from (\ref{eqn:stress1}) can now be written as:
 
-%As previously mentioned, there exists a necessary distinction between the block subdomain and the void subdomain when dealing with stress. Here, the integration over the homogenization domain can be decomposed into two seperate integrations over the block subdomain and the void subdomain: 
+\begin{equation}
+\langle\boldsymbol{\sigma}\rangle=\frac{1}{A^{h}}\sum_{I=1}^{N^{b}}\boldsymbol{\sigma}_{I}^{m}A_{I}\label{eqn:stress2}
+\end{equation}
 
-%\begin{equation}
-%\langle\boldsymbol{\sigma}\rangle=\frac{1}{A^{h}}\left[\int_{\Omega^{b}}\boldsymbol{\sigma}dA+\int_{\Omega^{v}}\boldsymbol{\sigma}dA\right]\label{eqn:stress2}
-%\end{equation}
+When each deformable block is discretized by constant stress triangles (elements/zones), the integration of the stress over each deformable block subdomain can be written as a summation in the form of a spatially weighted average of the zone stresses. Let $\boldsymbol{\sigma}_{IJ}^{m}$ denote the stress in zone $J$ of deformable block $I$, $N_{I}^{z}$ denote the number of zones within block $I$, and $A_{IJ}$ denote area of zone $J$ in block $I$. The average stress in a block is then defined as:
 
-%This distinction is made due to the fact that in a purely mechanical model, there isn't any pressure or stress being retained in the void space, resulting in a negligable contribution to the overall stress state. This allows for the void subdomain integration term to be dropped from the formulation: 
+\begin{equation}
+\boldsymbol{\sigma}_{I}^{m}=\frac{1}{A_{I}}\sum_{J=1}^{N_{I}^{z}}\boldsymbol{\sigma}_{IJ}^{m}A_{IJ}\label{eqn:stress3}
+\end{equation}
 
-%\begin{equation}
-%\langle\boldsymbol{\sigma}\rangle=\frac{1}{A^{h}}\int_{\Omega^{b}}\boldsymbol{\sigma}dA\label{eqn:stress2a}
-%\end{equation}
-
-When each deformable block is discretized by constant stress triangles (elements/zones), the integration of the stress over each deformable block subdomain can be written as a summation in the form of a spatially weighted average of the zone stresses. Let $\boldsymbol{\sigma}_{IJ}^{m}$ denote the stress in zone $J$ of deformable block $I$, $N_{I}^{z}$ denote the number of zones within block $I$, $A_{IJ}$ denote area of zone $J$ in block $I$, and $N^{b}$ denote the number of deformable blocks. The homogenized stress is then defined as 
+Here, substituting (\ref{eqn:stress3}) into (\ref{eqn:stress2}) allows us to write the homogenized stress in terms of the zone stresses:
 
 \begin{equation}
 \langle\boldsymbol{\sigma}\rangle=\frac{1}{A^{h}}\sum_{I=1}^{N^{b}}\sum_{J=1}^{N_{I}^{z}}\boldsymbol{\sigma}_{IJ}^{m}A_{IJ}\label{eqn:stress4}
@@ -173,8 +190,11 @@ When $\Gamma_h$ is defined by a set of line segments over which the displacement
 \langle\boldsymbol{\epsilon}\rangle=\frac{1}{2A^{h}}\sum_{I=1}^{N}\left[\bar{\mathbf{u}}^m_{I}\otimes\mathbf{n}_{I}+\mathbf{n}_{I}\otimes\bar{\mathbf{u}}^m_{I}\right]L_{I}\label{eqn:strain7}
 \end{equation}
 
+In our implementation, (\ref{eqn:strain7}) is incorporated into the homogenization module.
 
+%----------------------------------------------------------------------
 \section{Assessment of the REV Size}
+%----------------------------------------------------------------------
 
 Homogenizing DEM simulations requires the existence and determination of the REV for that medium. Generally, the REV of a given domain can be described as the smallest subdomain that is statistically representative of the entire domain \citep{Kanit_2003, Gitman_2007}. This qualitative definition is insufficient to rigorously define an REV as it is subjective with respect to what "statistically representative" means. Hence, the assessment of the REV can be a contentious issue, fraught with ambiguity.
 
@@ -182,12 +202,47 @@ One can conceptualize an REV to be "statistically representative" in two primari
 
 The alternative means of conceptualizing "statistically representative", and arguably a more pragmatic way, proposes that the constitutive response of the REV should be statistically representative of the domain. In other words, as one increases the size of a sample domain, the point at which the constitutive response within the domain becomes sensibly constant can be referred to as the REV. Thus, the subdomain constitutive response is quantifiable through resultant model properties and parameters. This REV interpretation has been widely used because of its quantifiability \citep{Kanit_2003, Gitman_2005, Gusev_1997, M_ller_2010}, and is adopted for this work.
 
-\subsection{Spatial Variance of RVE}
-***
-\subsection{RVE Size Convergence}
-***
+Here, the aim of this discussion is to present tools to help evaluate the size and existence of the REV for a given microscopically heterogeneous domain. The method of assessing the REV that is presented here is based on testing the statistical significance of the sample distribution parameters. In this method of REV assessment, only one numerical simulation is required if it is of sufficient size. Instead of running the numerical simulations for each realization, subsets of the larger simulation are extracted and analysed independently for their respective constitutive response. This method is far less computationally demanding and correspondingly much faster as a result.  
 
+For most constitutive response parameters, one can assume that they are primarily variant within the REV with respect to two key parameters: the spatial location of the REV within the domain and the REV size. The formulation presented in this investigation assumes static simulation environment such that there is no temporal dependence of the constitutive response parameters, otherwise this would be a third parameter to consider. 
+
+To clarify some terminology, the set of data that corresponds to a single location will be termed a realization. Whereas the set of data that corresponds to a single subdomain size will be referred to as a sample in the statistical sense. Therefore the statistical population can be interpreted as the set of all possible constitutive response parameters for a given subdomain size. 
+
+To assess the size of the REV for a given realization, a selection of subdomain sizes is chosen and the constitutive response parameter is evaluated over each subdomain. The constitutive response parameter can be plotted against the corresponding subdomain size as conceptually indicated in Figure \ref{fig:revConvergence}. In this plot, one can see that as the subdomain size increases, the variability in the constitutive response parameter decreases such that it converges to a single value. It is at this convergence that one can say that the subdomain is statistically representative of the whole domain, and therefore represents the REV for that realization. Each realization is spatially static such the spatial variability is not sampled. As such, in order to account for the spatial variability of the constitutive response parameter, multiple realizations are required to accurately define the REV.
+
+\begin{figure}[!htb]
+\begin{center}
+\includegraphics[width=\textwidth]{figures/Chapter3/REVConvergence}
+\caption{{\label{fig:revConvergence}Assessing the REV of a heterogeneous domain for a single realization. For very small subdomain sizes, the constitutive response parameter is very sensitive to small fluctuations, whereas at a sufficiently large subdomain size, the constitutive response parameter becomes insensitive to small fluctuations and converges to a single value representative of the whole domain. It is at this convergence that one can say the REV exists.%
+}}
+\end{center}
+\end{figure}
+
+To state the problem more formally, consider a heterogeneous domain, $\Omega$, in which an REV exists and is subject to a uniform loading. Now assume that this domain possesses a constitutive response parameter, $X$, which will be used to define the REV. This parameter, for a given sample, $i$, can be represented as a random variable due to the spatial variability in the sampling domain. This parameter can be assumed to follow normal distribution, $N\left(\mu,\sigma^2 \right)$, where the subscript, $i$, represents each sample of a given subdomain size:
+
+\begin{equation}
+X_i \approx N\left(\bar{x}_i,s_i \right)
+\label{eqn:rev1}
+\end{equation}
+
+Given that the constitutive response parameter is expected to be normally distributed within the sample, there exists two distribution parameters that completely describe the sample distribution: the mean and the variance. As such, the proposed method for assessing the REV relies on assessing whether the population mean, $\mu$, is statistically equivalent to the sample mean, $\bar{x}_i$, and whether the population variance, $\sigma^2$, is statistically equivalent to the sample variance, $s^2$. Because of the uniform loading, the REV is expected to have the same constitutive response parameter value regardless of its location in the domain. As such, the statistical criteria to be fulfilled are such that the expected values, $E()$, of the sample distribution parameters are equivalent to the population distribution parameters which can be written as follows:
+
+\begin{equation}
+E\left(\bar{x}\right) = \mu
+\label{eqn:rev2}
+\end{equation}
+
+
+\begin{equation}
+E\left(s^2\right) = \sigma^2
+\label{eqn:rev3}
+\end{equation}
+
+In order to assess these criteria for each sample, hypothesis testing is employed. In order to test (\ref{eqn:rev2}), the independent one sample t-test was used, while to test (\ref{eqn:rev3}), the chi-squared test for variance was used. In both tests, if null hypothesis is not rejected, it can be said that the subdomain is statistically representative of the whole domain with respect to that parameter. As such, with this method, one can define the REV to be the minimum subdomain size for which both of the aforementioned null hypotheses are accepted.
+
+%----------------------------------------------------------------------
 \section{Macroscale Constitutive Model}
+%----------------------------------------------------------------------
 
 In this section we describe two macroscale stress-strain relationships, $\dot{\boldsymbol{\sigma}}^M=\dot{\boldsymbol{\sigma}}^M\left(\dot{\boldsymbol{\epsilon}}^M, \boldsymbol{\chi},\mathbf{h}\right)$, used in the validation examples. The models are chosen to be complex enough to make the validation of the framework meaningful; however, we do not claim that these are the "best" macroscale models. The framework presented is general and the macroscale constitutive models described here can be replaced in particular applications by different ones. To simplify the discussion and notation in this section, the superscript "$M$" is omitted since all quantities defined describe macroscale behaviour.
 
@@ -248,11 +303,7 @@ In CDM, the notion of effective stress, $\bar{\boldsymbol{\sigma}}$, becomes use
 The plasticity models used here are assumed to comprise of three key components: The yield function, the flow rule and the hardening rule. The yield function, $F\left(\bar{\boldsymbol{\sigma}},\bar{\epsilon}^{pl}\right)$ indicates whether or not the material has experienced yield given a particular stress state. The yield function varies between the two models but can be written in general as a function of the effective stress, $\bar{\boldsymbol{\sigma}}$, and equivalent plastic strain, $\dot{\bar{\epsilon}}^{pl}$, expressed through three stress invariants: the Von-Mises equivalent stress, $p\left(\bar{\boldsymbol{\sigma}}\right)$, the hydrostatic stress, $q\left(\bar{\boldsymbol{\sigma}}\right)$, and the third invariant of deviatoric stress, $r\left(\bar{\boldsymbol{\sigma}}\right)$:
 
 \begin{equation}
-    F = 
-    F
-    \left(
-        p\left(\bar{\boldsymbol{\sigma}}\right), q\left(\bar{\boldsymbol{\sigma}}\right), r\left(\bar{\boldsymbol{\sigma}}\right),\bar{\epsilon}^{pl}
-    \right)
+    F = F\left(p\left(\bar{\boldsymbol{\sigma}}\right), q\left(\bar{\boldsymbol{\sigma}}\right), r\left(\bar{\boldsymbol{\sigma}}\right),\bar{\epsilon}^{pl}\right)
 \label{eqn:gen1}
 \end{equation}
 
@@ -294,8 +345,7 @@ In addition, the flow rule describes the amount of plastic deformation that the 
 Where $\dot{\boldsymbol{\epsilon}}^{pl}$ is the plastic strain rate, $\dot{\lambda}$ is referred to as the plastic consistency parameter, and $G\left(\bar{\boldsymbol{\sigma}}\right)$ is the flow potential function. In addition to the yield function and the flow rule, the hardening rule is prescribed to govern the increase/decrease in yield stress as the plastic strain increases. More specifically, the hardening function, $\boldsymbol{h}\left(\bar{\boldsymbol{\sigma}}, \bar{\epsilon}^{pl}\right)$, in these models is used to relate the equivalent plastic strain, $\bar{\epsilon}^{pl}$,  to the plastic strain in rate form: 
 
 \begin{equation}
-    \dot{\bar{\epsilon}}^{pl} 
-    = 
+    \dot{\bar{\epsilon}}^{pl}  = 
     \boldsymbol{h}\left(\bar{\boldsymbol{\sigma}}, \bar{\epsilon}^{pl}\right):
     \dot{\boldsymbol{\epsilon}}^{pl}
 \label{eqn:gen7}
@@ -337,7 +387,6 @@ G\left(\bar{\boldsymbol{\sigma}}\right)=
 In addition to the yield function and the flow rule, the hardening rule is assumed to take the form of the Barcelona model \citep{lubliner_plastic-damage_1989}. The Barcelona model allows for material hardening before softening and approaches a yield stress of 0 as the plastic strain increases.  This form of the hardening function can be written in terms of three material parameters, initial compressive yield strength $\sigma_c^{iy}$, $\alpha$ and $\beta$:
 
 \begin{equation}
-%\sigma_{c}\left(\bar{\epsilon}^{in}\right)=\frac{\sigma_{c}^{iy}-\sigma_{c}^{p}}{\left(\epsilon_{c}^{pp}\right)^{2}}\left(\bar{\epsilon}^{in}-\epsilon_{c}^{pp}\right)^{2}+\sigma_{c}^{p}
 \sigma_c=\sigma_c^{iy}\left [ \left ( 1+\alpha \right ) e^{-\beta\bar{\epsilon}^{pl}}-\alpha e^{-2\beta\bar{\epsilon}^{pl}}  \right ]
 \label{eqn:druc3}
 \end{equation}
@@ -367,17 +416,10 @@ This model was specifically formulated for modeling quasi-brittle materials unde
 The yield function for this model is based on the yield function proposed by \citet{lee_plastic-damage_1998} which was developed to allow for differential hardening under tension and compression. The resultant yield function, $F\left(\bar{\boldsymbol{\sigma}},\bar{\epsilon}^{pl}\right)$, can be expressed in terms of two stress invariants: the Von-Mises equivalent stress, $p\left(\bar{\boldsymbol{\sigma}}\right)$, the hydrostatic stress, $q\left(\bar{\boldsymbol{\sigma}}\right)$:
 
 \begin{equation}
-    F
-    \left(\bar{\boldsymbol{\sigma}},\bar{\epsilon}^{pl}\right)
-    =
-    \frac{1}{1-A}
-    \left(
-        q\left(\bar{\boldsymbol{\sigma}}\right)-3A p\left(\bar{\boldsymbol{\sigma}}\right)+B\left(\bar{\epsilon}^{pl}\right)
+    F  \left(\bar{\boldsymbol{\sigma}},\bar{\epsilon}^{pl}\right) =\frac{1}{1-A}
+    \left( q\left(\bar{\boldsymbol{\sigma}}\right)-3A p\left(\bar{\boldsymbol{\sigma}}\right)+B\left(\bar{\epsilon}^{pl}\right)
         \left\langle\hat{\bar{\boldsymbol{\sigma}}}\right\rangle-\gamma\left\langle-\hat{\bar{\boldsymbol{\sigma}}}\right\rangle\right)
-    -\bar{\sigma}_{c}
-    \left(
-        \bar{\epsilon_{c}}^{pl}
-    \right)
+    -\bar{\sigma}_{c} \left(\bar{\epsilon_{c}}^{pl}\right)
 \label{eqn:const10c}
 \end{equation}
 
@@ -465,7 +507,10 @@ function of the equivalent plastic strains. For cyclic loading, both the compres
 \left[1-D\right]=\left[1-s_{t}D_{c}\right]\left[1-s_{c}D_{t}\right],\qquad0\leq s_{t},s_{c}\leq1\label{eqn:dam4}
 \end{equation}
 
+%----------------------------------------------------------------------
 \section{Parameter Estimation Algorithms}
+%----------------------------------------------------------------------
+
 Parameter estimation involves a process of obtaining a parameter set $\boldsymbol{\chi}$ of a CDM model that minimizes the difference between $\boldsymbol{\sigma}^M$-$\boldsymbol{\epsilon}^M$ and $\left<\boldsymbol{\sigma}\right>$-$\left<\boldsymbol{\epsilon}\right>$ for all load paths. Herein, the parameter estimation was conducted using calibration algorithms, a subset of optimization which attempts to minimize a least-squares objective function \citep{matott_ostrich:_2008}. Optimization algorithms are often described as either deterministic, which find the local optimum precisely, or heuristic, which find the global optimum approximately.
 
 Deterministic optimization algorithms primarily focus on searching for the optima within the local parameter space by iteratively converging towards a solution. Heuristic optimization algorithms explore the entire parameter space approximately and provide an estimate of the global optima. Heuristic techniques are useful for highly non-linear problems, where there are numerous local optima within the prescribed parameter space. When searching the global parameter-space deterministically becomes too computationally demanding, heuristic methods are used, at the cost of completeness and accuracy. A compromise between speed and accuracy can be obtained by strategically using both types of algorithms.
@@ -483,13 +528,9 @@ The aim of the following optimization algorithms can be described as an attempt 
 
 The parameter estimation works by iteratively running a single element CDM model, subject to boundary conditions provided by the homogenized DEM simulations, with successive parameter sets that intelligently adapt in order to converge to the DEM data. The approach used here is similar in aim to the Least Squares method that was briefly described in \citet{marquardt_algorithm_1963}.
 
-\subsection{Heuristic vs. Deterministic Search Algorithms}
-
 \subsection{Particle Swarm Optimization (PSO)}
 
-The PSO algorithm was developed by \citet{Kennedy} as a byproduct of modeling the cooperative-competitive nature of social behaviour in birds as they flocked searching for food. The PSO algorithm, in a conceptual sense, consists of a series of 'particles' (birds) which 'swarm' through the entire parameter space (sky) searching for the global optima (food) using a combination of individual 'particle' knowledge and global 'swarm' (flock) knowledge.
-
-etc...
+The PSO algorithm is a heuristic optimization algorithm that was developed by \citet{Kennedy} as a byproduct of modeling the cooperative-competitive nature of social behaviour in birds as they flocked searching for food. The PSO algorithm, in a conceptual sense, consists of a series of 'particles' (birds) which 'swarm' through the entire parameter space (sky) searching for the global optima (food) using a combination of individual 'particle' knowledge and global 'swarm' (flock) knowledge.
 
 Consider a particle in an $n$ dimensional parameter space with an arbitrary velocity, $\vec{v}_i$, and position, $\vec{x}_i$. At each position in this parameter space, $\Psi$ can be evaluated with an attempt to find the position that minimizes $\Psi$. The motion of this particle allows the the exploration of the parameter space to find a minimum value of $\Psi$ and the corresponding position. After a period of time $\Delta t$, the new position of the particle, $\vec{x}_{i+1}$ can be written as a combination of the old position and the new velocity, $\vec{v}_{i+1}$. 
 
@@ -569,9 +610,7 @@ To overcome these parallel inefficiencies, \citet{Venter_2006} introduced an Asy
 
 \subsection{Levenburg-Marquardt Algorithm (LMA)}
 
-The Levenberg-Marquardt Algorithm (LMA) was proposed by \citet{marquardt_algorithm_1963} which builds off of the work of \citet{levenberg_method_1944}. This calibration algorithm combines a quasi-Newton approach with a conjugate gradient technique in order to efficiently minimize non-linear least-squares problems. 
-
-etc..
+The Levenberg-Marquardt Algorithm (LMA) is a deterministic optimization algorithm that was proposed by \citet{marquardt_algorithm_1963} which builds off of the work of \citet{levenberg_method_1944}. This calibration algorithm combines a quasi-Newton approach with a conjugate gradient technique in order to efficiently minimize non-linear least-squares problems. 
 
 For notational simplicity (\ref{eqn:lma2}) is rewritten in matrix form by considering a vector containing $m$ number of arbitrary homogenized stress measurements at any given time, $\left< \mathbf{s} \right>$, and a corresponding vector of stress measurements for the macroscale model, $\mathbf{s}^M$:
 
@@ -646,7 +685,6 @@ The vector $\left[ \boldsymbol{\chi}_{i+1}-\boldsymbol{\chi}_0 \right]$, which r
 
 Here, for convenience, the upgrade vector is written as $\mathbf{U}_{i} = \left[ \boldsymbol{\chi}_{i+1}-\boldsymbol{\chi}_i \right]$. Since (\ref{eqn:lma10}) is still an approximation of the upgrade vector, an iterative approach to finding $\boldsymbol{\chi}$ is required. The LMA further proposes that $\boldsymbol{U}_i$ be modified with the Marquardt parameter, $\alpha$:
 
-
 \begin{equation}
 \mathbf{U}_{i} = \left[\mathbf{J}_i^T\mathbf{Q}\mathbf{J}_i+\alpha\mathbf{I}\right]^{-1}\mathbf{J}_i^T\mathbf{Q}\left[\left<\mathbf{s}\right>-\mathbf{s}^M_i\right]
 \label{eqn:lma11}
@@ -667,7 +705,6 @@ Another key development in the LMA notes that for many calibration and parameter
 \end{equation}
 
 With (\ref{eqn:lma12}), the upgrade vector in (\ref{eqn:lma11}) can be rewritten in a mathematically identical way while avoiding numerical errors:
-
 
 \begin{equation}
 \mathbf{U}_i= \mathbf{S}_i\left[\mathbf{S}_i^T\mathbf{J}_i^T\mathbf{Q}\mathbf{J}_i\mathbf{S}_i+\alpha\mathbf{S}_i^T\mathbf{S}_i\right]^{-1}\mathbf{S}_i^T\mathbf{J}_i^T\mathbf{Q}\left[\left<\mathbf{s}\right>-\mathbf{s}^M_i\right]
@@ -697,23 +734,22 @@ The final feature of the LMA is the introduction of the Marquardt Lambda, $\lamb
 \end{enumerate}
 \end{enumerate}
 
-
+%----------------------------------------------------------------------
 \section{Physically Meaningful Model Parameterization}
+%----------------------------------------------------------------------
+
 To accelerate the process of finding a near-optimal set of parameters, it is important to limit the search space of the parameterization algorithm. This is especially important when the number of parameters is large. We have found that it is beneficial for the parameters to have physical meaning in order to specify realistic bounds.
 
-etc...
-
-The elastic behaviour is parameterized by Young's modulus, $E$, and Poisson's ratio, $\nu$. Bounds on these quantities are well known. 
+Here, the parameterization of the two macorscale contiuum models is presented. For both models, the approach to paramaeterization is the same, but the specific methods and resulting parameters are different due to the inherently different constitutive models. However, the elastic behaviour for both models is governed by the same constitutive relation. The elastic behaviour is parameterized by Young's modulus, $E$, and Poisson's ratio, $\nu$. Bounds on these quantities are well known. 
 
 \subsection{Drucker-Prager Model with Ductile Damage}
 The yield function and flow potential function are parameterized in terms of the friction angle, dilation angle, and the stress ratio $K$. Bounds on these quantities are relatively well known.
 
 The hardening function (\ref{eqn:druc3}) is given in terms of two empirical coefficients $\alpha$ and $\beta$ and the initial compressive yield stress $\sigma_c^{iy}$.  While it is possible to set bounds on $\sigma_c^{iy}$, it is less straightforward to set bounds for $\alpha$ and $\beta$ as they do not have obvious physical meaning. The hardening function for the Barcelona model is shown in Figure \ref{fig:barcelona}. The coefficients $\alpha$ and $\beta$ can be rewritten in terms of the peak compressive yield strength, $\sigma_{c}^{p}$, the plastic strain at the peak compressive yield strength, $\epsilon_c^{p}$, and the initial compressive yield stress $\sigma_c^{iy}$:
 
-
 \begin{figure}[!htb]
 \begin{center}
-\includegraphics[width=0.7\textwidth]{figures/3fulllenghtpaddle-1140x642/barcelona}
+\includegraphics[width=0.8\textwidth]{figures/Chapter3/BarcelonaCurve}
 \caption{{\label{fig:barcelona}Compressive hardening/sofening function from the Barcelona model. The curve is able to be parameterized using three parameters.%
 }}
 \end{center}
@@ -749,7 +785,7 @@ In addition, the damage evolution was parameterized using only the plastic displ
 \centering
 \caption{{Parameter set for Drucker-Prager Material Model with Ductile Damage}}
 \label{tab:druckerParameters}
-\begin{tabular}{@{}cccc@{}}
+\begin{tabularx}{\textwidth}{@{}YccY@{}}
 \toprule
 \multicolumn{2}{c}{\textbf{Parameter Type}}                                                                      & \textbf{Name}                              & \textbf{Symbol}                   \\ \midrule
 \multicolumn{2}{c}{\multirow{2}{*}{Elastic}}                                                                     & Young's Modulus                            & $E$                               \\
@@ -763,7 +799,7 @@ In addition, the damage evolution was parameterized using only the plastic displ
 \multirow{3}{*}{Damage}  & \multirow{2}{*}{Initiation}                                                           & Yield Strain at $-0.5$ Triaxiality         & $\bar{\epsilon}^{pl}_{y_{-0.5}}$  \\
                          &                                                                                       & Yield Strain at $-0.6$ Triaxiality        & $\bar{\epsilon}^{pl}_{y_{-0.6}}$ \\ \cmidrule{2-2}
                          & Evolution                                                                             & Plastic Displacement at Failure            & $\bar{u}^{pl}_f$                  \\ \bottomrule
-\end{tabular}
+\end{tabularx}
 \end{table}
 
 \subsection{Damage-Plasticity Model for Quasi-Brittle Materials}
@@ -810,7 +846,7 @@ The tensile hardening rule has a fundamentally different behavior than the compr
 
 \begin{figure}[!htb]
 \begin{center}
-\includegraphics[width=0.7\textwidth]{figures/tensionHardening/tensionHardening}
+\includegraphics[width=0.8\textwidth]{figures/Chapter3/TensionHardening}
 \caption{{\label{fig:tensionHardening} Tensile hardening/sofening function. The curve is able to be parameterized using two parameters.%
 }}
 \end{center}
@@ -821,7 +857,6 @@ In addition to the hardening rules, the damage evolution equations are also para
 \begin{equation}
 D_{c}\left(\bar{\epsilon}^{in}\right)=\bar{\epsilon}^{in}m\label{eqn:param3}
 \end{equation}
-
 
 The tensile damage ($D_{t}$) evolution is slightly less trivial, but can also be characterized by a single parameter due to some constraints imposed on the function by the nature of the damage parameter. In
 tension, the damage evolution curve starts at the origin and asymptotically approaches $D_{t}=1$ as $\bar{\epsilon}^{ck}\rightarrow\infty$. As such, under this functional assumption, the only parameter required to describe this relationship is the tensile damage rate parameter, n:
@@ -834,7 +869,7 @@ Sample damage evolution curves for both tension and compression are illustrated 
 
 \begin{figure}[!htb]
 \begin{center}
-\includegraphics[width=0.7\textwidth]{figures/damageCurves/damageCurves}
+\includegraphics[width=0.8\textwidth]{figures/Chapter3/DamageCurves}
 \caption{{\label{fig:damageCurves} Tensile and compressive damage evolution curves.%
 }}
 \end{center}
@@ -867,7 +902,6 @@ The numerical issues with this formulation arise due to the fact that it is very
 For the compressive damage evolution, we can substitute (\ref{eqn:param3}) into (\ref{eqn:param11}) to get the following expression of plastic strain as a function of the compressive damage rate parameter:
 
 \begin{equation}
-%\bar{\epsilon}_{c}^{pl}=\bar{\epsilon}^{in}-\frac{\bar{\epsilon}^{in}m}{1-\bar{\epsilon}^{in}m}\frac{\sigma_{c}^{iy}}{E}
 \bar{\epsilon}_{c}^{pl}=\bar{\epsilon}^{in}-\frac{D_{c}}{1-D_{c}}\frac{\sigma_{c}^{iy}}{E}\\
 \label{eqn:param12}
 \end{equation}
@@ -916,7 +950,7 @@ n=d_{t}\min_{\bar{\epsilon}^{ck}}\left\{\frac{W\left(\frac{E\left(\bar{\epsilon}
 \label{eqn:param9}
 \end{equation}
 
-where the tensile damage scaling factor has the following limits:
+Where the tensile damage scaling factor has the following limits:
 
 \begin{equation}
 0<d_{t}<1\label{eqn:param10}
@@ -928,7 +962,7 @@ The goal of the parameter estimation module, is therefore to estimate the 11 par
 \centering
 \caption{Parameters for Damage-Plasticity Model for Quasi-Brittle Materials}
 \label{tab:concParam}
-\begin{tabular}{@{}cccc@{}}
+\begin{tabularx}{\textwidth}{@{}YccY@{}}
 \toprule
 \multicolumn{2}{c}{Parameter Type}                         & Name                               & Symbol              \\ \midrule
 \multicolumn{2}{c}{\multirow{2}{*}{Elastic}}               & Young's Modulus                    & $E$                 \\
@@ -942,5 +976,5 @@ The goal of the parameter estimation module, is therefore to estimate the 11 par
                          &                                 & Strain at Peak Compressive Yield   & $\epsilon_c^{p}$   \\ \cmidrule(r){1-2}
 \multirow{2}{*}{Damage}  & Compressive                     & Compressive Damage Scaling Factor  & $d_c$               \\ \cmidrule(lr){2-2}
                          & Tensile                         & Tensile Damage Scaling Factor      & $d_t$               \\ \bottomrule
-\end{tabular}
+\end{tabularx}
 \end{table}

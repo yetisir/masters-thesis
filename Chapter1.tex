@@ -13,7 +13,9 @@ The most common types of multiscale methods are hierarchical and concurrent \cit
 
 Many homogenization techniques have been developed and proposed in the past, but none have presented algorithms for homogenizing DEM simulations with deformable blocks. The homogenization algorithms presented here are based on the work of \citet{daddetta_particle_2004} and \citet{wellmann_homogenization_2008} in which homogenization is applied to rigid body DEM simulations and focused on the computation of the homogenized stress and strain. 
 
+%----------------------------------------------------------------------
 \section{Context and Research Motivation}
+%----------------------------------------------------------------------
 
 Naturally Fractured Rock (NFR) is often modeled as a multiscale material because of the vastly different length and time scales involved in the deformation process \citep{zhou_flow_2003}. At the fracture scale (10\textsuperscript{-2} m), the physics is dominated by brittle fracture propagation and fracture-to-fracture contact force interaction. However, one is normally interested in the reservoir scale (10\textsuperscript{3} m) response as a result of the spatial extension of the fractures. Because these length scales of interest span approximately five orders of magnitude, multiscale methods may aid in assessing the overall response, as models with natural fracture scale resolution at the reservoir scale becomes computationally prohibitive.
 
@@ -29,30 +31,39 @@ However, the main issue with DEM models is primarily the computational demands. 
 
 The general goal of up-scaling is to formulate simplified coarse-scale governing equations that approximate the fine-scale behavior of a material \citep{Geers_2010}. In the case of the DEM simulations in this investigation, the aim of up-scaling is to identify the parameters of a continuum model that best mimic the response of the DEM model.
 
+%----------------------------------------------------------------------
 \section{Research Objectives}
+%----------------------------------------------------------------------
 
-In this thesis, a multi-scale up-scaling framework is developed to address the computational demands of simulating microscale phenomenon in a macroscale domain in the context of NFR. The primary research objectives of this research revolve around developing and validating aspects of the proposed up-scaling framework. Here, four key research objective have been identified:
+In this thesis, a multi-scale up-scaling framework is developed to address the computational demands of simulating microscale phenomenon in a macroscale domain in the context of NFR. The primary research objectives that were addressed revolve around developing and validating aspects of the proposed up-scaling framework. Here, four key research objective have been identified:
 
 \begin{enumerate}
-\item the application of homogenization to DEM models with deformable blocks.
-\item the presentation of a methodology to parameterize complex nonlinear continuum constitutive models based on the DEM homogenized stress and strain curves.
-\item the demonstration that the performance of the up-scaled continuum FEA models are accurate and significantly more computationally efficient.
-\item the development and implementation of a modular software framework for up-scaling DEM simulations.
+\item \textbf{Up-Scaling Framework}: The development and implementation of an automated modular software framework for up-scaling DEM simulations.
+\item \textbf{Deformable DEM Homogenization}: The application of homogenization to DEM models with deformable blocks.
+\item \textbf{Parameterization Methodology}: The presentation of a methodology to parameterize complex nonlinear continuum constitutive models based on the DEM homogenized stress and strain curves.
+\item \textbf{Computational Efficiency Demonstration}: The demonstration that the performance of the up-scaled continuum FEA models are accurate and significantly more computationally efficient.
 \end{enumerate}
 
-\subsection*{Homogenizing DEM simulations with deformable blocks}
-***Algorithms to assess the homogenized stress and strain tensors of DEM simulations with deformable blocks are to be developed. As part of the homogenization algorithm, a method to automatically assess the RVE of the given rock mass is also necessary.
-
-\subsection*{Macroscale Constitutive Relationship}
-***A macroscale constitutive relationship that represents the homogenized DEM response is to be identified. The constitutive relationship must be able to capture all the salient features of the discrete system. Furthermore, this constitutive relationship is to be parameterized by as few scalar parameters as possible while representing the rock mass accurately.
-
-\subsection*{Parameter Estimation Algorithms}
-***An appropriate parameter estimation algorithm is to be identified that converges to the optimal solution most of the time, while minimizing the required number of iterations. 
-
 \subsection*{Up-Scaling Framework}
-***More specifically, an automated framework for up-scaling DEM simulations is to be developed. It is required that the key aspects of the framework remain modular, so as to facilitate extensibility for future applications. Furthermore, the framework must have the flexibility to drive the different modules individually, based on saved states in order to modify the results without having to redo the entire analysis.
 
+An up-scaling framework for DEM simulations is developed in this thesis. The aim of this framework is to be able to generate a continuum parameter set that best captures the salient features of the DEM constitutive response. The framework is developed in a general capacity such that the DEM and continuum models are not directly part of the framework, but rather plug-in to the framework. Thus, the software implementation of the up-scaling framework contains primarily protocols for different modules to exchange information. The model components are wrapped as modules that plug-in to the framework such that the core software is model independant. 
+
+\subsection*{Deformable DEM Homogenization}
+
+In order to extract the constitutive stress-strain curves from the DEM simulations, homogenization algorithms are applied to the DEM data. Here, since the DEM simulations use deformable bodies, application of homogenization alogithms that account for the block deformation are required.  Additionally, it is also necessary to define an appropriate REV for accurate homogenization to be conducted.
+
+\subsection*{Parameterization Methodology}
+
+Running the parameter estimation algorithms requires the macroscale constitutive law to be parameterized in terms of a series of scalar parameters. Here, a parameterization methodology is presented to reduce complex constitutive laws to a manageable number of scalar parametes. The key to effective paraemterization is minimizing the number of parameters, while maintaining the fidelity of the original model. This is done by assuming functional forms of curves normally provided from laboratory data. The constitutive relationships chosen aim to capture all the salient features of the discrete system. 
+
+\subsection*{Computational Efficiency Demonstration}
+
+The effectiveness of the up-scaling framework and implementation is shown through a slope stability example. Here, a slope model is simulated with both DEM and CDM using FEA subject to the same boundary conditions. The efficiency increases are assed by comparing the simulation times and system response to each other to ensure that the up-scaled model is sufficiently accurate and computationally superior.
+
+%----------------------------------------------------------------------
 \section{Scope of Study and Research Limitations}
+%----------------------------------------------------------------------
+
 The scope of this research is to present an up-scaling framework and a simple implementation as a proof of concept. Here, the goal is to provide all the necessary pieces using in-house and third-party software to show the up-scaling process from DEM simulations to optimal macroscale parameter set. 
 
 For simplicity, the DEM simulations considered here are isotropic, two-dimensional, and purely mechanical (not thermo-hydro-mechanically coupled). These simplifications reduce the complexity of the implementation significantly. As a result, the homogenization algorithms presented are designed for two-dimensional DEM simulations, though they can easily be adapted for three-dimensional problems.

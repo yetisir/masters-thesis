@@ -6,15 +6,6 @@
 % requires electronic thesis submission. See the uWaterloo thesis regulations at
 % http://www.grad.uwaterloo.ca/Thesis_Regs/thesistofc.asp.
 
-% DON'T FORGET TO ADD YOUR OWN NAME AND TITLE in the "hyperref" package
-% configuration below. THIS INFORMATION GETS EMBEDDED IN THE PDF FINAL PDF DOCUMENT.
-% You can view the information if you view Properties of the PDF document.
-
-% Many faculties/departments also require one or more printed
-% copies. This template attempts to satisfy both types of output. 
-% It is based on the standard "book" document class which provides all necessary 
-% sectioning structures and allows multi-part theses.
-
 % DISCLAIMER
 % To the best of our knowledge, this template satisfies the current uWaterloo requirements.
 % However, it is your responsibility to assure that you have met all 
@@ -27,28 +18,6 @@
 % version optimized for viewing on an electronic display, including 
 % hyperlinks within the PDF.
  
-% E.g. to process a thesis called "mythesis.tex" based on this template, run:
-
-% pdflatex mythesis	-- first pass of the pdflatex processor
-% bibtex mythesis	-- generates bibliography from .bib data file(s) 
-% pdflatex mythesis	-- fixes cross-references, bibliographic references, etc
-% pdflatex mythesis	-- fixes cross-references, bibliographic references, etc
-
-% If you use the recommended LaTeX editor, Texmaker, you would open the mythesis.tex
-% file, then click the pdflatex button. Then run BibTeX (under the Tools menu).
-% Then click the pdflatex button two more times. If you have an index as well,
-% you'll need to run MakeIndex from the Tools menu as well, before running pdflatex
-% the last two times.
-
-% N.B. The "pdftex" program allows graphics in the following formats to be
-% included with the "\includegraphics" command: PNG, PDF, JPEG, TIFF
-% Tip 1: Generate your figures and photos in the size you want them to appear
-% in your thesis, rather than scaling them with \includegraphics options.
-% Tip 2: Any drawings you do should be in scalable vector graphic formats:
-% SVG, PNG, WMF, EPS and then converted to PNG or PDF, so they are scalable in
-% the final PDF as well.
-% Tip 3: Photographs should be cropped and compressed so as not to be too large.
-
 % To create a PDF output that is optimized for double-sided printing: 
 %
 % 1) comment-out the \documentclass statement in the preamble below, and
@@ -198,7 +167,7 @@
 \begin{document}
 
 %----------------------------------------------------------------------
-% FRONT MATERIAL
+% FRONT MATTER
 %----------------------------------------------------------------------
 \input{FrontMatter} 
 
@@ -233,32 +202,6 @@
 \input{Chapter6} 
 
 %----------------------------------------------------------------------
-% END MATERIAL
+% BACK MATTER
 %----------------------------------------------------------------------
-
-% B I B L I O G R A P H Y
-% -----------------------
-
-% The following statement selects the style to use for references.  It controls the sort order of the entries in the bibliography and also the formatting for the in-text labels.
-\bibliographystyle{plainnat}
-% This specifies the location of the file containing the bibliographic information.  
-% It assumes you're using BibTeX (if not, why not?).
-\cleardoublepage % This is needed if the book class is used, to place the anchor in the correct page,
-                 % because the bibliography will start on its own page.
-                 % Use \clearpage instead if the document class uses the "oneside" argument
-\phantomsection  % With hyperref package, enables hyperlinking from the table of contents to bibliography             
-% The following statement causes the title "References" to be used for the bibliography section:
-\renewcommand*{\bibname}{References}
-
-% Add the References to the Table of Contents
-\addcontentsline{toc}{chapter}{\textbf{References}}
-
-\bibliography{bibliography/biblio}
-% Tip 5: You can create multiple .bib files to organize your references. 
-% Just list them all in the \bibliogaphy command, separated by commas (no spaces).
-
-% The following statement causes the specified references to be added to the bibliography% even if they were not 
-% cited in the text. The asterisk is a wildcard that causes all entries in the bibliographic database to be included (optional).
-\nocite{*}
-
-\end{document}
+\input{BackMatter}
