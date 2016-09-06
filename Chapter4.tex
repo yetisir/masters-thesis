@@ -1,8 +1,8 @@
 %======================================================================
-\chapter{Software Implementation (MOUSE)}
+\chapter{Software Implementation}
 %======================================================================
 
-The Modular autOmated Up-Scaling softwarE (MOUSE) for DEM simulations was created and written in Python\textsuperscript{TM} to provide an implementation of the up-scaling framework presented in the previous chapter using third-party software. The software itself aims to provide a platform through which the four software elements of the up-scaling framework (DEM, homogenization, parameter estimation, and macroscale model) can communicate with each other. The communication is facilitated by MOUSE through modules which wrap the third party software in such a way that the inputs and outputs to and from the modules are in a consistent structure regardless of the third party software being used. 
+The \textbf{M}odular aut\textbf{O}mated \textbf{U}p-\textbf{S}caling softwar\textbf{E} (MOUSE) for DEM simulations was created and written in Python\textsuperscript{TM} to provide an implementation of the up-scaling framework presented in the previous chapter using in house and third-party software modules. The software itself aims to provide a platform through which the four software elements of the up-scaling framework (DEM, homogenization, parameter estimation, and macroscale model) can communicate with each other. The communication is facilitated by MOUSE through modules which wrap the third party software in such a way that the I/O routines to and from the modules are performed in a consistent capcity regardless of the third party software being used. 
 
 This chapter of the thesis aims to provide a very high level overview of the key aspects of the MOUSE software implementation without getting into any of the fine details. The programatic structure of some of the important software components is presented to illustrate the software design, but a complete discussion on the construction of all the specific wrappers gets unweildly.
 
@@ -35,7 +35,7 @@ The \textbf{program} attribute is a string that contains the name of the softwar
 self.program = program
 \end{lstlisting}
 
-The \textbf{parameters} attribute is a dictionary that contains all the command line parameters and corresponding arguments. Here, the parameters are the dictionary keys and the arguments are the dictionary values. If no arguments are required, then an empty dictionary is acceptable aswell. 
+The \textbf{parameters} attribute is a dictionary that contains all the command line parameters and corresponding arguments. Here, the parameters are the dictionary keys and the arguments are the dictionary values. If no arguments are required, then an empty dictionary is acceptable as well. 
 
 \begin{lstlisting}[frame=single]   
 #Dictionary of command line parameters and corresponding arguments
@@ -52,7 +52,7 @@ self.suppressText = suppressText
 self.suppressErrors = suppressErrors
 \end{lstlisting}
 
-The \textbf{binaryDirectory} and \textbf{textDirectory} attributes are strings that refer to file folders in which the binary and text data are to be saved, respectively. these values are determined through relative directory parsing, rather than as an initialization argument. \\\\
+The \textbf{binaryDirectory} and \textbf{textDirectory} attributes are strings that refer to file folders in which the binary and text data are to be saved, respectively. These values are determined through relative directory parsing, rather than as an initialization argument. \\\\
 
 \begin{lstlisting}[frame=single]   	
 #String that indicates where to store the binary data
@@ -133,7 +133,7 @@ The \textbf{updateParameters} method allows for the dynamic updating of module i
 #Method that allows dynamic updating of parameters.
 def updateParameters(self, parameters):
 	"""
-	parameters:	dictionary of parameter-argument pairs	"""
+	parameters:	dictionary of parameter-argument pairs"""
 \end{lstlisting}
 
 The \textbf{commandLineArguments} method takes the \textbf{parameters} dictionary attribute and converts it to a string which can be passed to the command line when running the specified program.
@@ -182,23 +182,23 @@ This section aims to explain the data structures used to store and transfer data
 
 \subsubsection*{Python Lists}
 
-The list in Python\textsuperscript{TM} is one of the most versatile data structures. The list treats the data as a sequence such that each element in the list is assigned a number referring to its position or index.  The implementation of the list structure in python contains a number of unique features. The main feature of python lists is that the elements within the lists are not required to be of the same data type. Additionally, these lists are mutable, allowing for more advanced manipulation of the data structure. Because of this flexibility, the list structure is slow and unsuitable for large data sets. 
+The list in Python\textsuperscript{TM} is one of the most versatile data structures. The list treats the data as a sequence such that each element in the list is assigned a number referring to its position or index.  The implementation of the list structure in python contains a number of unique features. The main feature of python lists is that the elements within the lists are not required to be of the same data type. Additionally, these lists are mutable, allowing for more advanced manipulation of the data structure. Because of this flexibility, the list structure is slow and can be unsuitable for large data sets. 
 
 \subsubsection*{Numpy Arrays}
 
-Numpy arrays are a specific implementation of a python list which are optimized for numerical operations on large datasets. Here the numpy arrays are much more compact by using a sequence of uniform values, rather than a sequence of pointers as is the case for the list structure.
+Numpy arrays are a specific implementation of a Python\textsuperscript{TM} list which are optimized for numerical operations on large datasets. Here the numpy arrays are much more compact by using a sequence of uniform values, rather than a sequence of pointers as is the case for the list structure.
 
 \subsubsection*{Python Dictionaries (Hash Tables)}
 
-In general, a hash table is a data structure that maps keys to values. The implementation of hash tables in Python\textsuperscript{TM}, are referred to as dictionaries. Similar to a python list, a python dictionary is a mutable structure that does not require the elements to be of the same type. However, instead of accessing the element value through an index argument, the data is accessed through a key argument. This unordered structure is usefull for storing non-sequential data.
+In general, a hash table is a data structure that maps keys to values. The implementation of hash tables in Python\textsuperscript{TM}, are referred to as dictionaries. Similar to a Python\textsuperscript{TM} list, a Python\textsuperscript{TM} dictionary is a mutable structure that does not require the elements to be of the same type. However, instead of accessing the element value through an index argument, the data is accessed through a key argument. This unordered structure is usefull for storing non-sequential data.
 
 \subsection{Data Storage Structures}
 
-Three distinct types of data are used in the information tranfer protocols between modules: constitutive parameter data, DEM data, and continuum data. these different types fo data require different data structure which are explained in more detail below. The constitutive parameter data is stored in a hash table, the DEM data is stored in a three level nested hash table, and the continuum data is stored in a list of arrays.
+Three distinct types of data are used in the information tranfer protocols between modules: constitutive parameter data, DEM data, and continuum data. These different types of data require different data structures which are explained in more detail below. The constitutive parameter data is stored in a hash table, the DEM data is stored in a three level nested hash table, and the continuum data is stored in a list of arrays.
 
 \subsubsection*{Hash Tables for Constitutive Parameters}
 
-Constitutive parameters are required as an input to the DEM and macroscale modules as well as an output from the parameter estimation module. Here, the constutive parameters are always stored in a Python\textsuperscript{TM} dictionary with the constitutive parameter name as the key. To access the value of a specific constitutive parameter in a dictionary named 'constitutiveParameters', the string corresponding to the 
+Constitutive parameters are required as an input to the DEM and macroscale modules as well as an output from the parameter estimation module. Here, the constutive parameters are always stored in a Python\textsuperscript{TM} dictionary with the constitutive parameter name as the key. To access the value of a specific constitutive parameter in a dictionary named 'constitutiveParameters', the value corresponding to any parameter name can be accessed by:
 
 \begin{lstlisting}[frame=single]
 parameterValue = constitutiveParameters[parameterName]
@@ -213,14 +213,14 @@ elasticModulus = constitutiveParameters['elasticModulus']
 \subsubsection*{Nested Hash Tables for DEM Data}
 The raw DEM Data is considered to be comprised of six distinct types: block data, contact data, corner data, domain data, grid point data, and zone data. Here, each block, contact, corner, domain, grid point, and zone is assigned a unique 7 digit numeric identifier (assuming here that the number of components in the system does not exceed 10 million) by which the associated data can be accessed. The same identifier may be repeated for different data types.
 
-To allow for convenient access to the data, the DEM data is stored in six distinct nested hash tables corresponding to each of the DEM data types.  Each DEM data hash table has three levels of nesting. The first level keys are the simulation times, which returns the second level of hash tables. The second level keys are the component identifiers, which returns a third level hash table. In this third level, the component attirbutes can be accessed using the attirbute name as the key. In general, accessing an attribute of a specific component with a given ID at a specific time from a hash table called demDataHash is done as follows:
+To allow for convenient access to the data, the DEM data is stored in six distinct nested hash tables corresponding to each of the DEM data types.  Each DEM data hash table has three levels of nesting. The first level keys are the simulation times, which returns the second level of hash tables. The second level keys are the component identifiers, which returns a third level hash table. In this third level, the component attributes can be accessed using the attirbute name as the key. In general, accessing an attribute of a specific component with a given ID at a specific time from a hash table called demDataHash is done as follows:
 
 
 \begin{lstlisting}[frame=single]
 componentAttributeValue = demDataHash[time][ID][attribute]
 \end{lstlisting}
 
-For example, accessing the list of grid points associatied with block ID 2543465 at a simulation time of 1 is performed as follows:
+For example, accessing the list of grid points associatied with block ID 2543465 at a simulation time of 1.0 is performed as follows:
 
 \begin{lstlisting}[frame=single]
 gridPoints = blockData[1.0][2543465]['gridPoints']
@@ -332,7 +332,7 @@ The continuum data is stored in three lists: a normal list and two nested lists 
 
 \subsection{Binary Serialization}
 
-These data structures mentioned above are great for efficiently accessing the desired data, but cannot easily be saved to file in standard unicode. In the event that this is possible, formatting and parsing large data sets from file becomes slow and increases the possibility of data corruption. To speed up the data access and increase the integrity of the data, binary serialization is employed. 
+These data structures mentioned above are great for efficiently accessing the desired data, but cannot easily be saved to file in standard unicode. In the event that this is possible, formatting and parsing large data sets from text files is slow and increases the possibility of data corruption. To speed up the data access and increase the integrity of the data, binary serialization is employed. 
 
 Binary serialization stores the state of any given object by converting the public and private fields of the class to a stream of bytes, which is then written to the data stream. This data stream can easily be written to a binary file and subsequently read at any later date. The deserialization of this data stream takes the stream of bytes and reconstructs an exact clone of the original object whenever it is required. This method is usefull when attemping to store large non-linear data structures to file.
 
@@ -349,7 +349,6 @@ Binary serialization stores the state of any given object by converting the publ
 % ***
 % \subsection{ABAQUS Module}
 % ***
-
 
 %----------------------------------------------------------------------
 \section{HODS Homogenization}

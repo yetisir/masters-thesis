@@ -2,7 +2,7 @@
 \chapter{Up-Scaling Methodology}
 %======================================================================
 
-The goal of the up-scaling methodology is to identify the parameters of a continuum constitutive model (macroscale model) that best emulates the average response in the DEM REV (microscale model). Let the displacement, strain and stress of the DEM REV (microscale) model be denoted by $\mathbf{u}^m$, $\boldsymbol{\epsilon}^m$, and $\boldsymbol{\sigma}^m$, respectively. Let the homogenized (averaged) strain and stress in the DEM REV model be denoted by  $\left<\boldsymbol{\epsilon}\right>$ and $\left<\boldsymbol{\sigma}\right>$, respectively.  Finally, let the strain and stress from the continuum (macroscale) constitutive model be denoted as $\boldsymbol{\epsilon}^M$ and $\boldsymbol{\sigma}^M$, respectively. The rate of macroscale stress, $\dot{\boldsymbol{\sigma}}^M=\dot{\boldsymbol{\sigma}}^M\left(\dot{\boldsymbol{\epsilon}}^M, \boldsymbol{\chi},\mathbf{h}\right)$, is defined in terms of the rate of macroscale strain, $\dot{\boldsymbol{\epsilon}}^M$, a set of material parameters $\boldsymbol{\chi}$ and a set of internal history variables $\mathbf{h}$.
+The goal of the following up-scaling methodology is to identify the parameters of a continuum constitutive model (macroscale model) that best emulates the average response in the DEM REV (microscale model). Let the displacement, strain and stress of the DEM REV (microscale) model be denoted by $\mathbf{u}^m$, $\boldsymbol{\epsilon}^m$, and $\boldsymbol{\sigma}^m$, respectively. Let the homogenized (averaged) strain and stress in the DEM REV model be denoted by  $\left<\boldsymbol{\epsilon}\right>$ and $\left<\boldsymbol{\sigma}\right>$, respectively.  Finally, let the strain and stress from the continuum (macroscale) constitutive model be denoted as $\boldsymbol{\epsilon}^M$ and $\boldsymbol{\sigma}^M$, respectively. The rate of macroscale stress, $\dot{\boldsymbol{\sigma}}^M=\dot{\boldsymbol{\sigma}}^M\left(\dot{\boldsymbol{\epsilon}}^M, \boldsymbol{\chi},\mathbf{h}\right)$, is defined in terms of the rate of macroscale strain, $\dot{\boldsymbol{\epsilon}}^M$, a set of material parameters $\boldsymbol{\chi}$ and a set of internal history variables $\mathbf{h}$.
 
 The up-scaling methodology has five steps: 
 \begin{enumerate}
@@ -43,7 +43,7 @@ There exists a set of methods, referred to as discrete element methods, which pr
 
 With DEM methods, the discontinuous system is represented as an assembly of deformable blocks such that the interfaces between the blocks represent the discontinuities. With respect to NFR, the blocks can be used to represent the intact rock while the discontinuities represent the joints in the rock mass. 
 
-Consider an arbitrary deformable domain, $\Omega$, with a boundary, $\Gamma$, that is subdivided by prescribed discontinuities into $i$ number of subdomains, each denoted by $\Omega_i$ (Figure \ref{fig:DEM}). Let $\Gamma_{ij}=\Gamma_{ji}$ represent the boundary between $\Omega_i$ and $\Omega_j$. The motion of these subdomains (discrete elements) is governed by the conservation of momentum which relates the divergence of the stress field within the element, $\nabla\boldsymbol{\sigma}^m$, to the element acceleration, $\ddot{\mathbf{u}}^m$, and density, $\rho$:
+Consider an arbitrary deformable domain, $\Omega$, with a boundary, $\Gamma$, that is subdivided by prescribed discontinuities into $i$ number of subdomains, each denoted by $\Omega_i$ (Figure \ref{fig:DEM}). Let $\Gamma_{ij}=\Gamma_{ji}$ represent the boundary between $\Omega_i$ and $\Omega_j$. The motion of these subdomains (discrete elements) is governed by the conservation of momentum which relates the divergence of the stress field within the element, $\nabla\cdot\boldsymbol{\sigma}^m$, to the element acceleration, $\ddot{\mathbf{u}}^m$, and density, $\rho$:
 
 \begin{equation}
 \rho \ddot{\mathbf{u}}^m=\nabla\cdot\boldsymbol{\sigma}^m
@@ -105,28 +105,27 @@ We begin by defining a $L\times L$ square DEM simulation domain over which mixed
 \end{center}
 \end{figure}
 
-Given a circular REV, due to the discontinuous nature of the DEM simulations, the circular REV cannot be used directly. Because the calculated displacements and contact forces from the DEM are known at the block edges, the homogenization domain boundary must follow the block boundaries. The homogenization domain is characterized by a series of block corners which are identified at the initial (zero strain) state. These corners continue to define the homogenization domain once deformation occurs, allowing for a consistent homogenization domain definition as the model is deformed. The algorithm that was developed to assess the homogenization domain boundary is presented as follows: 
+Given a circular REV, due to the discontinuous nature of the DEM simulations, the circular REV cannot be used directly. Because the calculated displacements and contact forces from the DEM are known at the block edges, the homogenization domain boundary must follow the block boundaries. The homogenization domain is characterized by a series of block corners which are identified at the initial (zero strain) state. These corners continue to define the homogenization domain once deformation occurs, allowing for a consistent homogenization domain definition as the model is deformed. An algorithm is developed here to assess the homogenization domain boundary: 
 
 \begin{enumerate}
-\item \label{hli:1} Identify all blocks that lie on the REV boundary. 
-\item \label{hli:2} Identify all blocks that lie completely outside the
-REV boundary. 
-\item \label{hli:3} Find all contacts corresponding to the intersection
-between blocks in \ref{hli:1} and \ref{hli:2}. 
+\item \label{hli:1} Identify all blocks that interect the circular REV boundary. 
+\item \label{hli:2} Identify all blocks that lie completely outside the REV boundary. 
+\item \label{hli:3} Find all contacts corresponding to the intersection between blocks in \ref{hli:1} and \ref{hli:2}. 
 \item \label{hli:4} Find all corners corresponding to the contacts in \ref{hli:3}. 
 \item \label{hli:5} Find all contacts of blocks in \ref{hli:1}. 
-\item \label{hli:6} Find all blocks corresponding to the intersection of
-contacts in \ref{hli:3} and \ref{hli:5}. 
+\item \label{hli:6} Find all blocks corresponding to the intersection of contacts in \ref{hli:3} and \ref{hli:5}. 
 \item \label{hli:7} Find all corners corresponding to blocks in \ref{hli:6}. 
 \item \label{hli:8} Find intersection of corners in \ref{hli:4} and \ref{hli:7}. 
-\item \label{hli:9} Find corners that initially (at zero strain) coincided
-with the corners in \ref{hli:8} 
+\item \label{hli:9} Find corners that initially (at zero strain) coincide with the corners in \ref{hli:8} 
 \item \label{hli:10} Find union of corners in \ref{hli:8} and \ref{hli:9}. 
-\item \label{hli:11} Order corners from \ref{hli:10} such that they form
-the boundary of the homogenization area
+\item \label{hli:11} Order corners from \ref{hli:10} such that they form the closed boundary of the homogenization area.
 \end{enumerate}
 
-This algorithm for defining the homogenization domain was developed to provide an unambiguous method for assessing a unique homogenization domain for a given circle radius and location. In steps \ref{hli:1} and \ref{hli:2}, two mutually exclusive block sets are identified, which necessarily share contacts. It is the boundary between these two block sets that is the homogenization domain boundary which is characterized by this algorithm. Ultimately, the goal of this process is to identify the corners on this boundary that are on the blocks that intersect with the REV boundary and not the blocks that are outside the REV boundary. As such, the corners (step \ref{hli:4}) corresponding to the contacts (step \ref{hli:3}) between the two sets of blocks are determined. Step \ref{hli:5} is necessary to help eliminate some blocks from the set of boundary block which intersect the REV boundary, but only have contact with blocks inside the homogenization domain boundary, and thus do not have any overall contribution to the definition. Step \ref{hli:6} determines this resultant set of boundary blocks of which every member is connected to the boundary in some capacity. Finding the set of corners that is mutually shared by these blocks in step \ref{hli:7} and the boundary contact corners in step \ref{hli:4} allow for the determination of the initial set of boundary corners (step \ref{hli:8}).
+This algorithm for defining the homogenization domain is developed to provide an unambiguous method for assessing a unique homogenization domain for a given circular REV at a specific location. In steps \ref{hli:1} and \ref{hli:2}, two mutually exclusive block sets are identified, which necessarily share contacts. It is the boundary between these two block sets that is the homogenization domain boundary which is characterized by this algorithm. 
+
+Ultimately, the goal of this process is to identify the corners on this boundary that are on the blocks that intersect with the REV boundary and not the blocks that are outside the REV boundary. As such, the corners (step \ref{hli:4}) corresponding to the contacts (step \ref{hli:3}) between the two sets of blocks are determined. Step \ref{hli:5} is necessary to help eliminate some blocks from the set of boundary block which intersect the REV boundary, but only have contact with blocks inside the homogenization domain boundary, and thus do not have any overall contribution to the definition. Step \ref{hli:6} determines this resultant set of boundary blocks of which every member is connected to the boundary in some capacity. Finding the set of corners that is mutually shared by these blocks in step \ref{hli:7} and the boundary contact corners in step \ref{hli:4} allow for the determination of the initial set of boundary corners (step \ref{hli:8}).
+
+However, one must also note the potential displacement jumps that may occur between blocks on the boundary as the model deforms. In the case where the blocks become physically separated, there exists a discontinuity along the homogenization boundary. These discontinuities along the homogenization boundary are considered by adding boundary segments to the homogenization boundary between the corners of the adjacent blocks. As such, steps \ref{hli:9} and \ref{hli:10} find coincident corners on adjacent boundary blocks to allow for the blocks to become separated on the boundary, while still maintaining connectivity along the homogenization domain boundary. It is also necessary to order the corners (step \ref{hli:11}) to define a closed set of boundary segments along which integration can be performed.
 
 The homogenization boundary, $\Gamma_{h}$, can be described in terms of $n$ ordered boundary vertices, $V_{i}^{h}=(x_{i}^{h},y_{i}^{h})$, representing the $i$-th set of vertex coordinates along the boundary, such that the area of the homogenization domain, $A^{h}$, can be calculated using the following formulation for the area of an arbitrary, non-self-intersecting polygon \citep{Zwillinger_1995}: 
 
@@ -176,13 +175,11 @@ At this point, it becomes convenient to assume a small displacement formulation 
 \boldsymbol{\epsilon}^m=\frac{1}{2}\left[\nabla\mathbf{u}^m+\left(\nabla^\top \mathbf{u}^m\right)\right]\label{eqn:strain1}
 \end{equation}
 
-The above integral can be converted to the following boundary integral using the divergence theorem:
+The above integral can be converted to the following boundary integral using the divergence theorem where $\mathbf{n}$ is the outward pointing normal to $\Gamma_h$. :
 
 \begin{equation}
 \langle\boldsymbol{\epsilon}\rangle=\frac{1}{2A^{h}}\oint_{\Gamma^{h}}\left[\mathbf{u}^m\otimes\mathbf{n}+\mathbf{n}\otimes\mathbf{u}^m\right]d\Gamma\label{eqn:strain5-1}
 \end{equation}
-
-where $\mathbf{n}$ is the outward pointing normal to $\Gamma_h$.
 
 When $\Gamma_h$ is defined by a set of line segments over which the displacement is also linear, the boundary integral can be rewritten as a summation over each of the $N$ boundary segments. Let $\bar{\mathbf{u}}^m_{I}$ denote the average displacement along the $I^{th}$ boundary segment of the homogenization boundary, which is calculated as the average of the two nodal displacements defining the boundary of each segment. Let $\mathbf{n}_{I}$ represent the outward pointing normal to the $I^{th}$ boundary segment on the homogenization boundary.  Let the length of boundary segment $I$ be denoted by $L_{I}$. The homogenized strain can be rewritten as
 
@@ -196,7 +193,7 @@ In our implementation, (\ref{eqn:strain7}) is incorporated into the homogenizati
 \section{Assessment of the REV Size}
 %----------------------------------------------------------------------
 
-Homogenizing DEM simulations requires the existence and determination of the REV for that medium. Generally, the REV of a given domain can be described as the smallest subdomain that is statistically representative of the entire domain \citep{Kanit_2003, Gitman_2007}. This qualitative definition is insufficient to rigorously define an REV as it is subjective with respect to what "statistically representative" means. Hence, the assessment of the REV can be a contentious issue, fraught with ambiguity.
+Homogenizing DEM simulations requires the existence and determination of the REV for the given medium. Generally, the REV of a given domain can be described as the smallest subdomain that is statistically representative of the entire domain \citep{Kanit_2003, Gitman_2007}. This qualitative definition is insufficient to rigorously define an REV as it is subjective with respect to what "statistically representative" means. Hence, the assessment of the REV can be a contentious issue, fraught with ambiguity.
 
 One can conceptualize an REV to be "statistically representative" in two primarily different ways \citep{Drugan_1996}. The classically cited means for characterizing an REV suggests that the micro-scale heterogeneities (e.g. fractures, voids, grains, etc.) should be statistically representative within the REV such that the REV should contain a sufficiently large sample of these heterogeneities. This characterization of the REV is potentially problematic when attempting to quantify the REV as the descriptions of these heterogeneities tend to be nominally qualitative, and at best, quasi-quantitative.
 
@@ -238,7 +235,7 @@ E\left(s^2\right) = \sigma^2
 \label{eqn:rev3}
 \end{equation}
 
-In order to assess these criteria for each sample, hypothesis testing is employed. In order to test (\ref{eqn:rev2}), the independent one sample t-test was used, while to test (\ref{eqn:rev3}), the chi-squared test for variance was used. In both tests, if null hypothesis is not rejected, it can be said that the subdomain is statistically representative of the whole domain with respect to that parameter. As such, with this method, one can define the REV to be the minimum subdomain size for which both of the aforementioned null hypotheses are accepted.
+In order to assess these criteria for each sample, hypothesis testing is employed. In order to test (\ref{eqn:rev2}), the independent one sample t-test is used, while to test (\ref{eqn:rev3}), the chi-squared test for variance is used. In both tests, if null hypothesis is not rejected, it can be said that the subdomain is statistically representative of the whole domain with respect to that parameter. As such, with this method, one can define the REV to be the minimum subdomain size for which both of the aforementioned null hypotheses are accepted.
 
 %----------------------------------------------------------------------
 \section{Macroscale Constitutive Model}
@@ -303,7 +300,7 @@ In CDM, the notion of effective stress, $\bar{\boldsymbol{\sigma}}$, becomes use
 The plasticity models used here are assumed to comprise of three key components: The yield function, the flow rule and the hardening rule. The yield function, $F\left(\bar{\boldsymbol{\sigma}},\bar{\epsilon}^{pl}\right)$ indicates whether or not the material has experienced yield given a particular stress state. The yield function varies between the two models but can be written in general as a function of the effective stress, $\bar{\boldsymbol{\sigma}}$, and equivalent plastic strain, $\dot{\bar{\epsilon}}^{pl}$, expressed through three stress invariants: the Von-Mises equivalent stress, $p\left(\bar{\boldsymbol{\sigma}}\right)$, the hydrostatic stress, $q\left(\bar{\boldsymbol{\sigma}}\right)$, and the third invariant of deviatoric stress, $r\left(\bar{\boldsymbol{\sigma}}\right)$:
 
 \begin{equation}
-    F = F\left(p\left(\bar{\boldsymbol{\sigma}}\right), q\left(\bar{\boldsymbol{\sigma}}\right), r\left(\bar{\boldsymbol{\sigma}}\right),\bar{\epsilon}^{pl}\right)
+    F = F\left(\bar{\boldsymbol{\sigma}}\right)
 \label{eqn:gen1}
 \end{equation}
 
@@ -331,7 +328,7 @@ Where $\mathbf{S}$ is known as the stress deviator with $\mathbf{I}$ being the i
 The third invariant of the deviatoric stress is written as:
 
 \begin{equation}
-q\left(\bar{\boldsymbol{\sigma}}\right)=
+r\left(\bar{\boldsymbol{\sigma}}\right)=\left[\frac{9}{2}\mathbf{S}\cdot\mathbf{S}:\mathbf{S}\right]^{frac{1}{3}}
 \label{eqn:gen5}
 \end{equation}
 
@@ -351,7 +348,7 @@ Where $\dot{\boldsymbol{\epsilon}}^{pl}$ is the plastic strain rate, $\dot{\lamb
 \label{eqn:gen7}
 \end{equation}
 
-For the damage models, the damage initiation criteria and evolution equations are different for each material model. In general though, the damage initiation criteria for both material models is strain based and the nature of the damage evolution is assumed to be a function of the effective stress, and the equivalent plastic strain:
+For the damage models, the damage initiation criteria and evolution equations are different for each material model. In general though, the damage initiation criteria for both material models is strain based and the nature of the damage evolution is assumed to be a function the equivalent plastic strain:
 
 \begin{equation}
 D=D\left(\bar{\boldsymbol{\sigma}},\bar{\epsilon}^{pl}\right)
@@ -370,7 +367,7 @@ Here, for the extended Drucker-Prager plasticity model, a linear yield function,
 
 \begin{multline}
 F\left(\bar{\boldsymbol{\sigma}}, \bar{\epsilon}^{pl}\right)=
-\frac{1}{2}q\left(\bar{\boldsymbol{\sigma}}\right)\left [ 1+\frac{1}{K}-\left ( 1-\frac{1}{K} \mid \right )\left ( \frac{r\left(\bar{\boldsymbol{\sigma}}\right)}{q\left(\bar{\boldsymbol{\sigma}}\right)} \right )^3 \right ] \\
+\frac{1}{2}q\left(\bar{\boldsymbol{\sigma}}\right)\left [ 1+\frac{1}{K}-\left [1-\frac{1}{K} \right ]\left [ \frac{r\left(\bar{\boldsymbol{\sigma}}\right)}{q\left(\bar{\boldsymbol{\sigma}}\right)} \right ]^3 \right ] \\
 - p\left(\bar{\boldsymbol{\sigma}}\right)\tan\phi - \left[1-\frac{1}{3}\tan\phi \right]\sigma_c^y\left(\bar{\epsilon}^{pl}\right)
 \label{eqn:druc1}
 \end{multline}
@@ -379,19 +376,25 @@ The flow rule in this formulation is non-associated but the flow potential funct
 
 \begin{equation}
 G\left(\bar{\boldsymbol{\sigma}}\right)=
-\frac{1}{2}q\left(\bar{\boldsymbol{\sigma}}\right)\left [ 1+\frac{1}{K}-\left ( 1-\frac{1}{K} \right )\left ( \frac{r\left(\bar{\boldsymbol{\sigma}}\right)}{q\left(\bar{\boldsymbol{\sigma}}\right)} \right )^3 \right ] 
+\frac{1}{2}q\left(\bar{\boldsymbol{\sigma}}\right)\left [ 1+\frac{1}{K}-\left [] 1-\frac{1}{K} \right ]\left [\frac{r\left(\bar{\boldsymbol{\sigma}}\right)}{q\left(\bar{\boldsymbol{\sigma}}\right)} \right ]^3 \right ] 
 -p\left(\bar{\boldsymbol{\sigma}}\right)\tan\psi
 \label{eqn:druc2}
 \end{equation}
 
-In addition to the yield function and the flow rule, the hardening rule is assumed to take the form of the Barcelona model \citep{lubliner_plastic-damage_1989}. The Barcelona model allows for material hardening before softening and approaches a yield stress of 0 as the plastic strain increases.  This form of the hardening function can be written in terms of three material parameters, initial compressive yield strength $\sigma_c^{iy}$, $\alpha$ and $\beta$:
+In addition to the yield function and the flow rule, the hardening rule is assumed to take the form of the Barcelona model \citep{lubliner_plastic-damage_1989}. The Barcelona model allows for material hardening before softening and approaches a yield stress of 0 as the plastic strain increases.  This form of the hardening function can be written in terms of three material parameters, initial compressive yield strength $\sigma_c^{iy}$, $\alpha$, and $\beta$:
 
 \begin{equation}
-\sigma_c=\sigma_c^{iy}\left [ \left ( 1+\alpha \right ) e^{-\beta\bar{\epsilon}^{pl}}-\alpha e^{-2\beta\bar{\epsilon}^{pl}}  \right ]
+\sigma_c=\sigma_c^{iy}\left [ \left [1+\alpha \right ] e^{-\beta\bar{\epsilon}^{pl}}-\alpha e^{-2\beta\bar{\epsilon}^{pl}}  \right ]
 \label{eqn:druc3}
 \end{equation}
 
-The damage initiation criterion for this material model is based on the Johnson-Cook model of ductile damage initiation \citep{Johnson_1985}. The standard Johnson-Cook model assumes the equivalent plastic strain when damage is initiated, $\bar{\epsilon}_{f}^{pl}\left(\eta\right)$, is a function of triaxiality, $\eta$, and is written in terms of five material parameters. However, assuming isothermal conditions, neglecting rate effects, and assuming a simplified form of the exponential relationship, the initiation criterion can be reduced to two material parameters, $D_2$ and $D_3$:
+The damage initiation criterion for this material model is based on the Johnson-Cook model of ductile damage initiation \citep{Johnson_1985}. The standard Johnson-Cook model assumes the equivalent plastic strain when damage is initiated, $\bar{\epsilon}_{f}^{pl}\left(\eta\right)$, is a function of triaxiality, $\eta$, and is written in terms of five material parameters:
+
+\begin{equation}
+\bar{\epsilon}_{f}^{pl}\left(\eta,\dot{\bar{\epsilon}}^{pl},\hat{T}\right)=\left[D_{1}+D_{2}e^{D_{3}\eta}\right]\left[1+D_{4}\ln\left(\frac{\dot{\bar{\epsilon}}^{pl}}{\dot{\bar{\epsilon}}}\right)\right]\left[1+D_{5}\hat{T}\right]\label{eqn:druc7}
+\end{equation}
+
+However, assuming isothermal conditions, neglecting rate effects, and assuming a simplified form of the exponential relationship, the initiation criterion can be reduced to two material parameters, $D_2$ and $D_3$:
 
 \begin{equation}
 \bar{\epsilon}_{f}^{pl}\left(\eta\right)=D_{2}e^{D_{3}\eta}
@@ -411,19 +414,23 @@ In this constitutive model, a quasi-brittle isotropic damage formulation is pres
 
 This damage-plasticity model was developed by \citet{lubliner_plastic-damage_1989} as a plasticity based damage model for non-linear analysis of concrete failure. Subsequently, \citet{lee_plastic-damage_1998} further developed the model to facilitate cyclic loading by adding a second damage variable and introducing a new yield function to account for the additional damage variable. 
 
-This model was specifically formulated for modeling quasi-brittle materials under low confining stresses subject to cyclic loading. In addition to the separate damage variables governing the stiffness degradation, the stiffness recovery and material hardening/softening is also treated separately in both compression and tension. Because the formulation does not consider the effects of large hydrostatic stresses, the applicability of this plastic to in-situ geomechanics at depth may not be sufficiently accurate. As such, this model is more appropriate for shallow geological models that require cyclic loading paths to be considered.
+This model was specifically formulated for modeling quasi-brittle materials under low confining stresses subject to cyclic loading. In addition to the separate damage variables governing the stiffness degradation, the stiffness recovery and material hardening/softening is also treated separately in both compression and tension. Because the formulation does not consider the effects of large hydrostatic stresses, the applicability of this plasticity model to in-situ geomechanics at depth may not be sufficiently accurate. As such, this model is more appropriate for shallow geological models that require cyclic loading paths to be considered.
 
 The yield function for this model is based on the yield function proposed by \citet{lee_plastic-damage_1998} which was developed to allow for differential hardening under tension and compression. The resultant yield function, $F\left(\bar{\boldsymbol{\sigma}},\bar{\epsilon}^{pl}\right)$, can be expressed in terms of two stress invariants: the Von-Mises equivalent stress, $p\left(\bar{\boldsymbol{\sigma}}\right)$, the hydrostatic stress, $q\left(\bar{\boldsymbol{\sigma}}\right)$:
 
 \begin{equation}
     F  \left(\bar{\boldsymbol{\sigma}},\bar{\epsilon}^{pl}\right) =\frac{1}{1-A}
-    \left( q\left(\bar{\boldsymbol{\sigma}}\right)-3A p\left(\bar{\boldsymbol{\sigma}}\right)+B\left(\bar{\epsilon}^{pl}\right)
-        \left\langle\hat{\bar{\boldsymbol{\sigma}}}\right\rangle-\gamma\left\langle-\hat{\bar{\boldsymbol{\sigma}}}\right\rangle\right)
+    \left[ q\left(\bar{\boldsymbol{\sigma}}\right)-3A p\left(\bar{\boldsymbol{\sigma}}\right)+B\left(\bar{\epsilon}^{pl}\right)
+        \left\langle\hat{\bar{\boldsymbol{\sigma}}}\right\rangle-\gamma\left\langle-\hat{\bar{\boldsymbol{\sigma}}}\right\rangle\right]
     -\bar{\sigma}_{c} \left(\bar{\epsilon_{c}}^{pl}\right)
 \label{eqn:const10c}
 \end{equation}
 
-Where $A$ and $\gamma$ are dimensionless material constants. Experimental testing has yielded values of $A$ between $0.08$ and $0.12$, as well as a typical $\gamma$ value of approximately $3$ \cite{lubliner_plastic-damage_1989}. Additionally, the hat notation $\hat{\bar{\boldsymbol{\sigma}}}$ for an arbitrary stress tensor, $\bar{\boldsymbol{\sigma}}$, represents the algebraically maximum eigenvalue, or, the maximum principle stress.
+Where $A$ and $\gamma$ are dimensionless material constants. Experimental testing has yielded values of $A$ between $0.08$ and $0.12$, as well as a typical $\gamma$ value of approximately $3$ \citep{lubliner_plastic-damage_1989}. The hat notation, $\hat{\bar{\boldsymbol{\sigma}}}$, for an arbitrary stress tensor, $\bar{\boldsymbol{\sigma}}$, represents the algebraically maximum eigenvalue, or, the maximum principle stress. In addition, $\left\langle\right\rangle $ are Macauley brackets and can be defined as:
+
+\begin{equation}
+\left\langle x\right\rangle =\frac{1}{2}\left(\left|x\right|+x\right)\label{eqn:const9-3}
+\end{equation}
 
 The flow rule in this formulation is non-associated which means that the flow potential function, $G\left(\bar{\boldsymbol{\sigma}}\right)$, follows a different form than the yield function. Like with the yield function, the flow potential function, is written in terms of two stress invariants, $p\left(\bar{\boldsymbol{\sigma}}\right)$ and $q\left(\bar{\boldsymbol{\sigma}}\right)$, and two material parameters, dilation angle, $\psi$, and eccentricity $\varepsilon$:
 
@@ -444,7 +451,7 @@ In this formulation of damage-plasticity, the brittle nature of rock necessitate
 \label{eqn:const9}
 \end{equation}
 
-The hardening rule for this model is slightly modified from equation \ref{eqn:gen7} to accommodate two hardening variables (equivalent plastic strains) for tension and compression. The hardening rule can thus be written in matrix form:
+The hardening rule for this model is slightly modified from (\ref{eqn:gen7}) to accommodate two hardening variables (equivalent plastic strains) for tension and compression. The hardening rule can thus be written in matrix form:
 
 \begin{equation}
 \mathbf{h}\left(\bar{\boldsymbol{\sigma}},\bar{\epsilon}^{pl}\right)=\left[\begin{array}{ccc}
@@ -456,7 +463,7 @@ r\left(\hat{\bar{\sigma}}_{ij}\right)\frac{\sigma_t\left(\bar{\epsilon}_{t}^{pl}
 Where $\sigma_t$ and $\sigma_c$ are the yield stresses in tension and compression as specified by the hardening curves which describe the evolution of the equivalent plastic strains. The compressive hardening rule is approximated here using the Barcelona model in a similar capacity as was done for the Drucker-Prager model in the previous section. The only difference here being that the hardening is defined in terms of the inelastic strain, $\bar{\epsilon}^{in}$, rather than the plastic strain before: 
 
 \begin{equation}
-\sigma_c=\sigma_c^{iy}\left [ \left ( 1+\alpha \right ) e^{-\beta\bar{\epsilon}^{in}}-\alpha e^{-2\beta\bar{\epsilon}^{in}}  \right ]
+\sigma_c=\sigma_c^{iy}\left [ \left [1+\alpha \right ] e^{-\beta\bar{\epsilon}^{in}}-\alpha e^{-2\beta\bar{\epsilon}^{in}}  \right ]
 \label{eqn:dam1b}
 \end{equation}
 
@@ -481,14 +488,14 @@ g_c = \frac{G_c}{l}
 \label{eqn:dam1d}
 \end{equation}
 
-Furthermore, the weighting function, $r\left(\hat{\bar{\sigma}}\right)$, weights the hardening functions depending on the degree of tension or compression that the model is experiencing:
+Furthermore, the weighting function, $r\left(\hat{\bar{\boldsymbol{\sigma}}}\right)$, weights the hardening functions depending on the degree of tension or compression that the model is experiencing:
 
 \begin{equation}
-r\left(\hat{\boldsymbol{\bar{\sigma}}}\right)=\frac{\sum_{i=1}^{3}\left\langle \hat{\boldsymbol{\bar{\sigma}}}_{i}\right\rangle }{\sum_{i=1}^{3}\left|\hat{\boldsymbol{\bar{\sigma}}}_{i}\right|},\qquad0\leq r\left(\hat{\boldsymbol{\bar{\sigma}}}\right)\leq1
+r\left(\hat{\bar{\boldsymbol{\sigma}}}\right)=\frac{\sum_{i=1}^{3}\left\langle \hat{\bar{\boldsymbol{\sigma}}}_{i}\right\rangle }{\sum_{i=1}^{3}\left|\hat{\bar{\boldsymbol{\sigma}}}_{i}\right|},\qquad0\leq r\left(\hat{\bar{\boldsymbol{\sigma}}}\right)\leq1
 \label{eqn:const9-2}
 \end{equation}
 
-Loading a quasi-brittle in compression or tension causes damage in the material, which reduces the effective stiffness, weakening the unloading response. This damage is characterized by two damage variables, one of which represents the damage due to tensile loading, $D_{t}$, the other represents damage due to compressive loading, $D_{c}$. 
+Loading a quasi-brittle material in compression or tension causes damage in the material, which reduces the effective stiffness, weakening the unloading response. This damage is characterized by two damage variables, one of which represents the damage due to tensile loading, $D_{t}$, the other represents damage due to compressive loading, $D_{c}$. 
 
 \begin{equation}
 D_{t}=D_{t}\left(\bar{\epsilon}_{t}^{pl}\right),\qquad0\leq D_{t}\leq1
@@ -517,7 +524,7 @@ Deterministic optimization algorithms primarily focus on searching for the optim
 
 A combination of two optimization algorithms is used to assess the optimal parameter set. An initial heuristic algorithm is applied to search for the approximate global optima, followed by a deterministic algorithm as a local refinement of the optimal parameter set. Particle Swarm Optimization (PSO) is used for the global heuristic search, whereas the Levenberg-Marquardt Algorithm (LMA) is used for the local deterministic search. 
 
-Consider a $j^{th}$ arbitrary homogenized stress measurement at any given time, $\left< s \right>_j$, which acts as the target solution for the macroscale model. The same stress measurement in the macroscale model, $s^M_j \left(\boldsymbol{\chi}, \left< e \right>\right)$, can be expressed as a function of the parameter set for the continuum constitutive model, $\boldsymbol{\chi}$, containing $n$ number of parameters, and the homogenized strain at the given load step, $\left< e \right>$. Here, the weighted least-squares objective function to be minimized, $\Psi$, can be written in terms of a weighting parameter, $w_j$, for $m$ number of stress measurements:
+Consider a $j^{th}$ arbitrary homogenized stress measurement, $\left< s \right>_j$,  at any given simulation time which acts as the target solution for the macroscale model. The same stress measurement in the macroscale model, $s^M_j \left(\boldsymbol{\chi}, \left< e \right>\right)$, can be expressed as a function of the parameter set for the continuum constitutive model, $\boldsymbol{\chi}$, containing $n$ number of parameters, and the homogenized strain at the given load step, $\left< e \right>$. Here, the weighted least-squares objective function to be minimized, $\Psi$, can be written in terms of a weighting parameter, $w_j$, for $m$ number of stress measurements:
 
 \begin{equation}
 \Psi=\sum_{j=1}^m\left[w_j\left[\left< s \right>_j-s^M_j \left(\boldsymbol{\chi}, \left< e \right>\right)\right]\right]^2
@@ -532,21 +539,21 @@ The parameter estimation works by iteratively running a single element CDM model
 
 The PSO algorithm is a heuristic optimization algorithm that was developed by \citet{Kennedy} as a byproduct of modeling the cooperative-competitive nature of social behaviour in birds as they flocked searching for food. The PSO algorithm, in a conceptual sense, consists of a series of 'particles' (birds) which 'swarm' through the entire parameter space (sky) searching for the global optima (food) using a combination of individual 'particle' knowledge and global 'swarm' (flock) knowledge.
 
-Consider a particle in an $n$ dimensional parameter space with an arbitrary velocity, $\vec{v}_i$, and position, $\vec{x}_i$. At each position in this parameter space, $\Psi$ can be evaluated with an attempt to find the position that minimizes $\Psi$. The motion of this particle allows the the exploration of the parameter space to find a minimum value of $\Psi$ and the corresponding position. After a period of time $\Delta t$, the new position of the particle, $\vec{x}_{i+1}$ can be written as a combination of the old position and the new velocity, $\vec{v}_{i+1}$. 
+Consider a particle in an $n$ dimensional parameter space with an arbitrary velocity, $\vec{v}_i$, and position, $\vec{x}_i$. At each position in this parameter space, $\Psi$ can be evaluated with an attempt to find the position that minimizes $\Psi$. The motion of this particle allows the the exploration of the parameter space to find a minimum value of $\Psi$ and the corresponding position. After a period of time, $\Delta t$, the new position of the particle, $\vec{x}_{i+1}$, can be written as a combination of the old position and the new velocity, $\vec{v}_{i+1}$. 
 
 \begin{equation}
 \vec{x}_{i+1} = \vec{x}_i + \vec{v}_{i+1} \Delta t
 \label{eqn:psoupdate}
 \end{equation}
 
-Here, $\vec{v}_{i+1}$, is considered to be influenced by $\vec{v}_i$, the position of the current local optimum, $p_l$, and the position of the current global optimum, $p_g$. The local optimum refers to the minimum value of $\Psi$ observed by the particle, while the global optimum refers to the minimum value of $\Psi$ observed by all particles. As such,  $\vec{v}_{i+1}$ is written as a linear combination of $\vec{v}_{i}$, the velocity required to move the particle back to the local optimum and the velocity required to move the particle back to global optimum. In order to prevent the algorithm from oscillating indefinitely in a predictable manner, a randomization vector, $\vec{U}\left(\phi\right)$, of length $n$ is introduced to provide coefficients between 0 and $\phi$ to the velocity vectors. The operator $\odot$ refers to the Hadamard product (element-wise multiplication):
+Here, $\vec{v}_{i+1}$, is considered to be influenced by $\vec{v}_i$, the position of the current local optimum, $p_l$, and the position of the current global optimum, $p_g$. The local optimum refers to the minimum value of $\Psi$ observed by the individual particle, while the global optimum refers to the minimum value of $\Psi$ observed by all particles. As such,  $\vec{v}_{i+1}$ is written as a linear combination of $\vec{v}_{i}$, the velocity required to move the particle back to the local optimum and the velocity required to move the particle back to global optimum. In order to prevent the algorithm from oscillating indefinitely in a predictable manner, a randomization vector, $\vec{U}\left(\phi\right)$, of length $n$ is introduced to provide coefficients between 0 and $\phi$ to the velocity vectors. The operator $\odot$ refers to the Hadamard product (element-wise multiplication):
 
 \begin{equation}
 \vec{v}_{i+1} = \vec{v}_i + \frac{\vec{U}_i\left(\phi_1\right)\odot\left[\vec{p}_l-\vec{x}_i\right] + \vec{U}_i\left(\phi_2\right)\odot\left[\vec{p}_g-\vec{x}_i\right]}{\Delta t}
 \label{eqn:psobasic}
 \end{equation}
 
-As one would expect, the behaviour of the PSO is highly sensitive to the chosen values of $\phi_1$ and $\phi_2$. If these parameters are too small, then the optimization becomes "unresponsive" such that the initial velocity is maintained and successive iterations do not have the capacity to appreicable change the velocity to search the parameter space effectively. Alternatively, if these parameters are too large, the PSO has the capacity to become unstable such that the particle speeds keep increasing on successive iterations. Commonly accepted in most PSO algorithms is the assumption that $\phi_1 = \phi_2 = 2$. To overcome these limitations and control the scope of the search, \citet{Shi} introduced the inertial weight term, $\omega$:
+As one would expect, the behaviour of the PSO is highly sensitive to the chosen values of $\phi_1$ and $\phi_2$. If these parameters are too small, then the optimization becomes "unresponsive" such that the initial velocity is maintained and successive iterations do not have the capacity to appreicably change their velocity to search the parameter space effectively. Alternatively, if these parameters are too large, the PSO has the capacity to become unstable such that the particle speeds keep increasing on successive iterations. Commonly accepted in most PSO algorithms is the assumption that $\phi_1 = \phi_2 = 2$. To overcome these limitations and control the scope of the search, \citet{Shi} introduced the inertial weight term, $\omega$:
 
 \begin{equation}
 \vec{v}_{i+1} = \omega\vec{v}_i + \frac{\vec{U}_i\left(\phi_1\right)\odot\left[\vec{p}_l-\vec{x}_i\right] + \vec{U}_i\left(\phi_2\right)\odot\left[\vec{p}_g-\vec{x}_i\right]}{\Delta t}
@@ -576,7 +583,7 @@ In addition, with the desire to give more credence to either the local optimum o
 \label{eqn:psoposition}
 \end{equation}
 
-Here, the position of the particle can be taken to represent an estimate of the optimal parameter set, $\boldsymbol{\chi}_i$, while the velocity of the particle represents the direction and magnitude of the change in the parameter set estimate for the next iteration $\Delta\boldsymbol{\chi}_{i+1}$. Furhtermore, the time step can considered to be a unit iteratation step, which allows for (\ref{eqn:psoposition}) to be abstracted as follows in the context of up-scaling DEM simulations.
+In terms of the up-scaling application, the position of the particle can be taken to represent an estimate of the optimal parameter set, $\boldsymbol{\chi}_i$, while the velocity of the particle represents the direction and magnitude of the change in the parameter set estimate for the next iteration $\Delta\boldsymbol{\chi}_{i+1}$. Furthermore, the time step can considered to be a unit iteratation step, which allows for (\ref{eqn:psoposition}) to be abstracted as follows in the context of up-scaling DEM simulations.
 
 \begin{equation}
 \Delta\boldsymbol{\chi}_{i+1} = \zeta\left(\phi_1, \phi_2\right) \left[\omega\Delta\boldsymbol{\chi}_{i} + c_1\vec{U}_i\left(\phi_1\right)\odot\left[\boldsymbol{\chi}_l-\boldsymbol{\chi}_i\right] + c_2\vec{U}_i\left(\phi_2\right)\odot\left[\boldsymbol{\chi}_g-\boldsymbol{\chi}_i\right]\right]
@@ -711,7 +718,7 @@ With (\ref{eqn:lma12}), the upgrade vector in (\ref{eqn:lma11}) can be rewritten
 \label{eqn:lma13}
 \end{equation}
 
-The final feature of the LMA is the introduction of the Marquardt Lambda, $\lambda$. The Marquardt Lambda is taken as the largest term in the matrix $\alpha\mathbf{S}^T\mathbf{S}$. Here, the adjustment of $\lambda$ provides control over the relative weighting of the SDM vs the TSA such that for large values of $\lambda$, the SDM dominates, while for small values of $\lambda$, the TSA dominates. The iterative algorithm is summarized as follows \cite{matott_ostrich:_2008}:
+The final feature of the LMA is the introduction of the Marquardt Lambda, $\lambda$. The Marquardt Lambda is taken as the largest term in the matrix $\alpha\mathbf{S}^T\mathbf{S}$. Here, the adjustment of $\lambda$ provides control over the relative weighting of the SDM vs the TSA such that for large values of $\lambda$, the SDM dominates, while for small values of $\lambda$, the TSA dominates. The iterative algorithm is summarized as follows \citep{matott_ostrich:_2008}:
 
 \begin{enumerate}
 \item Choose initial value for $\lambda$
@@ -730,7 +737,7 @@ The final feature of the LMA is the introduction of the Marquardt Lambda, $\lamb
 \item Test for convergence by comparing $\Psi_{i+1}$ and $\Psi_i$
 \begin{enumerate}
 \item If converged, iteration is complete and $\boldsymbol{\chi}_{i+1}$ represents the optimal solution.
-\item If not converged, increment $i$, and go to Step 2
+\item If not converged, increment $i$, and go to step 2
 \end{enumerate}
 \end{enumerate}
 
@@ -743,6 +750,7 @@ To accelerate the process of finding a near-optimal set of parameters, it is imp
 Here, the parameterization of the two macorscale contiuum models is presented. For both models, the approach to paramaeterization is the same, but the specific methods and resulting parameters are different due to the inherently different constitutive models. However, the elastic behaviour for both models is governed by the same constitutive relation. The elastic behaviour is parameterized by Young's modulus, $E$, and Poisson's ratio, $\nu$. Bounds on these quantities are well known. 
 
 \subsection{Drucker-Prager Model with Ductile Damage}
+
 The yield function and flow potential function are parameterized in terms of the friction angle, dilation angle, and the stress ratio $K$. Bounds on these quantities are relatively well known.
 
 The hardening function (\ref{eqn:druc3}) is given in terms of two empirical coefficients $\alpha$ and $\beta$ and the initial compressive yield stress $\sigma_c^{iy}$.  While it is possible to set bounds on $\sigma_c^{iy}$, it is less straightforward to set bounds for $\alpha$ and $\beta$ as they do not have obvious physical meaning. The hardening function for the Barcelona model is shown in Figure \ref{fig:barcelona}. The coefficients $\alpha$ and $\beta$ can be rewritten in terms of the peak compressive yield strength, $\sigma_{c}^{p}$, the plastic strain at the peak compressive yield strength, $\epsilon_c^{p}$, and the initial compressive yield stress $\sigma_c^{iy}$:
@@ -761,7 +769,7 @@ The hardening function (\ref{eqn:druc3}) is given in terms of two empirical coef
 \end{equation}
 
 \begin{equation}
-\alpha =\frac{2\sigma_c^{p}-\sigma_c^{iy}+2\sqrt{-\sigma_c^p\left(\sigma_c^{iy}-\sigma_c^p \right )}}{\sigma_c^{iy}}
+\alpha =\frac{2\sigma_c^{p}-\sigma_c^{iy}+2\sqrt{-\sigma_c^p\left[\sigma_c^{iy}-\sigma_c^p \right ]}}{\sigma_c^{iy}}
 \label{eqn:param2-3}
 \end{equation}
 
@@ -770,12 +778,12 @@ Thus, we parameterize the hardening law in terms of $\sigma_{c}^{p}$, $\epsilon_
 Similarly, the Johnson-Cook damage initiation criterion from (\ref{eqn:druc4}) is described by two empirical coefficients ($D_2$, and $D_3$) which do not have intuitive physical meaning. To make setting the bounding limits during the parameter estimation simpler, the Johnson-Cook parameters were rewritten in terms of equivalent plastic strain at which damage is initiated at triaxialities of -0.5 and -0.6, $\bar{\epsilon}^{pl}_{y_{-0.5}}$ and $\bar{\epsilon}^{pl}_{y_{-0.6}}$, respectively:
 
 \begin{equation}
-D_2=\frac{\left(\bar{\epsilon}^{pl}_{y_{-0.5}}\right)^6}{\left(\bar{\epsilon}^{pl}_{y_{-0.6}}\right)^5}
+D_2=\frac{\left[\bar{\epsilon}^{pl}_{y_{-0.5}}\right]^6}{\left[\bar{\epsilon}^{pl}_{y_{-0.6}}\right]^5}
 \label{eqn:dparam8}
 \end{equation}
 
 \begin{equation}
-D_3=10\ln \left (\frac{\bar{\epsilon}^{pl}_{y_{-0.5}}}{\bar{\epsilon}^{pl}_{y_{-0.6}}}\right )
+D_3=10\ln \left [\frac{\bar{\epsilon}^{pl}_{y_{-0.5}}}{\bar{\epsilon}^{pl}_{y_{-0.6}}}\right ]
 \label{eqn:dparam9}
 \end{equation}
 
@@ -819,7 +827,7 @@ A = \frac{f_0-1}{2f_0-1}
 Additionally, $\gamma$ is expressed in terms of the ratio $K_c$ which expresses the ratio of hydrostatic pressure at yield in tension to the hydrostatic pressure at yield in compression:
 
 \begin{equation}
-\gamma = \frac{3\left(1-K_c \right)}{2K_c-1}
+\gamma = \frac{3\left[1-K_c \right]}{2K_c-1}
 \label{eqn:param1-3}
 \end{equation}
 
@@ -838,7 +846,7 @@ The compressive hardening function, similar to the hardening function in the Dru
 \end{equation}
 
 \begin{equation}
-\alpha =\frac{2\sigma_c^{p}-\sigma_c^{iy}+2\sqrt{-\sigma_c^p\left(\sigma_c^{iy}-\sigma_c^p \right )}}{\sigma_c^{iy}}
+\alpha =\frac{2\sigma_c^{p}-\sigma_c^{iy}+2\sqrt{-\sigma_c^p\left[\sigma_c^{iy}-\sigma_c^p \right ]}}{\sigma_c^{iy}}
 \label{eqn:c2}
 \end{equation}
 
@@ -862,10 +870,10 @@ The tensile damage ($D_{t}$) evolution is slightly less trivial, but can also be
 tension, the damage evolution curve starts at the origin and asymptotically approaches $D_{t}=1$ as $\bar{\epsilon}^{ck}\rightarrow\infty$. As such, under this functional assumption, the only parameter required to describe this relationship is the tensile damage rate parameter, n:
 
 \begin{equation}
-D_{t}\left(\bar{\epsilon}^{ck}\right)=1-\frac{1}{\left(1+\bar{\epsilon}^{ck}\right)^{n}}\label{eqn:param4}
+D_{t}\left(\bar{\epsilon}^{ck}\right)=1-\frac{1}{\left[1+\bar{\epsilon}^{ck}\right]^{n}}\label{eqn:param4}
 \end{equation}
 
-Sample damage evolution curves for both tension and compression are illustrated in Fig \ref{fig:damageCurves}, where one can see that the rate at which the tensile damage evolves is far larger than the rate at which the compressive damage evolves. The combination of the elastic parameters, the hardening rule parameters, and the damage evolution parameters, yield a total of nine parameters that must be identified by experiments or through up-scaling to define the behavior of CDM model.
+Sample damage evolution curves for both tension and compression are illustrated in Fig \ref{fig:damageCurves}, where one can see that the rate at which the tensile damage evolves is far larger than the rate at which the compressive damage evolves. The combination of the elastic parameters, the hardening rule parameters, and the damage evolution parameters, yield a total of 11 parameters that must be identified by experiments or through up-scaling to define the behavior of CDM model.
 
 \begin{figure}[!htb]
 \begin{center}
@@ -887,7 +895,7 @@ At this point, there are some parameter constraints for the damage evolution tha
 \bar{\epsilon}_{t}^{pl}=\bar{\epsilon}^{ck}-\frac{D_{t}}{1-D_{t}}\frac{\sigma_{t}^{iy}}{E}
 \end{equation}
 
-The numerical issues with this formulation arise due to the fact that it is very possible for the converted plastic strain to not be monotonically increasing with respect to the tensile damage. By having a damage evolution curve with a sufficiently steep slope, such that the second term in equation \ref{eqn:param11} increases faster than the first term, it becomes mathematically possible to have decreasing and/or negative plastic strains in the damage evolution definition. As such, the following conditions is applied to constrain the damage evolution to always yield monotonically increasing plastic strains as damage increases:
+The numerical issues with this formulation arise due to the fact that it is very possible for the converted plastic strain to not be monotonically increasing with respect to the tensile damage. By having a damage evolution curve with a sufficiently steep slope, such that the second term in (\ref{eqn:param11}) increases faster than the first term, it becomes mathematically possible to have decreasing and/or negative plastic strains in the damage evolution definition. As such, the following conditions are applied to constrain the damage evolution to always yield monotonically increasing plastic strains as damage increases:
 
 \begin{equation}
 \label{eqn:param6-1}
@@ -899,7 +907,7 @@ The numerical issues with this formulation arise due to the fact that it is very
 \frac{d\bar{\epsilon}_{t}^{pl}}{dD_{t}}>0
 \end{equation}
 
-For the compressive damage evolution, we can substitute (\ref{eqn:param3}) into (\ref{eqn:param11}) to get the following expression of plastic strain as a function of the compressive damage rate parameter:
+For the compressive damage evolution, we substitute (\ref{eqn:param3}) into (\ref{eqn:param11}) to get the following expression of plastic strain as a function of the compressive damage rate parameter:
 
 \begin{equation}
 \bar{\epsilon}_{c}^{pl}=\bar{\epsilon}^{in}-\frac{D_{c}}{1-D_{c}}\frac{\sigma_{c}^{iy}}{E}\\
@@ -909,13 +917,13 @@ For the compressive damage evolution, we can substitute (\ref{eqn:param3}) into 
 Combining (\ref{eqn:param12}) and (\ref{eqn:param6-1}) yields the following expression governing the stability limit for the compressive damage rate parameter:
 
 \begin{equation}
-m<\frac{\sigma_{c}^{iy}+2E\bar{\epsilon}^{in}-\sqrt{\sigma_{c}^{iy}\left(\sigma_{c}^{iy}+4E\bar{\epsilon}^{in}\right)}}{2E\left(\bar{\epsilon}^{in}\right)^{2}}\label{eqn:param13}
+m<\frac{\sigma_{c}^{iy}+2E\bar{\epsilon}^{in}-\sqrt{\sigma_{c}^{iy}\left[\sigma_{c}^{iy}+4E\bar{\epsilon}^{in}\right]}}{2E\left[\bar{\epsilon}^{in}\right]^{2}}\label{eqn:param13}
 \end{equation}
 
 However, since this upper bound for $m$ is functional on several of the parameterization parameters, which are not constant, the upper bound varies depending on the other input parameters. Because of this, a compressive damage scaling factor, $d_c$, is introduced. In addition, the upper bound for $m$ is dependent on the inelastic strain which is not constant throughout the model. Since only one value of $m$ can be specified for a given simulation, the chosen value of $m$ should be the smallest value over the range of the expected inelastic strain experienced. As can be seen from (\ref{eqn:param13}), as $\bar{\epsilon}^{in} \rightarrow \infty$, $m\rightarrow0$ such that for very large inelastic strains the conversion to plastic strain becomes very unstable. Thus, the compressive damage rate parameter can be written as:
 
 \begin{equation}
-m=d_{c}\min_{\bar{\epsilon}^{in}}\left\{\frac{\sigma_{c}^{iy}+2E\bar{\epsilon}^{in}-\sqrt{\sigma_{c}^{iy}\left(\sigma_{c}^{iy}+4E\bar{\epsilon}^{in}\right)}}{2E\left(\bar{\epsilon}^{in}\right)^{2}}\right\}
+m=d_{c}\min_{\bar{\epsilon}^{in}}\left\{\frac{\sigma_{c}^{iy}+2E\bar{\epsilon}^{in}-\sqrt{\sigma_{c}^{iy}\left[\sigma_{c}^{iy}+4E\bar{\epsilon}^{in}\right]}}{2E\left[\bar{\epsilon}^{in}\right]^{2}}\right\}
 \label{eqn:param14}
 \end{equation}
 
@@ -928,16 +936,16 @@ Where the compressive damage scaling factor has the following limits:
 The tensile damage evolution curve has the same numerical constraints when converting form cracking strain to plastic strain. Substituting (\ref{eqn:param4}) into (\ref{eqn:param11}) yields the following expression for the plastic strain:
 
 \begin{equation}
-\bar{\epsilon}_{t}^{pl}=\bar{\epsilon}^{ck}-\left[\left(1+\bar{\epsilon}^{ck}\right)^{n}-1\right]\frac{\sigma_{t}^{iy}}{E}\label{eqn:param5-1}
+\bar{\epsilon}_{t}^{pl}=\bar{\epsilon}^{ck}-\left[\left[1+\bar{\epsilon}^{ck}\right]^{n}-1\right]\frac{\sigma_{t}^{iy}}{E}\label{eqn:param5-1}
 \end{equation}
 
 Solving for $n$ with (\ref{eqn:param6-1}) and (\ref{eqn:param5-1}) yields the following inequality governing the upper bound of the tensile damage rate parameter:
 
 \begin{equation}
-n<\frac{W\left(\frac{E\left(\bar{\epsilon}^{ck}+1\right)}{\sigma_{t}^{iy}}\ln\left(\bar{\epsilon}^{ck}+1\right)\right)}{\ln\left(\bar{\epsilon}^{ck}+1\right)}\label{eqn:param7}
+n<\frac{W\left(\frac{E\left[\bar{\epsilon}^{ck}+1\right]}{\sigma_{t}^{iy}}\ln\left[\bar{\epsilon}^{ck}+1\right)\right]}{\ln\left[\bar{\epsilon}^{ck}+1\right]}\label{eqn:param7}
 \end{equation}
 
-Where $W\left(x\right)$ is the Lambert W function defined implicitly as \cite{Corless_1996}:
+Where $W\left(x\right)$ is the Lambert W function defined implicitly as \citep{Corless_1996}:
 
 \begin{equation}
 x=W\left(x\right)e^{W(x)}\label{eqn:param8}
@@ -946,7 +954,7 @@ x=W\left(x\right)e^{W(x)}\label{eqn:param8}
 Using the same methodology as was used to derive (\ref{eqn:param14}) in compression, the tensile damage scaling factor can be written as:
 
 \begin{equation}
-n=d_{t}\min_{\bar{\epsilon}^{ck}}\left\{\frac{W\left(\frac{E\left(\bar{\epsilon}^{ck}+1\right)}{\sigma_{t}^{iy}}\ln\left(\bar{\epsilon}^{ck}+1\right)\right)}{\ln\left(\bar{\epsilon}^{ck}+1\right)}\right\}
+n=d_{t}\min_{\bar{\epsilon}^{ck}}\left\{\frac{W\left(\frac{E\left[\bar{\epsilon}^{ck}+1\right]}{\sigma_{t}^{iy}}\ln\left[\bar{\epsilon}^{ck}+1\right]\right)}{\ln\left[\bar{\epsilon}^{ck}+1\right]}\right\}
 \label{eqn:param9}
 \end{equation}
 
