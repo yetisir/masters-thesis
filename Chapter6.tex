@@ -2,31 +2,28 @@
 \chapter{Conclusions and Future Considerations}
 %======================================================================
 
-*section needs work....
-
-A framework for up-scaling DEM simulations is presented in this thesis. Up-scaling is achieved by matching homogenized stress-strain curves from REV-scale DEM simulations to single element continuum models using PSO and LMA optimization algorithms. A Drucker-Prager plasticity model with ductile damage is implemented in the CDM model to empirically capture the effect of the degradation (damage) of the NFR as deformation takes place.
+A summary of the main conclusions from the development of the up-scaling framework as well as the implementation and testing of the framework are presented here. These conclusions represent a successful completion of the research objectives for the thesis. That being said, there are substantial limitations to this research. A series of recommendations are provided to address some of these limitations in future implementations and to provide guidance on how to extend this research.
 
 %----------------------------------------------------------------------
 \section{Conclusions}
 %----------------------------------------------------------------------
-
-In this thesis, a multi-scale up-scaling framework is developed to address the computational demands of simulating microscale phenomenon in a macroscale domain in the context of NFR. The specified research objectives set out in Chapter 1 have been met and detailed below:
+A multi-scale framework for up-scaling DEM simulations has been developed to address the computational demands of simulating microscale phenomenon in a macroscale domain in the context of NFR. Up-scaling is achieved by matching homogenized stress-strain curves from REV-scale DEM simulations to single element continuum models using PSO and LMA optimization algorithms. A Drucker-Prager plasticity model with ductile damage is implemented in the CDM model to empirically capture the effect of the degradation (damage) of the NFR as deformation takes place.
 
 \subsection*{Up-Scaling Framework}
 
-The \textbf{M}odular aut\textbf{O}mated \textbf{U}p-\textbf{S}caling softwar\textbf{E} (MOUSE) for DEM simulations was created and written in Python\textsuperscript{TM} to provide an implementation of the up-scaling framework presented in the previous chapter using in house and third-party software modules. The software itself aims to provide a platform through which the four software elements of the up-scaling framework (DEM, homogenization, parameter estimation, and macroscale model) can communicate with each other. The communication is facilitated by MOUSE through modules which wrap the third party software in such a way that the I/O routines to and from the modules are performed in a consistent capcity regardless of the third party software being used. 
+MOUSE software was created and written in Python\textsuperscript{TM} to provide an implementation of the up-scaling framework presented in this thesis using in house and third-party software modules. The software itself provides a platform through which the four software elements of the up-scaling framework (DEM module, homogenization module, parameter estimation module, and macroscale module) can communicate with each other. The communication is facilitated by MOUSE through modules which wrap the third party software in such a way that the I/O routines to and from the modules are performed in a consistent capcity regardless of the third party software being used. A consistent set of data protocols were devleloped for the modules to effectively transfer data between them.
 
 \subsection*{Deformable DEM Homogenization}
 
-Homogenization algorithms are developed for homogenizing DEM simulations with deformable bodies to assess the spatially averaged stress-strain behaviour of the REV from the microscale displacements, strains, and stresses. In this homogenization process, the resultant inter-block contact forces and block displacement from the DEM simulations are converted to average stresses and strains. For the homogenization procedure to yield meaningful results, it should be applied to a REV. The exact size of the REV depends on the geometry and mechanical properties of the DEM model. A method for automatically assessing a suitable REV is presented. 
+Homogenization algorithms were developed for homogenizing DEM simulations with deformable bodies to assess the spatially averaged stress-strain behaviour of the REV from the microscale displacements, strains, and stresses. In this homogenization process, the resultant inter-block contact forces and block displacement from the DEM simulations are converted to average stresses and strains. To apply the homogenization algorithms, a method of automatically assesing a suitable REV given a sufficiently large domain was developed. These algorithms were implemented in Python\textsuperscript{TM} as the HODS software, which was used as a Module for MOUSE.
 
 \subsection*{Parameterization Methodology}
 
-The Drucker-Prager model with ductile damage is shown to be a reasonable CDM model approach to represent NFR in a continuum context, including effects of pressure dependent yield and the triaxiality based damage initiation criterion. Compared to a full DEM simulation, the CDM model shows a good fit pre-damage, but is unable to emulate the subtle post-yield oscillations arising from non-continuous yielding in the NFR.
+Two examples of the parameterization methodology are presented. Here, the key parameters required to capture the salient features of the model are isolated in order to be able to run the parameter estimation algoirhtms efffectively. the main aspect of this parameterization methodology is the functional assumptions of the hardening/softening and damage evolution functions. In addition, the parameters are rewritten in term of physically meaningfull parameters to provide more insight into the mechanics. The Drucker-Prager model with ductile damage is shown to be a reasonable CDM model approach to represent NFR in a continuum context, including effects of pressure dependent yield and the triaxiality based damage initiation criterion. Compared to a full DEM simulation, the CDM model shows a good fit pre-damage, but is unable to emulate the subtle post-yield oscillations arising from non-continuous yielding in the NFR.
 
 \subsection*{Computational Efficiency Increase}
 
-Most importantly, with this up-scaling framework, very comparable results ($<5\%$ error) to full DEM solutions can be obtained with the CDM method but with two to three orders of magnitude less computational time.
+Most importantly, the DNS of the slope stability analysis showed that with this up-scaling framework, very significant computational gains can be had with an acceptable error. Very comparable results ($<5\%$ error) to full DEM solutions were obtained with the CDM method but required two orders of magnitude less computational time. The computational demands were again able to be reduced by another order of magnitude by using a selectively refined continuum mesh at the locations in the domain with high stress gradients.
 
 %----------------------------------------------------------------------
 \section{Future Considerations}

@@ -102,9 +102,31 @@ In addition to the loading response under the specified confining stresses, DEM 
 \section{Comparison of CDM Constitutive Models}
 %----------------------------------------------------------------------
 
-Here, the results from the damage plasticity model for quasi-brittle materials are compared to the results from the Drucker-Prager model with ductile damage presented above. 
-\ref{fig:concretefitted}
-\ref{fig:concreteverify}
+Here, the results from the damage plasticity model for quasi-brittle materials are compared to the results from the Drucker-Prager model with ductile damage presented above. Like with the Drucker-Prager model, a PSO algorithm followed by an LMA optimization is employed to fit the damage-plasticity model to the homogenized DEM simulation data in order to obtain an optimal parameter set. Again, 200 data points for all four DEM simulations are used and the PSO algorithm uses a swarm size of 24 for 100 generations. Additionally, parameter bounding limits are again required by the optimization algorithms in order to limit the search space. The specified bounding limits for each parameter results can be seen in Table \ref{tab:paramConcrete}.
+
+\begin{table}[!htb]
+
+\centering
+\caption{{Parameter estimation results for damage-plasticity model for quasi-brittle materials}}
+\label{tab:paramConcrete}
+\begin{tabulary}{\textwidth}{@{}cCcCCC@{}}
+\toprule
+\textbf{Parameter}                 & \textbf{Symbol}                  & \textbf{Units} & \textbf{Lower Bound} & \textbf{Upper Bound} & \textbf{Optimum} \\ \midrule
+Young's Modulus                    & $E$                              & $GPa$          & $1$                                                             & $25$                                                            & $1.4$                                                             \\
+Poisson's Ratio                    & $\nu$                            &                & $0.1$                                                           & $0.4$                                                           & $0.32$                                                            \\
+Dilation Angle                     & $\psi$                           & $^{\circ}$     & $5$                                                             & $15$                                                            & $5$                                                              \\
+Flow Eccentricity                  & $\varepsilon$                              &                & $0.05$                                                          & $0.5$                                                             & $0.11$                                                            \\
+Second Stress Invariant Ratio                     & $K_c$                          &      & $0.51$                                                            & $1$                                                            & $0.61$                                                              \\
+Initial Equibiaxial Stress Ratio    & $f_0$                 & $m$            & $1.05$                                                          & $1.3$                                                             & $1.1$                                                            \\ 
+Initial Compressive Yield Strength & $\sigma_c^{iy}$                  & $kPa$          & $1$                                                             & $100$                                                           & $28$                                                              \\
+Peak Compressive Yield Strength    & $\sigma_c^{p}$                   & $MPa$          & $0.5$                                                           & $5$                                                             & $0.5$                                                             \\
+Strain at Peak Compressive Yield   & $\epsilon_c^{p}$                 & $\%$           & $0.5$                                                           & $5$                                                             & $3.4$                                                             \\
+Compressive Damage Scaling Factor   & $d_c$ &            & $0.4$                                                          & $0.95$                                                           & $0.85$                                                          \\
+Tensile Damage Scaling Factor   & $d_t$ &            & $0.4$                                                           & $0.95$                                                            & $0.90$                                                            \\ \bottomrule
+\end{tabulary}
+\end{table}
+
+The benefit of the damage plasticity model for quasi-brittle materials used here is its ability to differentiate between tensile and compressive damage, allowing for cyclic loading to be more accurately modelled. However, the fitted curves in Figure \ref{fig:concretefitted} show that the loading response is very poor for this material for larger confining stresses. This behaviour is somewhat expected as the constitutive relationship is formulated primarily with uniaxial loading conditions considered. Unfortunately, without a successful match on the loading curve, the cyclic modelling capacity of this model cannot be used effectively. The interpolated and extrapolated curves show an expectedly poor fit (Figure \ref{fig:concreteverify}).
 
 \begin{figure}[!htb]
 \begin{center}
@@ -114,6 +136,7 @@ Here, the results from the damage plasticity model for quasi-brittle materials a
 \end{center}
 \end{figure}
 
+
 \begin{figure}[!htb]
 \begin{center}
 \includegraphics[width=0.7\textwidth]{figures/Chapter5/ConcreteVerificationCurves}
@@ -121,6 +144,8 @@ Here, the results from the damage plasticity model for quasi-brittle materials a
 }}
 \end{center}
 \end{figure}
+
+The optimal parameter set in Table \ref{tab:paramConcrete} compares well in some respects to the optimal parameter set in Table \ref{tab:paramDrucker}. The estimated elastic modulus of the rock mass, compares well, but Poisson's ratio and dilation angle are quite different. Based on the fit and the RMSE of the two fitted parameter sets, the discrepancy in parameter values shown by the damage plasticity model can be attributed to the poor overall fit of the consistutive model for the dataset. 
 
 %----------------------------------------------------------------------
 \section{Impact of REV Size on Estimated Parameters}
@@ -154,7 +179,7 @@ The plane-strain slope stability problem has a height of $50m$ and a depth of $8
 
 \begin{figure}[!htb]
 \begin{center}
-\includegraphics[width=0.8\textwidth]{figures/Chapter5/SlopeSchematic}
+\includegraphics[width=0.9\textwidth]{figures/Chapter5/SlopeSchematic}
 \caption{{\label{fig:slopeGeom} Schematic geometry and boundary conditions of the slope failure problem.%
 }}
 \end{center}
@@ -206,7 +231,7 @@ An additional comparison of the surface deflection where the load was applied is
 
 \subsection{Up-Scaling Computational Efficiency}
 
-The CDM model for this case requires about two orders of magnitude less computational effort than the DEM model (Table \ref{tab:computation}). The CDM simulation uses a comparable number of continuum elements ($29,866$) as in the DEM simulation ($25,898$) for comparison and adequate convergence. The CDM model efficiency can be improved by applying a Selectively Refined Mesh (SRM) where only the areas with stress concentrations and large stress gradients have a strongly refined mesh. With the SRM, a converged CDM solution is achievable with only $3,577$ elements leading to another order of magnitude reduction in computational effort. 
+The CDM model for this case requires about two orders of magnitude less computational effort than the DEM model (Table \ref{tab:computation}). The CDM simulation uses a comparable number of continuum elements ($29,866$) as in the DEM simulation ($25,898$) for comparison and adequate convergence. The CDM model efficiency can be improved by applying a Selectively Refined Mesh (SRM) where only the areas with stress concentrations and large stress gradients have a strongly refined mesh. With the SRM, a converged CDM solution is achievable with only $3,577$ elements leading to another order of magnitude reduction in computational effort. The SRM is verified to be accurate by comparing the results to the fully converged solution with $29,866$ elements. To obtain the SRM, the number of elements is selectively reduced untill an appreciable divergence from the actual solution is noted.  
 
 \begin{table}[!htb]
 \centering
