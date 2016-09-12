@@ -354,7 +354,9 @@ Binary serialization stores the state of any given object by converting the publ
 \section{HODS Homogenization}
 %----------------------------------------------------------------------
 
-HODS homogeniziation module....
+Since no commercial homogenization software exists, a code is developed here to integrate into the homogenization module. The \textbf{H}omogenization \textbf{O}f \textbf{D}EM \textbf{S}imulations (HODS) software implements the stress and strain homogenization algorithms described in the previous chapter. 
+
+
 \subsection{Class Attributes}
 
 
@@ -527,21 +529,3 @@ def time(self):
 	"""
 	"""
 	return timeHistory
-
-%----------------------------------------------------------------------
-\section{MOUSE Usage Example}
-%----------------------------------------------------------------------
-
-MOUSE can be
-\begin{lstlisting}[frame=single, language=bash]
-python MOUSE.py -n voronoiGranite -o APPSO
-\end{lstlisting}
-
-\begin{figure}[!htb]
-\begin{center}
-\includegraphics[width=\textwidth]{figures/Chapter4/HODSOutput}
-\caption{{\label{fig:homCMD} MOUSE Outputs from HODS Module.%
-}}
-\end{center}
-\end{figure}
-

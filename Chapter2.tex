@@ -19,6 +19,8 @@ Complexities such as fracture and scale effects are important challenged to cons
 \subsection{Intact Rock}
 To understand the behaviour of naturally fractured rock masses, it is first necessary to understand how the rock behaves without fractures. Unfractured rock can be referred to in this context as intact rock. 
 
+
+
 \subsection{Rock Fractures and Discontinuities}
 
 
@@ -31,10 +33,6 @@ To understand the behaviour of naturally fractured rock masses, it is first nece
 \section{Computational Geomechanics}
 
 Numerical modelling of naturally fractured geomechanical systems can be approached in two ways: by considering the constitutive relationship of the rock mass to be either continuous or discontinuous. The difference between these methods is a function of how one decides to conceptualize the rock mass. In a rock mass modelled as a continuum, the average macroscale response is considered while a rock mass modelled as a discontinuum is modelled by explicitly representing the natural fractures. 
-
-\subsection{Continuum Modelling}
-
-\subsection{Discontinuum Modelling}
 
 \section{Slope Stability Analysis}
 Slope stability analysis is an important aspect of geotechnical engineering as it allows one to determine how susceptible a given engineered or natural slope is to failure. The primary purpose of slope stability analysis is often to contribute to the safe and economic design of slopes. There are a number of parameters that affect the stability of a slope. When assessing the stability of a slope, one needs to be aware of the impact that these parameters have on the overall system stability and how to account for them in the model (ref):
@@ -54,16 +52,26 @@ The determination of the stability of a slope is by no means a trivial task. To 
 
 In practice, there are two main approaches to assessing the stability of a given slope: the limit equilibrium method (LEM), and the shear strength reduction method (SSRM). The former can be achieved analytically, and therefore much faster, but also has to make assumptions about the nature of the failure surface a priori and can only address one failure mechanism at a time, which limits its applicability and efficacy. The SSRM addresses these issues, but is more difficult to implement and more costly in terms of computational time. 
 
-
-\subsection{Mechanisms of Slope Failure}
-
-\subsection{Factor of Safety for Slope Stability}
-
 In slope stability analysis, the factor of safety (FOS) is the primary metric used to assess the slope stability. Fundamentally, the FOS is a system parameter which describes the capacity of a static system to perform under a given load. By definition, a FOS above 1.0 would describe a slope with a low susceptibility to failure such that it is stable under greater loads. Conversely, a FOS below 1.0 would describe a slope in a state of failure, while a FOS of 1.0 would indicate a slope on the verge of failure. In general, a FOS of at least 1.5 under maximum expected load is required for slopes in order to be considered sufficiently stable \citep{das_principles_2009}.
 
 Assessing the FOS for a slope is not a trivial task and functions on numerous parameters. Conventional analysis methods are based on limit equilibrium methods (LEM) which require several \textit{a priori} assumptions which, if not correctly chosen, can result in inaccurate solutions. The main drawback of these methods is the requirement to assume a failure surface, which quite often does not accurately represent the actual failure surface. Alternatively, with the advent of FEA, it becomes possible to conduct slope stability analysis of these systems in such a way that the weakest failure surface or failure mechanism will prevail inherently.
 
+The limit equilibrium method (LEM) of slope stability analysis is the conventional method of analysis for slope stability problems. The LEM assesses the stability of the slope based on the ratio of resisting forces to driving forces. The factor of safety for a soil slope using limit equilibrium analysis can be defined in terms of soil strength as \citep{das_principles_2009}: 
 
-\subsection{Limit Equilibrium Methods (LEM)}
+\begin{equation}
+F_s=\frac{\tau_f}{\tau_d}
+\label{eqn:limeq}
+\end{equation}
 
-\subsection{Shear Strength Reduction Methods (SSRM)}
+Where $F_s$ is the FOS with respect to strength, $\tau_f$ is the average shear strength of the soil, and $\tau_d$ is the average shear stress developed along the potential failure surface. 
+
+In lieu of the LEM, the shear strength reduction method (SSRM) was developed to assess slope stability using FEA as the traditional LEM cannot be implemented in FEA. The SSRM has several main advantages over the LEM \citep{griffiths_slope_1999}:
+
+\begin{itemize}
+\item No a priori assumptions are required with respect to the failure surface; the failure occurs along the weakest surface.
+\item Global equilibrium is maintained until failure occurs.
+\item Stress and deformation information can be extracted from the model.
+\item Progressive failure monitoring becomes feasible.
+\end{itemize}
+
+The fundamental principle behind this method is to find a value of the SRF such that the slope verges on failure. The SRF value at this point can be said to be the FOS. As one would expect, this solution becomes an iterative process. 

@@ -229,13 +229,99 @@ E\left(\bar{x}\right) = \mu
 \label{eqn:rev2}
 \end{equation}
 
-
 \begin{equation}
 E\left(s^2\right) = \sigma^2
 \label{eqn:rev3}
 \end{equation}
 
 In order to assess these criteria for each sample, hypothesis testing is employed. In order to test (\ref{eqn:rev2}), the independent one sample t-test is used, while to test (\ref{eqn:rev3}), the chi-squared test for variance is used. In both tests, if null hypothesis is not rejected, it can be said that the subdomain is statistically representative of the whole domain with respect to that parameter. As such, with this method, one can define the REV to be the minimum subdomain size for which both of the aforementioned null hypotheses are accepted.
+
+\subsection{Spatial Variance of the REV}
+
+The chi-squared test for the variance is a hypothesis testing method used to test whether or not a sample is statistically likely to have a specified population variance if the population belongs to a normal distribution \citep{walpole_probability_2007}. In this case, it is desireable to know whether or not a given samples variance is equivalent to a tolerable population variance, $\sigma^2$. As such, the null hypothesis, $H_0$, can be stated as follows:
+
+\begin{equation}
+H_0:s^2=\sigma_t^2
+\label{eqn:rev4}
+\end{equation}
+
+Where in the case that the null hypothesis is rejected, the alternate hypothesis, $H_A$, for an upper one-tail test is specified to be the following
+
+\begin{equation}
+H_A:s^2>\sigma_t^2
+\label{eqn:rev5}
+\end{equation}
+
+This alternate hypothesis is specified because this is the only case in which the sample variance does not fulfill the criteria for the REV (if the variance is smaller than the population variance, a REV can still be defined). As such, when the null hypothesis is rejected, the capacity for the specified subdomain size to be a REV is also rejected. To test this hypothesis, the chi-squared test statistic, $T_{\chi^2}$, is given as follows \citep{walpole_probability_2007}:
+
+\begin{equation}
+T_{\chi^2}=\left[N-1\right]\left[\frac{s}{\sigma_t}\right]^2
+\label{eqn:rev6}
+\end{equation}
+
+Where $N$ is the sample size. In (\ref{eqn:rev6}), the tolerable population standard deviation is unknown. This method estimates the tolerable standard deviation of the population based on a specified tolerance, $\alpha$, and the expected value of the realizations:
+
+\begin{equation}
+\sigma=\alpha E\left(\bar{x}_i\right)
+\label{eqn:rev7}
+\end{equation}
+
+Due to the fluctuations in the sample means for the samples corresponding to small subdomain sizes, the expected value of the realizations was taken to be the sample mean for the largest subdomain, $\bar{x}_i$:
+
+\begin{equation}
+E\left(\bar{x}_i\right) = \bar{x}_n
+\label{eqn:rev8}
+\end{equation}
+
+As such, one can substitute (\ref{eqn:rev7}) and (\ref{eqn:rev8}) into (\ref{eqn:rev6}) to rewrite the chi-squared test statistic as follows:
+
+\begin{equation}
+T_{\chi^2}=\left[N-1\right]\left[\frac{s}{\alpha \bar{x}_i}\right]^2
+\label{eqn:rev9}
+\end{equation}
+
+For the upper one-tailed chi squared test for variance, the following condition rejects the null hypothesis in favour of the alternative hypothesis where $\chi_{\left(\alpha, \nu\right)}$ is the critical chi-distribution test statistic for a significance level, $\alpha$, and $N-1$ degrees of freedom , $\nu$ \citep{walpole_probability_2007}:
+
+\begin{equation}
+T_{\chi^2}>\chi^2_{\left(1-\alpha, N-1\right)}
+\label{eqn:rev10}
+\end{equation}
+
+\subsection{REV Size Convergence}
+The independent one sample t-test is a hypothesis testing method used to test whether or not a sample is statistically likely to have a specified population mean when the population variance is unknown if the population belongs to a normal distirbution \citep{walpole_probability_2007}. Since the population variance is unknown, that parameter has to be estimated by means of Student’s t-distribution. In this case, it is desired to know whether or not a given samples mean is representative of the population mean. As such, the null hypothesis, $H_0$, can be stated as follows:
+
+\begin{equation}
+H_0:\bar{x}=\mu
+\label{eqn:rev11}
+\end{equation}
+
+Where if the null hypothesis is rejected, the alternate hypothesis, $H_A$, for a two-tailed hypothesis test can be written as:
+
+\begin{equation}
+H_A:\bar{x}\neq\mu
+\label{eqn:rev12}
+\end{equation}
+
+Such that in the case that the null hypothesis is rejected, the sample mean is not statistically representative of the population mean. The test statistic, $T_t$, for the t-test is indicated to be \citep{walpole_probability_2007}:
+
+\begin{equation}
+T_t=\left[X-\mu\right]\frac{\sqrt{N}}{s}
+\label{eqn:rev13}
+\end{equation}
+
+Where $N$ is the size of the sample. The population mean, $\mu$, is prescribed in a similar manner as \ref{eqn:rev8} by assuming the expected population mean to be equivalent to the sample mean corresponding to the largest subdomain:
+
+\begin{equation}
+\mu=\bar{x}_n
+\label{eqn:rev14}
+\end{equation}
+
+To evaluate the null hypothesis and determine whether or not the means are statistically equivalent, the following criterion is employed, where$t_{\left(\alpha, \nu\right)}$ is the t-distribution test statistic for a significance level, $\alpha$, and $N-1$ degrees of freedom, $\nu$ \citep{walpole_probability_2007}:
+
+\begin{equation}
+\left|T_t\right|>\left|t_{\left(1-\frac{\alpha}{2}, N-1\right)}\right|
+\label{eqn:rev15}
+\end{equation}
 
 %----------------------------------------------------------------------
 \section{Macroscale Constitutive Model}
