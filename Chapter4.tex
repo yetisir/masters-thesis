@@ -19,7 +19,7 @@ There exists four base classes that are used as parents to the third-party softw
 \end{figure}
 
 %----------------------------------------------------------------------
-\section{Base Module Class}
+\section{Software Module Format}
 %----------------------------------------------------------------------
 
 A base module class, \textbf{BaseModuleClass}, is implemented to provide a framework containing required methods and attributes for the MOUSE modules to inherit. The module class contains methods pertaining to I/O routines associated with the module so that each module that is written behaves in a consistent manner and to avoid reimplementation of certain methods. 
@@ -160,18 +160,41 @@ The undefined methods listed here are required to be defined in the child classe
 
 The \textbf{createArgumentParser} method creates an argument parser that allows the module to parse any command line arguments passed to it if the module is run in an isolated environment, While the \textbf{parseArguments} method parses the command line arguments derived from \textbf{createArgumentParser}.
 
-\begin{lstlisting}[frame=single]    
+\begin{lstlisting}[frame=single] 
+#Creates a module specific argument parser specific to allow the module to run independantly   
 def createArgumentParser(self):
-    
+	"""
+	"""
+#Parses the command line arguments passed to the module
 def parseArguments(self):
+	"""
+	"""
 \end{lstlisting}
 
-The \textbf{inputFileName} and \textbf{outputFileName} methods provide the formatting for the fileNames in a means that is consistent amongst modules.
+The \textbf{inputFileName} and \textbf{outputFileName} methods provide the formatting for the file names in a means that is consistent amongst modules.
 
 \begin{lstlisting}[frame=single]
+#Name of input file
 def inputFileName(self):
-        
+	"""
+	"""
+#Name of output file
 def outputFileName(self):
+	"""
+	"""
+\end{lstlisting}
+
+The final two undefined methods \textbf{parseInput} and \textbf{formatOutput} are provided by the software specific modules. These two methods act as wrappers for the software by manipulating the MOUSE inputs into input files for the specified programs as well as manipulateing the software output to a form which is consistent with the MOUSE data architecture.
+
+\begin{lstlisting}[frame=single]
+#converts MOUSE input to input files accepted by the software
+def parseInput(self):
+	"""
+	"""
+#converts module software output to MOUSE consistent data structures
+def formatOutput(self):
+	"""
+	"""
 \end{lstlisting}
 
 %----------------------------------------------------------------------
@@ -338,8 +361,21 @@ Binary serialization stores the state of any given object by converting the publ
 
 
 %----------------------------------------------------------------------
-% \section{Specific Module Implementation}
+\section{Third Party Software Modules}
 %----------------------------------------------------------------------
+
+Four software modules are required for the MOUSE software to to be functionally complete. The DEM software, parameter estimation software, and macroscale modules were developed by wrapping third-party software in Python\textsuperscript{TM} scripts. However, commercial homogenization software does not exist, so an in-house homogenization software (HODS) was created and implemented into the homogenization module.
+
+Some of these module implementations are non-trivial and require a substantail amount of code to properly parse the output files and format the input files. In the interest of brevity the majority of the details of these implementations have been ommited. 
+
+For the DEM module, the commerical software UDEC\textsuperscript{TM} was used. Here, the binary output from the software was unable to be parsed easily without knowing the datastructure of the serialization method or having access to an API. As such, a cycling script, using the built-in scripting language, FISH, was written to write the simulation data to text file as the simulations are running. These text files are subsequently consolidated and parsed with the Python\textsuperscript{TM} wrapper to create a data file that is consistent with the MOUSE architecture. 
+
+The homogenization module, as previously stated, was written in-house as a 2D homogenization code, HODS. This development meant that full controll over the I/O routines was possible. As such, the software was able to be directly written as a module with the exact same data structures to avoid and parsing and formatting issues.
+
+The parameter estimation module was implemented using OSTRICH\textsuperscript{TM} software, a model indepentant optimization software toolkit. Here, this parameter estimation module iteratively generates input parameters for the macroscale model in order to converge on a solution. The module accepts writes the DEM data and FEA data to text files for the OSTRICH program to read in. Here, multiple different optimization alogorithms are implemented and easy to switch between.
+
+The macroscale module was implemented using the commercial FEA software, ABAQUS\textsuperscript{TM}. Similarily to the DEM module, an internal script had to be written to describe the constitutive relationships as well as write the simulation data to text file since no API exists to parse the output binary data file. Subsequent to the simulation completion, the Python\textsuperscript{TM} wrapper converts the text to the appropriate MOUSE format to be used in the parameter estimation module.
+
 % ***
 % \subsection{UDEC Module}
 % ***
@@ -351,19 +387,16 @@ Binary serialization stores the state of any given object by converting the publ
 % ***
 
 %----------------------------------------------------------------------
-\section{HODS Homogenization}
+\section{HODS Homogenization Software}
 %----------------------------------------------------------------------
 
 Since no commercial homogenization software exists, a code is developed here to integrate into the homogenization module. The \textbf{H}omogenization \textbf{O}f \textbf{D}EM \textbf{S}imulations (HODS) software implements the stress and strain homogenization algorithms described in the previous chapter. 
 
+This section aims to describe the implementation of the homogenization algorithms in the HODS software. The main software is comprised of a single class, in which both the stress and the strain homogenization calculations are conducted. The instantiation of this class requires the subdomain location and radius, and the file containing the DEM binary data (the constructor function is also overloaded to be able to parse text files as well in the case that the binary files do not exist or are somehow corrupted). Once the data is loaded, the homogenization boundaries are defined besed on the subdomain radius and location. The homogenization algorithms are then applied to this subset of the DEM data when requested. It is possible to modifiy the input parameters and rerun the homogenization algorithms in this implementation without reinstatiating the class. This structure makes efficient use of the memory when running multiple homogenization inquiries when trying to assess the REV. Some of the relavent attributes and methods used to implement the homogenization algorithms are presented below. 
 
 \subsection{Class Attributes}
 
-
-\begin{lstlisting}[frame=single] 
-self.fileName = fileName
-\end{lstlisting}
-
+The class attributes for the
 
 \begin{lstlisting}[frame=single] 
 self.centre = centre
@@ -399,7 +432,14 @@ self.boundaryCornersOrdered = self.orderCorners(self.boundaryBlocksOrdered, self
 \end{lstlisting}
 
 \subsection{Class Data Methods}
-
+\begin{lstlisting}[frame=single] 
+#
+def __init__(self, centre, radius, blockData, contactData, cornerData, zoneData, gridPointData, domainData):
+	"""
+	fileName:	Name of file that contains DEM data
+	"""
+\end{lstlisting}
+	
 \begin{lstlisting}[frame=single] 
 def parseDataFile(self, fileName):
 	"""
@@ -512,9 +552,12 @@ def contactsInsideBoundary(self):
     
 \subsection{Class Homogenization Methods}
 
+\begin{lstlisting}[frame=single]                
 def calculateHomogenizationParameters(self):
+\end{lstlisting}
 
                    
+\begin{lstlisting}[frame=single]                
 def stress(self):
 	"""
 	"""
@@ -529,3 +572,4 @@ def time(self):
 	"""
 	"""
 	return timeHistory
+\end{lstlisting}
