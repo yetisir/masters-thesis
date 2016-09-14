@@ -392,17 +392,20 @@ The macroscale module was implemented using the commercial FEA software, ABAQUS\
 
 Since no commercial homogenization software exists, a code is developed here to integrate into the homogenization module. The \textbf{H}omogenization \textbf{O}f \textbf{D}EM \textbf{S}imulations (HODS) software implements the stress and strain homogenization algorithms described in the previous chapter. 
 
-This section aims to describe the implementation of the homogenization algorithms in the HODS software. The main software is comprised of a single class, in which both the stress and the strain homogenization calculations are conducted. The instantiation of this class requires the subdomain location and radius, and the file containing the DEM binary data (the constructor function is also overloaded to be able to parse text files as well in the case that the binary files do not exist or are somehow corrupted). Once the data is loaded, the homogenization boundaries are defined besed on the subdomain radius and location. The homogenization algorithms are then applied to this subset of the DEM data when requested. It is possible to modifiy the input parameters and rerun the homogenization algorithms in this implementation without reinstatiating the class. This structure makes efficient use of the memory when running multiple homogenization inquiries when trying to assess the REV. Some of the relavent attributes and methods used to implement the homogenization algorithms are presented below. 
+This section aims to describe the implementation of the homogenization algorithms in the HODS software. The main software is comprised of a single class, in which both the stress and the strain homogenization calculations are conducted. The instantiation of this class requires the subdomain location and radius, and the file containing the DEM binary data (the constructor function is also overloaded to be able to parse text files as well in the case that the binary files do not exist or are somehow corrupted). Once the class is instantiated, the homogenization boundaries are defined based on the subdomain radius and location. The homogenization algorithms can then applied to this subset of the DEM data when requested. It is possible to modifiy the input parameters and rerun the homogenization algorithms in this implementation without reinstatiating the class. This structure makes efficient use of the memory when running multiple homogenization inquiries when trying to assess the REV. Some of the relavent attributes and methods used to implement the homogenization algorithms are presented below. 
+
+The class methods have been (roughly) divided into two subsets in order to clarify the process a bit more: data methods and homogenization methods. The data methods are methods that are used to manipulate or retrieve data while the homogenization methods are methods that are used to perform the actual homogenization calculations and return the resultant homogenized DEM results. This is not a complete, nor comprehensive list of the methods used in the implementation, but should illustrate the structure of the software regardless.
 
 \subsection{Class Attributes}
 
-The class attributes for the
+There are three main subsets of class attributes used for the HODS class in this implementation. The first subset of attributes contains the subdomain parameters, \textbf{centre} and \textbf{radius}, which completely define a circular subdomain. In the case that the specified circular subdomain does not fully intersect with the full domain, the subdomain is chosen to be the intersection of these two areas. That being said, it is not recommended to specify such a subdomain as the influence of boundary effects will be large.
 
 \begin{lstlisting}[frame=single] 
 self.centre = centre
 self.radius = radius
 \end{lstlisting}
 
+An additionl set of class attributes, \textbf{blockData}, \textbf{contactData}, \textbf{cornerData}, \textbf{zoneData}, \textbf{gridPointData}, and \textbf{domainData}, contain their resepctive DEM data in nested hash tables as described above. Here, the data is being loaded from a \textbf{parseDataFile} method, which is called in the overloaded constructor method to parse the DEM data from text files instead of binary data. The functionality of this method is explained in more detail below.
 
 \begin{lstlisting}[frame=single] 
 self.blockData = self.parseDataFile(blockFileName)
@@ -413,6 +416,7 @@ self.gridPointData = self.parseDataFile(gridPointFileName)
 self.domainData = self.parseDataFile(domainFileName)
 \end{lstlisting}
 
+The third subset of attributes below relates to the definition of the homogenization boundary. These attributes represent the algorithmic steps required to define the homognenization domain as discussed in Chapter 3. Though perhaps not strictly necessary for these parameters to be class attributes, it becomes usefull to retain these steps in the class memory to be recalled for plotting to verify and debug the algorithms for assessing the homogenization domain.
 
 \begin{lstlisting}[frame=single] 
 self.boundaryBlocks = self.blocksOnBoundary()
@@ -432,142 +436,145 @@ self.boundaryCornersOrdered = self.orderCorners(self.boundaryBlocksOrdered, self
 \end{lstlisting}
 
 \subsection{Class Data Methods}
+
+These data methods are class methods that are primarily used to manipulate and retrieve the DEM data. The constructor method, \textbf{\_\_init\_\_}, here requires 8 parameters to properly be instantated: \textbf{centre}, \textbf{radius} and the 6 nested hash tables containing the DEM data. Additionally, the constructor method is overloaded to be able to parse the raw DEM data from text files.
+
 \begin{lstlisting}[frame=single] 
-#
+#Constructor method
 def __init__(self, centre, radius, blockData, contactData, cornerData, zoneData, gridPointData, domainData):
 	"""
-	fileName:	Name of file that contains DEM data
+	centre:		centre of subdomain to be homogenized
+	radius:		radius of subdomain to be homogenized
+	blockData:	Nested hash table of block data
+	contactData:	Nested hash table of contact data
+	cornerData:	Nested hash table of corner data
+	zoneData:	Nested hash table of zone data
+	gridPointData:	Nested hash table of gird point data
+	domainData:	Nested hash table of domain data"""
+	
+#Overloded constructor method
+def __init__(self, centre, radius, fileName):
 	"""
+	centre:	centre of subdomain to be homogenized
+	radius:	radius of subdomain to be homogenized
+	fileName:	prefix of files that contain DEM data"""
 \end{lstlisting}
 	
+The \textbf{parseDataFile} method takes a raw DEM text data file and returns a tripple level nested hash table. Here the first column of the text data file is specified to be simulation time and the second column is the component ID. These two columns represent the first two levels of hash keys. For the third level hash keys, the remaining column headers are used. 
+	
 \begin{lstlisting}[frame=single] 
+#Method to parse the DEM raw text files.
 def parseDataFile(self, fileName):
 	"""
-	fileName:	Name of file that contains DEM data
-	"""
+	fileName:	Name of file that contains DEM data"""
 	return data
 \end{lstlisting}
 
-\begin{lstlisting}[frame=single] 
-def cornersOnContacts(self, contacts):
-	"""
-	contacts:	list of contact IDs
-	"""
-	return corners
-
-def zonesInBlocks(self, blocks):
-	"""
-	blocks:		list of block IDs
-	"""
-	return zones
-
-def cornersOnBlocks(self, blocks):
-	"""
-	blocks:		list of block IDs
-	"""
-	return corners
-
-def contactsOnBlocks(self, blocks):
-	"""
-	blocks:		list of block IDs
-	"""
-	return contacts
-\end{lstlisting}
+The following series of methods are implemented here in order to provide the capacity to find the relational influence of different DEM components. 
 
 \begin{lstlisting}[frame=single] 
+#Finds the list of contacts that are between the two sets of blocks
 def contactsBetweenBlocks(self, blocks1, blocks2):
 	"""
 	blocks1:	list of block IDs
-	blocks2: 	list of block IDs
-	"""
+	blocks2: 	list of block IDs	"""
 	return contacts
-
+#Finds the list of blocks that contain the specified contacts
 def blocksWithContacts(self, blocks, contacts):
 	"""
 	blocks:		list of block IDs
-	contacts:	list of contact IDs
-	"""
+	contacts:	list of contact IDs"""
 	return newBlocks
-
+#Finds the list of blocks that contain the specified corners
 def blocksWithCorners(self, blocks, corners):
 	"""
 	blocks:		list of block IDs
-	corners:	list of corner IDs
-	"""
+	corners:	list of corner IDs"""
 	return newBlocks
-	
-def orderBlocks(self, blocks, relaventContacts):
+#Orders the blocks in a clockwise fashion.
+def orderBlocks(self, blocks, relContacts):
 	"""
 	blocks:		list of block IDs
-	relContacts:	list of contact IDs
-	"""
+	relContacts:	list of contact IDs"""
 	return orderedBlocks
-	
+#Orders the corners in a clockwise fashion
 def orderCorners(self, orderedBlocks, corners):
 	"""
 	orderedBlocks:	list of block IDs
-	corners:	list of corner IDs
-	"""
+	corners:	list of corner IDs"""
 	return orderedCorners
 \end{lstlisting}
 	
-\subsection{Class Boundary Methods}
+Additionally, the following set of methods here relate to describing the homogenization boundary given a circular subdomain. These methods use the already defined class attributes (\textbf{radius}, \textbf{centre}, DEM hash tables) to perform the search rather than by passing arguments.
 
 \begin{lstlisting}[frame=single] 
+#Finds all the blocks intersecting the circular subdomain
 def blocksOnBoundary(self):
 	"""
 	"""
 	return blocks
-
+#Finds all the blocks outside of the circular subdomain
 def blocksOutsideBoundary(self):
 	"""
 	"""
 	return blocks
-        
+#Finds all the blocks inside the circular subdomain
 def blocksInsideBoundary(self):
 	"""
 	"""
 	return blocks
-            
+#Finds all the corners outside of the circular subdomain	
 def cornersOutsideBoundary(self):
 	"""
 	"""
 	return corners
-	
+#Finds all the corners inside the circular subdomain
 def cornersInsideBoundary(self):
 	"""
 	"""
 	return corners
-	
+#Finds all the contacts outside the circular subdomain
 def contactsOutsideBoundary(self):
 	"""
 	"""
 	return contacts
-	
+#Finds all the contacts inside the circular subdomain
 def contactsInsideBoundary(self):
 	"""
 	"""
 	return contacts
 \end{lstlisting}
-    
+
 \subsection{Class Homogenization Methods}
 
+The \textbf{calculateHomogenizationParameters} method implements the algorithm for assessing the homogenization domain and boundary. This method is called by the constructor function after the DEM data is loaded to calculate the homogenization boundary and associated parameters. When the subdomain parameters are modified, this method is called again in order to update the homogenization domain. The parameters calculated in this method are used in both the stress and the strain homogenization alogirithms, and are thus stored as class attributes to be accessed by the \textbf{stress} and \textbf{strain} methods. 
+
 \begin{lstlisting}[frame=single]                
+#Calculates homogenization boundary and homogenization parameters
 def calculateHomogenizationParameters(self):
+	"""
+	"""
 \end{lstlisting}
 
+The \textbf{stress} and \textbf{strain} methods are where the majority of the homogenization algorithms are implemented. Here these methods can be slow to calculate if the dataset is sufficiently large, and thus don't run automatically upon instantiation. These methods can be called independently and at any time the class is alive. Whe these classes are called, the homogenization algorithms are run and a nested list of homogenized tensor arrays are returned, in accordance with the MOUSE data architecture. 
                    
-\begin{lstlisting}[frame=single]                
+\begin{lstlisting}[frame=single]      
+#Calculates and returns a nested list of stress tensors
 def stress(self):
 	"""
 	"""
 	return stressHistory
-	
+#Calculates and returns a nested list of strain tesnors
 def strain(self):
 	"""
 	"""
 	return strainHistory
+\end{lstlisting}
 
+The \textbf{time} method simply returns a list of timesteps corresponsing with each of the homogenized stress and strain tensors. Again, this format is consistent with the MOUSE architecture.
+
+\begin{lstlisting}[frame=single]      
+#Returns a list of simulation timesteps
 def time(self):
 	"""
 	"""
