@@ -1,2 +1,3 @@
+bibtex UpScalingDEMSimulations
 pdflatex UpScalingDEMSimulations
 pdflatex UpScalingDEMSimulations

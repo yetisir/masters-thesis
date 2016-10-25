@@ -2,13 +2,13 @@
 \chapter{Software Implementation}
 %======================================================================
 
-The \textbf{M}odular aut\textbf{O}mated \textbf{U}p-\textbf{S}caling softwar\textbf{E} (MOUSE) for DEM simulations was created and written in Python\textsuperscript{TM} to provide an implementation of the up-scaling framework presented in the previous chapter using in house and third-party software modules. The software itself aims to provide a platform through which the four software elements of the up-scaling framework (DEM, homogenization, parameter estimation, and macroscale model) can communicate with each other. The communication is facilitated by MOUSE through modules which wrap the third party software in such a way that the I/O routines to and from the modules are performed in a consistent capcity regardless of the third party software being used. 
+The \textbf{M}odular aut\textbf{O}mated \textbf{U}p-\textbf{S}caling softwar\textbf{E} (MOUSE) for DEM simulations was created and written in Python\textsuperscript{TM} to provide an implementation of the up-scaling framework presented in the previous chapter using in house and third-party software modules. The software itself aims to provide a platform through which the four software elements of the up-scaling framework (DEM, homogenization, parameter estimation, and macroscale model) can communicate with each other. The communication is facilitated by MOUSE through modules which wrap the third party software in such a way that the I/O routines to and from the modules are performed in a consistent capacity regardless of the third party software being used. 
 
-This chapter of the thesis aims to provide a very high level overview of the key aspects of the MOUSE software implementation without getting into any of the fine details. The programatic structure of some of the important software components is presented to illustrate the software design, but a complete discussion on the construction of all the specific wrappers gets unweildly.
+This chapter of the thesis aims to provide a very high level overview of the key aspects of the MOUSE software implementation without getting into any of the fine details. The programmatic structure of some of the important software components is presented to illustrate the software design, but a complete discussion on the construction of all the specific wrappers gets unwieldly.
 
-The general idea with the up-scaling framework developed in this thesis is that it is model independant. Because of this, it is important that MOUSE was written in such a way that allowed for different models (both DEM and macroscale) to be implemented without rewriting the up-scaling algorithms. As such, a modular approach was taken such that each module is isolated from the others and only communicates data through strict protocols set out by MOUSE.
+The general idea with the up-scaling framework developed in this thesis is that it is model independent. Because of this, it is important that MOUSE was written in such a way that allowed for different models (both DEM and macroscale) to be implemented without rewriting the up-scaling algorithms. As such, a modular approach was taken such that each module is isolated from the others and only communicates data through strict protocols set out by MOUSE.
 
-There exists four base classes that are used as parents to the third-party software module classes. Because each software compent has distinct I/O protocols, the base classes serve as a collection of usefull methods which the software module can inherit to ensure compatibility with MOUSE. Each of these four component base classes inherit from a base module class. Figure \ref{fig:moduleClass} indicates this class heirarchy as well as where each method and attribute definition falls in the heirarchy.
+There exist four base classes that are used as parents to the third-party software module classes. Because each software component has distinct I/O protocols, the base classes serve as a collection of useful methods which the software module can inherit to ensure compatibility with MOUSE. Each of these four component base classes inherit from a base module class. Figure \ref{fig:moduleClass} indicates this class hierarchy as well as where each method and attribute definition falls in the hierarchy.
 
 \begin{figure}[!htb]
 \begin{center}
@@ -28,7 +28,7 @@ A base module class, \textbf{BaseModuleClass}, is implemented to provide a frame
 
 Attributes are assigned to \textbf{BaseModuleClass} through the constructor method (\textbf{\_\_init\_\_}) when the class is initialized. The following attributes are passed as arguments through instantiation of the class children. 
 
-The \textbf{program} attribute is a string that contains the name of the software excecutable associated with the given module. This parmeter allows the module the capacity to run the program through a command line interface (CLI) As such, the program must be able to accept command line arguments.
+The \textbf{program} attribute is a string that contains the name of the software executable associated with the given module. This parameter allows the module the capacity to run the program through a command line interface (CLI) As such, the program must be able to accept command line arguments.
 
 \begin{lstlisting}[frame=single]  
 #String containing name of module software executable file. 
@@ -66,7 +66,7 @@ self.textDirectory = os.path.join(dataDirectory, 'Text')
 \subsection{Defined Methods}
 Methods in \textbf{BaseModuleClass} are divided into two types: defined and undefined. Defined methods are methods that are common to all the module classes and are thus able to be defined at the parent level. The undefined methods are methods that require overloading, so they are defined at the child level. 
 
-The \textbf{\_\_init\_\_} method is a built-in contructor method that is automatically called when the class is initialized. The only required argument for this method is \textbf{parameter}, with the other three being optional arguments. 
+The \textbf{\_\_init\_\_} method is a built-in constructor method that is automatically called when the class is initialized. The only required argument for this method is \textbf{parameter}, with the other three being optional arguments. 
 
 \begin{lstlisting}[frame=single]
 #Contructor method that is called when the class is initialized
@@ -127,7 +127,7 @@ def loadData(self):
 	"""
 \end{lstlisting}
 
-The \textbf{updateParameters} method allows for the dynamic updating of module input parameters. This allows for the module to run the program multiple times without being reinstantiated.
+The \textbf{updateParameters} method allows for the dynamic updating of module input parameters. This allows for the module to run the program multiple times without being re-instantiated.
 
 \begin{lstlisting}[frame=single]    
 #Method that allows dynamic updating of parameters.
@@ -184,7 +184,7 @@ def outputFileName(self):
 	"""
 \end{lstlisting}
 
-The final two undefined methods \textbf{parseInput} and \textbf{formatOutput} are provided by the software specific modules. These two methods act as wrappers for the software by manipulating the MOUSE inputs into input files for the specified programs as well as manipulateing the software output to a form which is consistent with the MOUSE data architecture.
+The final two undefined methods \textbf{parseInput} and \textbf{formatOutput} are provided by the software specific modules. These two methods act as wrappers for the software by manipulating the MOUSE inputs into input files for the specified programs as well as manipulating the software output to a form which is consistent with the MOUSE data architecture.
 
 \begin{lstlisting}[frame=single]
 #converts MOUSE input to input files accepted by the software
@@ -198,7 +198,7 @@ def formatOutput(self):
 \end{lstlisting}
 
 %----------------------------------------------------------------------
-\section{Data Architechture}
+\section{Data Architecture}
 %----------------------------------------------------------------------
 
 This section aims to explain the data structures used to store and transfer data between the modules in the up-scaling framework presented in this thesis.  Three fundamental data structures are used for the storage of data in conjunction with each other: hash tables, lists, and arrays. Using these three structures, three distinct types of data in the up-scaling framework are used to transfer between the modules in a consistent manner: constitutive parameters, DEM data, and continuum data.
@@ -213,11 +213,11 @@ Numpy arrays are a specific implementation of a Python\textsuperscript{TM} list 
 
 \subsubsection*{Python Dictionaries (Hash Tables)}
 
-In general, a hash table is a data structure that maps keys to values. The implementation of hash tables in Python\textsuperscript{TM}, are referred to as dictionaries. Similar to a Python\textsuperscript{TM} list, a Python\textsuperscript{TM} dictionary is a mutable structure that does not require the elements to be of the same type. However, instead of accessing the element value through an index argument, the data is accessed through a key argument. This unordered structure is usefull for storing non-sequential data.
+In general, a hash table is a data structure that maps keys to values. The implementation of hash tables in Python\textsuperscript{TM}, are referred to as dictionaries. Similar to a Python\textsuperscript{TM} list, a Python\textsuperscript{TM} dictionary is a mutable structure that does not require the elements to be of the same type. However, instead of accessing the element value through an index argument, the data is accessed through a key argument. This unordered structure is useful for storing non-sequential data.
 
 \subsection{Data Storage Structures}
 
-Three distinct types of data are used in the information tranfer protocols between modules: constitutive parameter data, DEM data, and continuum data. These different types of data require different data structures which are explained in more detail below. The constitutive parameter data is stored in a hash table, the DEM data is stored in a three level nested hash table, and the continuum data is stored in a list of arrays.
+Three distinct types of data are used in the information transfer protocols between modules: constitutive parameter data, DEM data, and continuum data. These different types of data require different data structures which are explained in more detail below. The constitutive parameter data is stored in a hash table, the DEM data is stored in a three level nested hash table, and the continuum data is stored in a list of arrays.
 
 \subsubsection*{Hash Tables for Constitutive Parameters}
 
@@ -227,29 +227,29 @@ Constitutive parameters are required as an input to the DEM and macroscale modul
 parameterValue = constitutiveParameters[parameterName]
 \end{lstlisting}
 
-For example, accessing the value of the elastic modulus from a hash table named 'contitutiveParameters' is performed as follows:
+For example, accessing the value of the elastic modulus from a hash table named 'constitutiveParameters' is performed as follows:
 
 \begin{lstlisting}[frame=single]
 elasticModulus = constitutiveParameters['elasticModulus']
 \end{lstlisting}
 
 \subsubsection*{Nested Hash Tables for DEM Data}
-The raw DEM Data is considered to be comprised of six distinct types: block data, contact data, corner data, domain data, grid point data, and zone data. Here, each block, contact, corner, domain, grid point, and zone is assigned a unique 7 digit numeric identifier (assuming here that the number of components in the system does not exceed 10 million) by which the associated data can be accessed. The same identifier may be repeated for different data types.
+The raw DEM Data is considered to be comprised of six distinct types: block data, contact data, corner data, domain data, grid point data, and zone data. Here, each block, contact, corner, domain, grid point, and zone is assigned a unique 7-digit numeric identifier (assuming here that the number of components in the system does not exceed 10 million) by which the associated data can be accessed. The same identifier may be repeated for different data types.
 
-To allow for convenient access to the data, the DEM data is stored in six distinct nested hash tables corresponding to each of the DEM data types.  Each DEM data hash table has three levels of nesting. The first level keys are the simulation times, which returns the second level of hash tables. The second level keys are the component identifiers, which returns a third level hash table. In this third level, the component attributes can be accessed using the attirbute name as the key. In general, accessing an attribute of a specific component with a given ID at a specific time from a hash table called demDataHash is done as follows:
+To allow for convenient access to the data, the DEM data is stored in six distinct nested hash tables corresponding to each of the DEM data types.  Each DEM data hash table has three levels of nesting. The first level keys are the simulation times, which returns the second level of hash tables. The second level keys are the component identifiers, which returns a third level hash table. In this third level, the component attributes can be accessed using the attribute name as the key. In general, accessing an attribute of a specific component with a given ID at a specific time from a hash table called demDataHash is done as follows:
 
 
 \begin{lstlisting}[frame=single]
 componentAttributeValue = demDataHash[time][ID][attribute]
 \end{lstlisting}
 
-For example, accessing the list of grid points associatied with block ID 2543465 at a simulation time of 1.0 is performed as follows:
+For example, accessing the list of grid points associated with block ID 2543465 at a simulation time of 1.0 is performed as follows:
 
 \begin{lstlisting}[frame=single]
 gridPoints = blockData[1.0][2543465]['gridPoints']
 \end{lstlisting}
 
-The keys of each of the third level dictionaries for each comonent are presented in Table \ref{tab:keys1}, Table \ref{tab:keys2}, Table \ref{tab:keys3}, Table \ref{tab:keys4}, Table \ref{tab:keys5}, and Table \ref{tab:keys6} for the block data, contact data, corner data, domain data, gridpoint data, and zone data, respectively.
+The keys of each of the third level dictionaries for each component are presented in Table \ref{tab:keys1}, Table \ref{tab:keys2}, Table \ref{tab:keys3}, Table \ref{tab:keys4}, Table \ref{tab:keys5}, and Table \ref{tab:keys6} for the block data, contact data, corner data, domain data, gridpoint data, and zone data, respectively.
 
 \begin{table}[!htb]
 \centering
@@ -351,30 +351,30 @@ gridPoints         & Grid points associated with this grid point (list of block 
 
 \subsubsection*{Nested List of Arrays for Continuum Data}
 
-The continuum data is stored in three lists: a normal list and two nested lists of arrays. The three lists contain the time data, stress data, and strain data. The time data is in the normal list, with each element representing a different time step. The other two lists contain two-dimensional nested arrays representing the stress and strain tensors respectively. Each array element within within these lists represents the stress or strain tensors for the corresponding timestep.
+The continuum data is stored in three lists: a normal list and two nested lists of arrays. The three lists contain the time data, stress data, and strain data. The time data is in the normal list, with each element representing a different time step. The other two lists contain two-dimensional nested arrays representing the stress and strain tensors respectively. Each array element within these lists represents the stress or strain tensors for the corresponding time step.
 
 \subsection{Binary Serialization}
 
 These data structures mentioned above are great for efficiently accessing the desired data, but cannot easily be saved to file in standard unicode. In the event that this is possible, formatting and parsing large data sets from text files is slow and increases the possibility of data corruption. To speed up the data access and increase the integrity of the data, binary serialization is employed. 
 
-Binary serialization stores the state of any given object by converting the public and private fields of the class to a stream of bytes, which is then written to the data stream. This data stream can easily be written to a binary file and subsequently read at any later date. The deserialization of this data stream takes the stream of bytes and reconstructs an exact clone of the original object whenever it is required. This method is usefull when attemping to store large non-linear data structures to file.
+Binary serialization stores the state of any given object by converting the public and private fields of the class to a stream of bytes, which is then written to the data stream. This data stream can easily be written to a binary file and subsequently read at any later date. The deserialization of this data stream takes the stream of bytes and reconstructs an exact clone of the original object whenever it is required. This method is useful when attempting to store large non-linear data structures to file.
 
 
 %----------------------------------------------------------------------
 \section{Third Party Software Modules}
 %----------------------------------------------------------------------
 
-Four software modules are required for the MOUSE software to to be functionally complete. The DEM software, parameter estimation software, and macroscale modules were developed by wrapping third-party software in Python\textsuperscript{TM} scripts. However, commercial homogenization software does not exist, so an in-house homogenization software (HODS) was created and implemented into the homogenization module.
+Four software modules are required for the MOUSE software to be functionally complete. The DEM software, parameter estimation software, and macroscale modules were developed by wrapping third-party software in Python\textsuperscript{TM} scripts. However, commercial homogenization software does not exist, so an in-house homogenization software (HODS) was created and implemented into the homogenization module.
 
-Some of these module implementations are non-trivial and require a substantail amount of code to properly parse the output files and format the input files. In the interest of brevity the majority of the details of these implementations have been ommited. 
+Some of these module implementations are non-trivial and require a substantial amount of code to properly parse the output files and format the input files. In the interest of brevity, the majority of the details of these implementations have been omitted. 
 
-For the DEM module, the commerical software UDEC\textsuperscript{TM} was used. Here, the binary output from the software was unable to be parsed easily without knowing the datastructure of the serialization method or having access to an API. As such, a cycling script, using the built-in scripting language, FISH, was written to write the simulation data to text file as the simulations are running. These text files are subsequently consolidated and parsed with the Python\textsuperscript{TM} wrapper to create a data file that is consistent with the MOUSE architecture. 
+For the DEM module, the commercial software UDEC\textsuperscript{TM} was used. Here, the binary output from the software was unable to be parsed easily without knowing the data structure of the serialization method or having access to an API. As such, a cycling script, using the built-in scripting language, FISH, was written to write the simulation data to text file as the simulations are running. These text files are subsequently consolidated and parsed with the Python\textsuperscript{TM} wrapper to create a data file that is consistent with the MOUSE architecture. 
 
-The homogenization module, as previously stated, was written in-house as a 2D homogenization code, HODS. This development meant that full controll over the I/O routines was possible. As such, the software was able to be directly written as a module with the exact same data structures to avoid and parsing and formatting issues.
+The homogenization module, as previously stated, was written in-house as a 2D homogenization code, HODS. This development meant that full control over the I/O routines was possible. As such, the software was able to be directly written as a module with the exact same data structures to avoid and parsing and formatting issues.
 
-The parameter estimation module was implemented using OSTRICH\textsuperscript{TM} software, a model indepentant optimization software toolkit. Here, this parameter estimation module iteratively generates input parameters for the macroscale model in order to converge on a solution. The module accepts writes the DEM data and FEA data to text files for the OSTRICH program to read in. Here, multiple different optimization alogorithms are implemented and easy to switch between.
+The parameter estimation module was implemented using OSTRICH\textsuperscript{TM} software, a model independent optimization software toolkit. Here, this parameter estimation module iteratively generates input parameters for the macroscale model in order to converge on a solution. The module accepts writes the DEM data and FEA data to text files for the OSTRICH program to read in. Here, multiple different optimization algorithms are implemented and easy to switch between.
 
-The macroscale module was implemented using the commercial FEA software, ABAQUS\textsuperscript{TM}. Similarily to the DEM module, an internal script had to be written to describe the constitutive relationships as well as write the simulation data to text file since no API exists to parse the output binary data file. Subsequent to the simulation completion, the Python\textsuperscript{TM} wrapper converts the text to the appropriate MOUSE format to be used in the parameter estimation module.
+The macroscale module was implemented using the commercial FEA software, ABAQUS\textsuperscript{TM}. Similarly to the DEM module, an internal script had to be written to describe the constitutive relationships as well as write the simulation data to text file since no API exists to parse the output binary data file. Subsequent to the simulation completion, the Python\textsuperscript{TM} wrapper converts the text to the appropriate MOUSE format to be used in the parameter estimation module.
 
 % ***
 % \subsection{UDEC Module}
@@ -392,7 +392,7 @@ The macroscale module was implemented using the commercial FEA software, ABAQUS\
 
 Since no commercial homogenization software exists, a code is developed here to integrate into the homogenization module. The \textbf{H}omogenization \textbf{O}f \textbf{D}EM \textbf{S}imulations (HODS) software implements the stress and strain homogenization algorithms described in the previous chapter. 
 
-This section aims to describe the implementation of the homogenization algorithms in the HODS software. The main software is comprised of a single class, in which both the stress and the strain homogenization calculations are conducted. The instantiation of this class requires the subdomain location and radius, and the file containing the DEM binary data (the constructor function is also overloaded to be able to parse text files as well in the case that the binary files do not exist or are somehow corrupted). Once the class is instantiated, the homogenization boundaries are defined based on the subdomain radius and location. The homogenization algorithms can then applied to this subset of the DEM data when requested. It is possible to modifiy the input parameters and rerun the homogenization algorithms in this implementation without reinstatiating the class. This structure makes efficient use of the memory when running multiple homogenization inquiries when trying to assess the REV. Some of the relavent attributes and methods used to implement the homogenization algorithms are presented below. 
+This section aims to describe the implementation of the homogenization algorithms in the HODS software. The main software is comprised of a single class, in which both the stress and the strain homogenization calculations are conducted. The instantiation of this class requires the subdomain location and radius, and the file containing the DEM binary data (the constructor function is also overloaded to be able to parse text files as well in the case that the binary files do not exist or are somehow corrupted). Once the class is instantiated, the homogenization boundaries are defined based on the subdomain radius and location. The homogenization algorithms can then be applied to this subset of the DEM data when requested. It is possible to modify the input parameters and rerun the homogenization algorithms in this implementation without re-instantiating the class. This structure makes efficient use of the memory when running multiple homogenization inquiries when trying to assess the REV. Some of the relevant attributes and methods used to implement the homogenization algorithms are presented below. 
 
 The class methods have been (roughly) divided into two subsets in order to clarify the process a bit more: data methods and homogenization methods. The data methods are methods that are used to manipulate or retrieve data while the homogenization methods are methods that are used to perform the actual homogenization calculations and return the resultant homogenized DEM results. This is not a complete, nor comprehensive list of the methods used in the implementation, but should illustrate the structure of the software regardless.
 
@@ -405,7 +405,7 @@ self.centre = centre
 self.radius = radius
 \end{lstlisting}
 
-An additionl set of class attributes, \textbf{blockData}, \textbf{contactData}, \textbf{cornerData}, \textbf{zoneData}, \textbf{gridPointData}, and \textbf{domainData}, contain their resepctive DEM data in nested hash tables as described above. Here, the data is being loaded from a \textbf{parseDataFile} method, which is called in the overloaded constructor method to parse the DEM data from text files instead of binary data. The functionality of this method is explained in more detail below.
+An additional set of class attributes, \textbf{blockData}, \textbf{contactData}, \textbf{cornerData}, \textbf{zoneData}, \textbf{gridPointData}, and \textbf{domainData}, contain their respective DEM data in nested hash tables as described above. Here, the data is being loaded from a \textbf{parseDataFile} method, which is called in the overloaded constructor method to parse the DEM data from text files instead of binary data. The functionality of this method is explained in more detail below.
 
 \begin{lstlisting}[frame=single] 
 self.blockData = self.parseDataFile(blockFileName)
@@ -416,7 +416,7 @@ self.gridPointData = self.parseDataFile(gridPointFileName)
 self.domainData = self.parseDataFile(domainFileName)
 \end{lstlisting}
 
-The third subset of attributes below relates to the definition of the homogenization boundary. These attributes represent the algorithmic steps required to define the homognenization domain as discussed in Chapter 3. Though perhaps not strictly necessary for these parameters to be class attributes, it becomes usefull to retain these steps in the class memory to be recalled for plotting to verify and debug the algorithms for assessing the homogenization domain.
+The third subset of attributes below relates to the definition of the homogenization boundary. These attributes represent the algorithmic steps required to define the homogenization domain as discussed in Chapter 3. Though perhaps not strictly necessary for these parameters to be class attributes, it becomes useful to retain these steps in the class memory to be recalled for plotting to verify and debug the algorithms for assessing the homogenization domain.
 
 \begin{lstlisting}[frame=single] 
 self.boundaryBlocks = self.blocksOnBoundary()
@@ -437,7 +437,7 @@ self.boundaryCornersOrdered = self.orderCorners(self.boundaryBlocksOrdered, self
 
 \subsection{Class Data Methods}
 
-These data methods are class methods that are primarily used to manipulate and retrieve the DEM data. The constructor method, \textbf{\_\_init\_\_}, here requires 8 parameters to properly be instantated: \textbf{centre}, \textbf{radius} and the 6 nested hash tables containing the DEM data. Additionally, the constructor method is overloaded to be able to parse the raw DEM data from text files.
+These data methods are class methods that are primarily used to manipulate and retrieve the DEM data. The constructor method, \textbf{\_\_init\_\_}, here requires 8 parameters to properly be instantiated: \textbf{centre}, \textbf{radius} and the 6 nested hash tables containing the DEM data. Additionally, the constructor method is overloaded to be able to parse the raw DEM data from text files.
 
 \begin{lstlisting}[frame=single] 
 #Constructor method
@@ -460,7 +460,7 @@ def __init__(self, centre, radius, fileName):
 	fileName:	prefix of files that contain DEM data"""
 \end{lstlisting}
 	
-The \textbf{parseDataFile} method takes a raw DEM text data file and returns a tripple level nested hash table. Here the first column of the text data file is specified to be simulation time and the second column is the component ID. These two columns represent the first two levels of hash keys. For the third level hash keys, the remaining column headers are used. 
+The \textbf{parseDataFile} method takes a raw DEM text data file and returns a triple level nested hash table. Here the first column of the text data file is specified to be simulation time and the second column is the component ID. These two columns represent the first two levels of hash keys. For the third level hash keys, the remaining column headers are used. 
 	
 \begin{lstlisting}[frame=single] 
 #Method to parse the DEM raw text files.
@@ -556,7 +556,7 @@ def calculateHomogenizationParameters(self):
 	"""
 \end{lstlisting}
 
-The \textbf{stress} and \textbf{strain} methods are where the majority of the homogenization algorithms are implemented. Here these methods can be slow to calculate if the dataset is sufficiently large, and thus don't run automatically upon instantiation. These methods can be called independently and at any time the class is alive. Whe these classes are called, the homogenization algorithms are run and a nested list of homogenized tensor arrays are returned, in accordance with the MOUSE data architecture. 
+The \textbf{stress} and \textbf{strain} methods are where the majority of the homogenization algorithms are implemented. Here these methods can be slow to calculate if the dataset is sufficiently large, and thus don't run automatically upon instantiation. These methods can be called independently and at any time the class is alive. When these classes are called, the homogenization algorithms are run and a nested list of homogenized tensor arrays are returned, in accordance with the MOUSE data architecture. 
                    
 \begin{lstlisting}[frame=single]      
 #Calculates and returns a nested list of stress tensors
@@ -571,7 +571,7 @@ def strain(self):
 	return strainHistory
 \end{lstlisting}
 
-The \textbf{time} method simply returns a list of timesteps corresponsing with each of the homogenized stress and strain tensors. Again, this format is consistent with the MOUSE architecture.
+The \textbf{time} method simply returns a list of time steps corresponding with each of the homogenized stress and strain tensors. Again, this format is consistent with the MOUSE architecture.
 
 \begin{lstlisting}[frame=single]      
 #Returns a list of simulation timesteps
