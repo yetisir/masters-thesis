@@ -54,7 +54,7 @@ Running the parameter estimation algorithms requires the macroscale constitutive
 
 \subsection*{3. Up-Scaling Framework}
 
-An up-scaling framework for DEM simulations is developed in this thesis. The aim of the framework is to generate a continuum parameter set that best captures the salient features of the DEM constitutive response. The framework developed is general, such that the DEM and continuum models are not directly part of the framework, but are rather plug-ins to the framework. Thus, the software implementation of the up-scaling framework primarily contains protocols for different modules to exchange information. The model components are wrapped as modules that plug-in to the framework so that the core up-scaling software is model independent. 
+An up-scaling framework for DEM simulations is developed in this thesis. The aim of the framework is to generate a continuum parameter set that best captures the salient features of the DEM constitutive response. The framework developed is general, such that the DEM and continuum models are not directly part of the framework, but are rather plug-ins to the framework. Thus, my software implementation of the up-scaling framework, "\textbf{M}odular aut\textbf{O}mated \textbf{U}p-\textbf{S}caling softwar\textbf{E}" (MOUSE), primarily contains protocols for different modules to exchange information. The model components are wrapped as modules that plug-in to the framework so that the core up-scaling software is model independent. 
 
 \subsection*{4. Framework Verification}
 
@@ -73,3 +73,29 @@ The macroscale constitutive models that are used are also implemented with an is
 There are countless different optimization algorithms to investigate along with their respective optimization parameters. Exhaustively searching for the most efficient and accurate algorithm for this particular application in a quantitative capacity was not a focus of this thesis. As such, several different algorithms are presented and compared in their capacity to accurately and efficiently converge to the optimal parameter set.
 
 Ultimately, the research presented in this thesis aims to show the efficacy of a modular up-scaling framework for DEM simulations that can facilitate the installation of upgraded modules in the future to account for more sophisticated physics.
+
+%----------------------------------------------------------------------
+\section{Background in Geomechanics}
+%----------------------------------------------------------------------
+
+In a general sense, the study of geomechanics aims to understand (in theory and in practice) the behavioural response of a geological system subjected to an applied disturbance. These disturbances can either be anthropogenic or naturogenic. Though the mechanics of these two types of loads should be the same, the difference in magnitude between the disturbance that can be applied manually, and that which is applied tectonically span several order of magnitude. The presence of scale effect, combined with the uncertainty of geosystems, results in necessarily different approaches to understanding the expected behaviour of the systems. 
+
+Geomechanics can be considered to consist of two subdisciplines: rock mechanics and soil mechanics. Where rock mechanics is concerned with the study of intact rock, soil mechanics is concerned with the behaviour of unconsolidated material. The difference between what constitutes soil and rock is arbitrary and can be highly nuanced in some cases (e.g. a highly weathered/fractured rock or a partially lithified soil). The transition from rock to soil (and \textit{vice versa}) can be considered to be a continuous spectrum where unfractured intact rock is at one end and fine grained unconsolidated soil is at the other. Whether or not one uses rock mechanics or soil mechanics for a particular engineering application is decided in a discretionary manner depending on which system behaviour is more dominant.
+
+In the context of this thesis, the focus of geomechanics considered here is rock mechanics subjected to anthropogenic loading. That being said, the up-scaling methodology may be applicable to soil mechanics and naturogenic loading as well.  
+
+Rock mechanics is a special discipline of mechanics which presents a unique set of challenges. Challenges such as uncertainty, fractures, scale effects and heterogeneities can quickly lead to very complex engineering problems. 
+
+Complexities such as fracture and scale effects are important challenges to consider as well. etc...\
+
+scale effects
+
+Uncertainty is probably the most challenging aspect of engineering rock mechanics. etc..
+
+\subsection{Intact Rock Characterization}
+
+\subsection{Rock Mass Fractures and Characterization}
+
+\subsection{Computational Geomechanics}
+
+Numerical modelling of naturally fractured geomechanical systems can be approached in two ways: by considering the constitutive relationship of the rock mass to be either continuous or discontinuous. The difference between these methods is a function of how one decides to conceptualize the rock mass. In a rock mass modelled as a continuum, the average macroscale response is considered while a rock mass modelled as a discontinuum is modelled by explicitly representing the natural fractures. 

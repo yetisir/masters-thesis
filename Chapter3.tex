@@ -99,7 +99,7 @@ I begin by defining a $L\times L$ square DEM simulation domain over which mixed-
 
 \begin{figure}[!htb]
 \begin{center}
-\includegraphics[width=\textwidth]{figures/Chapter3/HomogenizationArea}
+\includegraphics[width=0.8\textwidth]{figures/Chapter3/HomogenizationArea}
 \caption{{\label{fig:homoarea}Assessment of the homogenization boundary given a circular REV.%
 }}
 \end{center}
@@ -116,16 +116,147 @@ Given a circular REV, due to the discontinuous nature of the DEM simulations, th
 \item \label{hli:6} Find all blocks corresponding to the intersection of contacts in \ref{hli:3} and \ref{hli:5}. 
 \item \label{hli:7} Find all corners corresponding to blocks in \ref{hli:6}. 
 \item \label{hli:8} Find intersection of corners in \ref{hli:4} and \ref{hli:7}. 
-\item \label{hli:9} Find corners that initially (at zero strain) coincide with the corners in \ref{hli:8} 
-\item \label{hli:10} Find union of corners in \ref{hli:8} and \ref{hli:9}. 
-\item \label{hli:11} Order corners from \ref{hli:10} such that they form the closed boundary of the homogenization area.
+\item \label{hli:9} Order corners from \ref{hli:8} such that they form the closed boundary of the homogenization area.
 \end{enumerate}
 
-This algorithm for defining the homogenization domain is developed to provide an unambiguous method for assessing a unique homogenization domain for a given circular REV at a specific location. In steps \ref{hli:1} and \ref{hli:2}, two mutually exclusive block sets are identified, which necessarily share contacts. It is the boundary between these two block sets that is the homogenization domain boundary which is characterized by this algorithm. 
+This algorithm for defining the homogenization domain is developed to provide an unambiguous method for assessing a unique homogenization domain for a given circular REV at a specific location. In steps \ref{hli:1} and \ref{hli:2}, two mutually exclusive block sets are identified (Figures \ref{fig:step1} and \ref{fig:step2}), which necessarily share contacts. It is the boundary between these two block sets that is the homogenization domain boundary which is characterized by this algorithm. In the diagrams accompanying each step, the model is shown in both the original and deformed configuration for clarity. In some cases, the diagram of the deformed configuration helps illustrate the reason for the steps, though for the calculations, the original configuration is used. Furthermore, this algorithm is formulated to be able to be used for homogenization in the deformed configuration as well.
 
-Ultimately, the goal of this process is to identify the corners on this boundary that are on the blocks that intersect with the REV boundary and not the blocks that are outside the REV boundary. As such, the corners (step \ref{hli:4}) corresponding to the contacts (step \ref{hli:3}) between the two sets of blocks are determined. Step \ref{hli:5} is necessary to help eliminate some blocks from the set of boundary block which intersect the REV boundary, but only have contact with blocks inside the homogenization domain boundary, and thus do not have any overall contribution to the definition. Step \ref{hli:6} determines this resultant set of boundary blocks of which every member is connected to the boundary in some capacity. Finding the set of corners that is mutually shared by these blocks in step \ref{hli:7} and the boundary contact corners in step \ref{hli:4} allow for the determination of the initial set of boundary corners (step \ref{hli:8}).
+\begin{figure}[!htb]
+    \centering
+    \begin{subfigure}[b]{0.42\textwidth}
+        \includegraphics[width=\textwidth]{figures/Chapter3/voronoiGranite(0.0)_homostep1.png}
+        \caption{Undeformed configuration}
+        \label{fig:hs1}
+    \end{subfigure}
+    \begin{subfigure}[b]{0.42\textwidth}
+        \includegraphics[width=\textwidth]{figures/Chapter3/voronoiGranite(0.0)_homostep1l.png}
+        \caption{Deformed configuration}
+        \label{fig:hs1l}
+    \end{subfigure}
+    \caption{Homogenization boundary algorithm step 1 showing the set of blocks that lie on the REV boundary in the underformed configuration.}\label{fig:step1}
+\end{figure}
 
-However, one must also note the potential displacement jumps that may occur between blocks on the boundary as the model deforms. In the case where the blocks become physically separated, there exists a discontinuity along the homogenization boundary. These discontinuities along the homogenization boundary are considered by adding boundary segments to the homogenization boundary between the corners of the adjacent blocks. As such, steps \ref{hli:9} and \ref{hli:10} find coincident corners on adjacent boundary blocks to allow for the blocks to become separated on the boundary, while still maintaining connectivity along the homogenization domain boundary. It is also necessary to order the corners (step \ref{hli:11}) to define a closed set of boundary segments along which integration can be performed.
+\begin{figure}[!htb]
+    \centering
+    \begin{subfigure}[b]{0.42\textwidth}
+        \includegraphics[width=\textwidth]{figures/Chapter3/voronoiGranite(0.0)_homostep2.png}
+        \caption{Undeformed configuration}
+        \label{fig:hs2}
+    \end{subfigure}
+    \begin{subfigure}[b]{0.42\textwidth}
+        \includegraphics[width=\textwidth]{figures/Chapter3/voronoiGranite(0.0)_homostep2l.png}
+        \caption{Deformed configuration}
+        \label{fig:hs2l}
+    \end{subfigure}
+    \caption{Homogenization boundary algorithm step 2 showing the set of blocks that lie outside the REV boundary in the undeformed configuration.}\label{fig:step2}
+\end{figure}
+
+Ultimately, the goal of this process is to identify the corners on this boundary that are on the blocks that intersect with the REV boundary and not the blocks that are outside the REV boundary. As such, the corners (step \ref{hli:4}, Figure \ref{fig:step4}) corresponding to the contacts (step \ref{hli:3}, Figure \ref{fig:step3}) between the two sets of blocks are determined. Step \ref{hli:5} (Figure \ref{fig:step5}) is necessary to help eliminate some blocks from the set of boundary block which intersect the REV boundary, but only have contact with blocks inside the homogenization domain boundary, and thus do not have any overall contribution to the definition. Step \ref{hli:6} (Figure \ref{fig:step6}) determines this resultant set of boundary blocks of which every member is connected to the boundary in some capacity. Finding the set of corners that is mutually shared by these blocks in step \ref{hli:7}  (Figure \ref{fig:step7}) and the boundary contact corners in step \ref{hli:4} allow for the determination of the initial set of boundary corners (step \ref{hli:8},  Figure \ref{fig:step8}). It is also necessary to order the corners (step \ref{hli:9}, Figure \ref{fig:step8}) to define a closed set of boundary segments along which integration can be performed.
+
+\begin{figure}[!htb]
+    \centering
+    \begin{subfigure}[b]{0.42\textwidth}
+        \includegraphics[width=\textwidth]{figures/Chapter3/voronoiGranite(0.0)_homostep3.png}
+        \caption{Undeformed configuration}
+        \label{fig:hs3}
+    \end{subfigure}
+    \begin{subfigure}[b]{0.42\textwidth}
+        \includegraphics[width=\textwidth]{figures/Chapter3/voronoiGranite(0.0)_homostep3l.png}
+        \caption{Deformed configuration}
+        \label{fig:hs3l}
+    \end{subfigure}
+    \caption{Homogenization boundary algorithm step 3 showing the contacts along the homogenization boundary. Note how there are orphaned contacts not associated with the blocks defined in step \ref{hli:1} when deformed.}\label{fig:step3}
+\end{figure}
+
+\begin{figure}[!htb]
+    \centering
+    \begin{subfigure}[b]{0.42\textwidth}
+        \includegraphics[width=\textwidth]{figures/Chapter3/voronoiGranite(0.0)_homostep4.png}
+        \caption{Undeformed configuration}
+        \label{fig:hs4}
+    \end{subfigure}
+    \begin{subfigure}[b]{0.42\textwidth}
+        \includegraphics[width=\textwidth]{figures/Chapter3/voronoiGranite(0.0)_homostep4l.png}
+        \caption{Deformed configuration}
+        \label{fig:hs4l}
+    \end{subfigure}
+    \caption{Homogenization boundary algorithm step 4 showing corners along the homogenization boundary. Again, note how there are orphaned corners not associated with the blocks defined in step \ref{hli:1}.}\label{fig:step4}
+\end{figure}
+
+\begin{figure}[!htb]
+    \centering
+    \begin{subfigure}[b]{0.42\textwidth}
+        \includegraphics[width=\textwidth]{figures/Chapter3/voronoiGranite(0.0)_homostep5.png}
+        \caption{Undeformed configuration}
+        \label{fig:hs5}
+    \end{subfigure}
+    \begin{subfigure}[b]{0.42\textwidth}
+        \includegraphics[width=\textwidth]{figures/Chapter3/voronoiGranite(0.0)_homostep5l.png}
+        \caption{Deformed configuration}
+        \label{fig:hs5l}
+    \end{subfigure}
+    \caption{Homogenization boundary algorithm step 5 showing contacts within the homogenization boundary blocks. Again, Note how there are orphaned contacts not associated with the blocks defined in step \ref{hli:1}. }\label{fig:step5}
+\end{figure}
+
+\begin{figure}[!htb]
+    \centering
+    \begin{subfigure}[b]{0.42\textwidth}
+        \includegraphics[width=\textwidth]{figures/Chapter3/voronoiGranite(0.0)_homostep6.png}
+        \caption{Undeformed configuration}
+        \label{fig:hs6}
+    \end{subfigure}
+    \begin{subfigure}[b]{0.42\textwidth}
+        \includegraphics[width=\textwidth]{figures/Chapter3/voronoiGranite(0.0)_homostep6l.png}
+        \caption{Deformed configuration}
+        \label{fig:hs6l}
+    \end{subfigure}
+    \caption{Homogenization boundary algorithm step 6 showing only the boundary blocks that are in contact with the blocks outside the REV domain. Note the differences between this set of blocks and the set of blocks in Figure \ref{fig:step1}.}\label{fig:step6}
+\end{figure}
+
+\begin{figure}[!htb]
+    \centering
+    \begin{subfigure}[b]{0.42\textwidth}
+        \includegraphics[width=\textwidth]{figures/Chapter3/voronoiGranite(0.0)_homostep7.png}
+        \caption{Undeformed configuration}
+        \label{fig:hs7}
+    \end{subfigure}
+    \begin{subfigure}[b]{0.42\textwidth}
+        \includegraphics[width=\textwidth]{figures/Chapter3/voronoiGranite(0.0)_homostep7l.png}
+        \caption{Deformed configuration}
+        \label{fig:hs7l}
+    \end{subfigure}
+    \caption{Homogenization boundary algorithm step 7 showing all the corners associated with the boundary blocks defined in step \ref{hli:6}.}\label{fig:step7}
+\end{figure}
+
+\begin{figure}[!htb]
+    \centering
+    \begin{subfigure}[b]{0.42\textwidth}
+        \includegraphics[width=\textwidth]{figures/Chapter3/voronoiGranite(0.0)_homostep8.png}
+        \caption{Undeformed configuration}
+        \label{fig:hs8}
+    \end{subfigure}
+    \begin{subfigure}[b]{0.42\textwidth}
+        \includegraphics[width=\textwidth]{figures/Chapter3/voronoiGranite(0.0)_homostep8l.png}
+        \caption{Deformed configuration}
+        \label{fig:hs8l}
+    \end{subfigure}
+    \caption{Homogenization boundary algorithm step 8 showing all the corners on the boundary blocks that lie on the homogenization boundary.}\label{fig:step8}
+\end{figure}
+
+\begin{figure}[!htb]
+    \centering
+    \begin{subfigure}[b]{0.42\textwidth}
+        \includegraphics[width=\textwidth]{figures/Chapter3/voronoiGranite(0.0)_homostep9.png}
+        \caption{Undeformed configuration}
+        \label{fig:hs9}
+    \end{subfigure}
+    \begin{subfigure}[b]{0.42\textwidth}
+        \includegraphics[width=\textwidth]{figures/Chapter3/voronoiGranite(0.0)_homostep9l.png}
+        \caption{Deformed configuration}
+        \label{fig:hs9l}
+    \end{subfigure}
+    \caption{Homogenization boundary algorithm step 9 showing all the corners from step \ref{hli:7} connected in sequence to form the homogenization domain.}\label{fig:step9}
+\end{figure}
 
 The homogenization boundary, $\Gamma_{h}$, can be described in terms of $n$ ordered boundary vertices, $V_{i}^{h}=(x_{i}^{h},y_{i}^{h})$, representing the $i$-th set of vertex coordinates along the boundary, such that the area of the homogenization domain, $A^{h}$, can be calculated using the following formulation for the area of an arbitrary, non-self-intersecting polygon \citep{Zwillinger_1995}: 
 

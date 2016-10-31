@@ -2,9 +2,17 @@
 \chapter{Framework Implementation}
 %======================================================================
 
-The software that I developed for the implementation of this up-scaling framework is called "\textbf{M}odular aut\textbf{O}mated \textbf{U}p-\textbf{S}caling softwar\textbf{E}" (MOUSE). MOUSE for DEM simulations was created and written in Python\textsuperscript{TM} to provide an implementation of the up-scaling framework presented in the previous chapter using in house and third-party software modules. The software itself aims to provide a platform through which the four software elements of the up-scaling framework (DEM, homogenization, parameter estimation, and macroscale model) can communicate with each other. The communication is facilitated by MOUSE through modules which wrap the third party software in such a way that the I/O routines to and from the modules are performed in a consistent way regardless of the third party software being used. 
+The software that I developed for the implementation of this up-scaling framework is called "\textbf{M}odular aut\textbf{O}mated \textbf{U}p-\textbf{S}caling softwar\textbf{E}" (MOUSE). MOUSE for DEM simulations was created and written in Python\textsuperscript{TM} to provide an implementation of the up-scaling framework presented in the previous chapter using in house and third-party software modules. Additionally, I also developed the homogenization software, \textbf{H}omogenization \textbf{O}f \textbf{D}EM \textbf{S}imulations (HODS) to be used as the homogenization module. The MOUSE software itself aims to provide a platform through which the four software elements of the up-scaling framework (DEM, homogenization, parameter estimation, and macroscale model) can communicate with each other. The communication is facilitated by MOUSE through modules which wrap the third party software in such a way that the I/O routines to and from the modules are performed in a consistent way regardless of the third party software being used. 
 
-This chapter of the thesis aims to provide a very high level overview of the key aspects of the MOUSE software implementation. The programmatic structure of some of the important software components is presented to illustrate the software design, but a complete discussion on the construction of all the specific wrappers is beyond the scope of the discussion in this chapter.
+This chapter of the thesis aims to provide a very high level overview of the key aspects of the MOUSE and HODS software implementations. The programmatic structure of some of the important software components is presented to illustrate the software design, but a complete discussion on the construction of all the specific wrappers is beyond the scope of the discussion in this chapter. The modular implementation of MOUSE is summarized by Figure \ref{fig:upscalingflowchart}
+
+\begin{figure}[p]
+\begin{center}
+\includegraphics[width=0.75\textwidth]{figures/Chapter4/UpScalingFlowChart}
+\caption{{\label{fig:upscalingflowchart} MOUSE module implementation schematic. The DEM software, UDEC\textsuperscript{TM}, produces a data set which is run through homogenization software, HODS, which in turn produces another dataset that is fed into the parameter estimation program, OSTRICH\textsuperscript{TM}. This parameter estimation program drives the macroscale simulations in ABAQUS\textsuperscript{TM} iteratively in order to find an optimal parameter set for the fitted model.%
+}}
+\end{center}
+\end{figure}
 
 The goal of the up-scaling framework implementation is that it is model independent. So, MOUSE was written in such a way that allowed for different models (both DEM and macroscale) to be implemented without rewriting the up-scaling algorithms. As such, a modular approach was taken such that each module is isolated from the others and only communicates data through strict protocols set out by MOUSE.
 
