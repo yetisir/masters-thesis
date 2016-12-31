@@ -2,24 +2,24 @@
 \chapter{Up-Scaling Methodology}
 %======================================================================
 
-The goal of the following up-scaling methodology is to identify the parameters of a continuum constitutive model (macroscale model) that best emulates the average response in the DEM Representative Elementary Volume (REV) (microscale model). Let the displacement, strain and stress of the DEM REV (microscale) model be denoted by $\mathbf{u}^m$, $\boldsymbol{\epsilon}^m$, and $\boldsymbol{\sigma}^m$, respectively. Let the homogenized (averaged) strain and stress in the DEM REV model be denoted by  $\left<\boldsymbol{\epsilon}\right>$ and $\left<\boldsymbol{\sigma}\right>$, respectively.  Finally, let the strain and stress from the continuum (macroscale) constitutive model be denoted as $\boldsymbol{\epsilon}^M$ and $\boldsymbol{\sigma}^M$, respectively. The rate of macroscale stress, $\dot{\boldsymbol{\sigma}}^M=\dot{\boldsymbol{\sigma}}^M\left(\dot{\boldsymbol{\epsilon}}^M, \boldsymbol{\chi},\mathbf{h}\right)$, is defined in terms of the rate of macroscale strain, $\dot{\boldsymbol{\epsilon}}^M$, a set of material parameters $\boldsymbol{\chi}$ and a set of internal history variables $\mathbf{h}$.
+The goal of the following up-scaling methodology is to identify the parameters of a continuum constitutive model (macroscale model) that best emulates the average response in the \acrshort{dem} \acrfull{rev} (microscale model). Let the displacement, strain and stress of the \acrshort{dem} \acrshort{rev} (microscale) model be denoted by $\mathbf{u}^m$, $\boldsymbol{\epsilon}^m$, and $\boldsymbol{\sigma}^m$, respectively. Let the homogenized (averaged) strain and stress in the \acrshort{dem} \acrshort{rev} model be denoted by  $\left<\boldsymbol{\epsilon}\right>$ and $\left<\boldsymbol{\sigma}\right>$, respectively.  Finally, let the strain and stress from the continuum (macroscale) constitutive model be denoted as $\boldsymbol{\epsilon}^M$ and $\boldsymbol{\sigma}^M$, respectively. The rate of macroscale stress, $\dot{\boldsymbol{\sigma}}^M=\dot{\boldsymbol{\sigma}}^M\left(\dot{\boldsymbol{\epsilon}}^M, \boldsymbol{\chi},\mathbf{h}\right)$, is defined in terms of the rate of macroscale strain, $\dot{\boldsymbol{\epsilon}}^M$, a set of material parameters $\boldsymbol{\chi}$ and a set of internal history variables $\mathbf{h}$.
 
 The up-scaling methodology has five steps: 
 \begin{enumerate}
-    \item Identify the DEM REV for the NFR.
-	\item Exercise the DEM REV using multiple load paths. Store $\mathbf{u}^m$, $\boldsymbol{\epsilon}^m$, and $\boldsymbol{\sigma}^m$ for each load path.
-	\item Apply homogenization algorithms to the microscale results ($\mathbf{u}^m$, $\boldsymbol{\epsilon}^m$, and $\boldsymbol{\sigma}^m$) to determine the average stress-strain response of the REV, i.e., $\left<\boldsymbol{\sigma}\right>$-$\left<\boldsymbol{\epsilon}\right>$, for each load path.
-	\item Identify a continuum constitutive model, $\dot{\boldsymbol{\sigma}}^M=\dot{\boldsymbol{\sigma}}^M\left(\dot{\boldsymbol{\epsilon}}^M, \boldsymbol{\chi},\mathbf{h}\right)$, that captures the salient features of NFR mechanics.
+    \item Identify the \acrshort{dem} \acrshort{rev} for the \acrshort{nfr}.
+	\item Exercise the \acrshort{dem} \acrshort{rev} using multiple load paths. Store $\mathbf{u}^m$, $\boldsymbol{\epsilon}^m$, and $\boldsymbol{\sigma}^m$ for each load path.
+	\item Apply homogenization algorithms to the microscale results ($\mathbf{u}^m$, $\boldsymbol{\epsilon}^m$, and $\boldsymbol{\sigma}^m$) to determine the average stress-strain response of the \acrshort{rev}, i.e., $\left<\boldsymbol{\sigma}\right>$-$\left<\boldsymbol{\epsilon}\right>$, for each load path.
+	\item Identify a continuum constitutive model, $\dot{\boldsymbol{\sigma}}^M=\dot{\boldsymbol{\sigma}}^M\left(\dot{\boldsymbol{\epsilon}}^M, \boldsymbol{\chi},\mathbf{h}\right)$, that captures the salient features of \acrshort{nfr} mechanics.
 	\item Run parameter estimation algorithms to identify the parameters, $\boldsymbol{\chi}$, that minimize the difference between $\left<\boldsymbol{\sigma}\right>$-$\left<\boldsymbol{\epsilon}\right>$ and $\boldsymbol{\sigma}^M$-$\boldsymbol{\epsilon}^M$ over all load paths.
 \end{enumerate}
 
-Once an optimal parameter set, $\boldsymbol{\chi}$, for the desired model, $\dot{\boldsymbol{\sigma}}^M=\dot{\boldsymbol{\sigma}}^M\left(\dot{\boldsymbol{\epsilon}}^M, \boldsymbol{\chi},\mathbf{h}\right)$, has been identified, the newly established constitutive model can be used in Finite Element Method (FEM) models or with other suitable numerical or analytical simulations.
+Once an optimal parameter set, $\boldsymbol{\chi}$, for the desired model, $\dot{\boldsymbol{\sigma}}^M=\dot{\boldsymbol{\sigma}}^M\left(\dot{\boldsymbol{\epsilon}}^M, \boldsymbol{\chi},\mathbf{h}\right)$, has been identified, the newly established constitutive model can be used in \acrfull{fem} models or with other suitable numerical or analytical simulations.
 
 %----------------------------------------------------------------------
 \section{Up-Scaling Implementation Overview}
 %----------------------------------------------------------------------
 
-The up-scaling framework consists of four main software components (Figure \ref{fig:workflow}): a DEM simulator, a homogenization module, a FEM simulator, and a parameter estimation module. In procedural order, the first software component involved is a DEM simulation package, which is used to directly model the NFR. 
+The up-scaling framework consists of four main software components (Figure \ref{fig:workflow}): a \acrshort{dem} simulator, a homogenization module, a \acrfull{fem} simulator, and a parameter estimation module. In procedural order, the first software component involved is a \acrshort{dem} simulation package, which is used to directly model the \acrshort{nfr}. 
 
 \begin{figure}[p]
 \begin{center}
@@ -29,9 +29,9 @@ The up-scaling framework consists of four main software components (Figure \ref{
 \end{center}
 \end{figure}
 
-The DEM software accepts as inputs the geometry of the DFN, the material properties of the rock and the natural fractures, and the load paths. The DEM REV is exercised for different load-paths in a way that is akin to conducting multiple triaxial tests on physical specimens to characterize the full range of material behaviour. The DEM software outputs the microscale displacement, $\mathbf{u}^m$, and stress-strain, $\boldsymbol{\sigma}^m$-$\boldsymbol{\epsilon}^m$, responses for each load path.  This microscale data is subsequently fed into the homogenization module to compute the average stress-strain response, $\left<\boldsymbol{\sigma}\right>$-$\left<\boldsymbol{\epsilon}\right>$,  for each load path. Next, the homogenized stress-strain data, $\left<\boldsymbol{\sigma}\right>$-$\left<\boldsymbol{\epsilon}\right>$, is used by the parameter estimation software as observation data (i.e., laboratory/field data). The parameter estimation module iteratively executes a constitutive model, $\dot{\boldsymbol{\sigma}}^M=\dot{\boldsymbol{\sigma}}^M\left(\dot{\boldsymbol{\epsilon}}^M, \boldsymbol{\chi},\mathbf{h}\right)$, embedded in the FEM simulator for each load path using different parameter sets, $\boldsymbol{\chi}^i$, while attempting to minimize the error between the homogenized microscale, $\left<\boldsymbol{\sigma}\right>$-$\left<\boldsymbol{\epsilon}\right>$, and macroscale, $\boldsymbol{\sigma}^M$-$\boldsymbol{\epsilon}^M$,  stress-strain curves. Eventually, the algorithm converges to a near-optimal parameter set, $\boldsymbol{\chi}$, that can be viewed to be the best estimate of the NFR responses by the given continuum model. 
+The \acrshort{dem} software accepts as inputs the geometry of the \acrshort{dfn}, the material properties of the rock and the natural fractures, and the load paths. The \acrshort{dem} \acrshort{rev} is exercised for different load-paths in a way that is akin to conducting multiple triaxial tests on physical specimens to characterize the full range of material behaviour. The \acrshort{dem} software outputs the microscale displacement, $\mathbf{u}^m$, and stress-strain, $\boldsymbol{\sigma}^m$-$\boldsymbol{\epsilon}^m$, responses for each load path.  This microscale data is subsequently fed into the homogenization module to compute the average stress-strain response, $\left<\boldsymbol{\sigma}\right>$-$\left<\boldsymbol{\epsilon}\right>$,  for each load path. Next, the homogenized stress-strain data, $\left<\boldsymbol{\sigma}\right>$-$\left<\boldsymbol{\epsilon}\right>$, is used by the parameter estimation software as observation data (i.e., laboratory/field data). The parameter estimation module iteratively executes a constitutive model, $\dot{\boldsymbol{\sigma}}^M=\dot{\boldsymbol{\sigma}}^M\left(\dot{\boldsymbol{\epsilon}}^M, \boldsymbol{\chi},\mathbf{h}\right)$, embedded in the \acrshort{fem} simulator for each load path using different parameter sets, $\boldsymbol{\chi}^i$, while attempting to minimize the error between the homogenized microscale, $\left<\boldsymbol{\sigma}\right>$-$\left<\boldsymbol{\epsilon}\right>$, and macroscale, $\boldsymbol{\sigma}^M$-$\boldsymbol{\epsilon}^M$,  stress-strain curves. Eventually, the algorithm converges to a near-optimal parameter set, $\boldsymbol{\chi}$, that can be viewed to be the best estimate of the NFR responses by the given continuum model. 
 
-In my implementation, UDEC\textsuperscript{TM} was used as the DEM simulator and ABAQUS\textsuperscript{TM} was used as the FEM simulator. In ABAQUS\textsuperscript{TM}, single element simulations were performed with a strain-history prescribed through displacement boundary conditions for a given set of material parameters and the stress is obtained as the output. There is nothing particularly special about the DEM or FEM simulators chosen; each could easily be replaced to overcome any inherent limitations.  Moreover, a FEM simulator is not actually needed, since its inclusion in this framework is simply to gain access to the constitutive models within. The FEM simulator could easily be replaced by a FDM simulator or simply by a material subroutine.  OSTRICH\textsuperscript{TM}, a model-independent optimization package \citep{matott_ostrich:_2016}, is used for the parameter estimation module. I implemented the homogenization module in Python\textsuperscript{TM}. I also used Python\textsuperscript{TM} to develop interfaces drive the various components of the up-scaling framework.
+In my implementation, UDEC\textsuperscript{TM} was used as the \acrshort{dem} simulator and ABAQUS\textsuperscript{TM} was used as the \acrshort{fem} simulator. In ABAQUS\textsuperscript{TM}, single element simulations were performed with a strain-history prescribed through displacement boundary conditions for a given set of material parameters and the stress is obtained as the output. There is nothing particularly special about the \acrshort{dem} or \acrshort{fem} simulators chosen; each could easily be replaced to overcome any inherent limitations.  Moreover, a \acrshort{fem} simulator is not actually needed, since its inclusion in this framework is simply to gain access to the constitutive models within. The \acrshort{fem} simulator could easily be replaced by a \acrfull{fdm} simulator or simply by a material subroutine.  OSTRICH\textsuperscript{TM}, a model-independent optimization package \citep{matott_ostrich:_2016}, is used for the parameter estimation module. I implemented the homogenization module in Python\textsuperscript{TM}. I also used Python\textsuperscript{TM} to develop interfaces drive the various components of the up-scaling framework.
 
 %----------------------------------------------------------------------
 \section{Distinct Element Method}
@@ -39,9 +39,9 @@ In my implementation, UDEC\textsuperscript{TM} was used as the DEM simulator and
 
 Discontinuous systems are characterized by the existence of discontinuities that separate discrete domains within the system. In order to effectively model a discontinuous system, it is necessary to represent two distinct types of mechanical behaviour: the behaviour of the discontinuities and the behaviour of the solid material.
 
-There exists a set of methods, referred to as discrete element methods, which provide the capacity to explicitly represent the behaviour of multiple intersecting discontinuities. The methods allow for the modelling of finite displacements and rotations of discrete bodies, including contact detachment as well as automatic detection of new contacts. Within the set of Discrete Element Methods, there are four subsets \citep{CUNDALL_1992}: Modal Methods, Discontinuous Deformation Analysis Methods, Momentum Exchange Methods, and Distinct Element Methods (DEM). In this thesis, the discrete element method used is DEM.
+There exists a set of methods, referred to as discrete element methods, which provide the capacity to explicitly represent the behaviour of multiple intersecting discontinuities. The methods allow for the modelling of finite displacements and rotations of discrete bodies, including contact detachment as well as automatic detection of new contacts. Within the set of Discrete Element Methods, there are four subsets \citep{CUNDALL_1992}: Modal Methods, Discontinuous Deformation Analysis Methods, Momentum Exchange Methods, and \acrfull{dem}. In this thesis, the discrete element method used is \acrshort{dem}.
 
-With DEM methods, the discontinuous system is represented as an assembly of deformable blocks such that the interfaces between the blocks represent the discontinuities. With respect to NFR, the blocks can be used to represent the intact rock while the discontinuities represent the joints in the rock mass. 
+With \acrshort{dem} methods, the discontinuous system is represented as an assembly of deformable blocks such that the interfaces between the blocks represent the discontinuities. With respect to NFR, the blocks can be used to represent the intact rock while the discontinuities represent the joints in the rock mass. 
 
 Consider an arbitrary deformable domain, $\Omega$, with a boundary, $\Gamma$, that is subdivided by prescribed discontinuities into $i$ subdomains, each denoted by $\Omega_i$ (Figure \ref{fig:DEM}). Let $\Gamma_{ij}=\Gamma_{ji}$ represent the boundary between $\Omega_i$ and $\Omega_j$. The motion of these subdomains (discrete elements) is governed by the conservation of momentum which relates the divergence of the stress field at a material point, $\nabla\cdot\boldsymbol{\sigma}^m$, to the element acceleration, $\ddot{\mathbf{u}}^m$, and density, $\rho$:
 
@@ -58,7 +58,7 @@ Consider an arbitrary deformable domain, $\Omega$, with a boundary, $\Gamma$, th
 \end{center}
 \end{figure}
 
-The interaction between $\Omega_i$ and $\Omega_j$ along $\Gamma_{ij}$ is the distinguishing feature in the DEM formulation, and is comprised of two main components: contact detection and the constitutive relationship. The contact detection algorithms are responsible for ensuring that $\Omega_i$ and $\Omega_j$ do not penetrate each other and ensures that the appropriate contact forces are transferred between elements. These contact forces are governed by constitutive models of $\Gamma_{ij}$ which can be described in general by a shear stiffness, $k_s$, in a direction parallel to the $\Gamma_{ij}$, and a normal stiffness, $k_n$, in a direction normal to $\Gamma_i$. The normal stress over any $\Gamma_{ij}$, $\sigma^n$, can be expressed as a function of the normal elastic displacement jump across the interface, $u^n$, up until the tensile strength, $T$, is exceeded: 
+The interaction between $\Omega_i$ and $\Omega_j$ along $\Gamma_{ij}$ is the distinguishing feature in the \acrshort{dem} formulation, and is comprised of two main components: contact detection and the constitutive relationship. The contact detection algorithms are responsible for ensuring that $\Omega_i$ and $\Omega_j$ do not penetrate each other and ensures that the appropriate contact forces are transferred between elements. These contact forces are governed by constitutive models of $\Gamma_{ij}$ which can be described in general by a shear stiffness, $k_s$, in a direction parallel to the $\Gamma_{ij}$, and a normal stiffness, $k_n$, in a direction normal to $\Gamma_i$. The normal stress over any $\Gamma_{ij}$, $\sigma^n$, can be expressed as a function of the normal elastic displacement jump across the interface, $u^n$, up until the tensile strength, $T$, is exceeded: 
 
 \begin{equation}
 \sigma^n=\left\{\begin{matrix}
@@ -84,9 +84,9 @@ The microscale stress field, $\boldsymbol{\sigma}^m$, within $\Omega_i$ is descr
 \section{Homogenization Approach}
 %----------------------------------------------------------------------
 
-The main objective of up-scaling DEM simulations is to be able to describe the  behavior of the discontinuous medium in terms of a more computationally efficient continuum model. The homogenization algorithms used herein to determine the average stress-strain behaviour, $\left<\boldsymbol{\sigma}\right>$-$\left<\boldsymbol{\epsilon}\right>$, of the REV from the microscale displacements $\mathbf{u}^m$, strain $\boldsymbol{\epsilon}^m$, and stresses $\boldsymbol{\sigma}^m$ are based on the methods developed by \citet{daddetta_particle_2004} and \citet{wellmann_homogenization_2008}. In this homogenization process, the resultant inter-block contact forces and block displacement from the DEM simulations are converted to average stresses and strains.
+The main objective of up-scaling \acrshort{dem} simulations is to be able to describe the  behavior of the discontinuous medium in terms of a more computationally efficient continuum model. The homogenization algorithms used herein to determine the average stress-strain behaviour, $\left<\boldsymbol{\sigma}\right>$-$\left<\boldsymbol{\epsilon}\right>$, of the \acrshort{rev} from the microscale displacements $\mathbf{u}^m$, strain $\boldsymbol{\epsilon}^m$, and stresses $\boldsymbol{\sigma}^m$ are based on the methods developed by \citet{daddetta_particle_2004} and \citet{wellmann_homogenization_2008}. In this homogenization process, the resultant inter-block contact forces and block displacement from the \acrshort{dem} simulations are converted to average stresses and strains.
 
-For the homogenization procedure to yield meaningful results, it should be applied to a Representative Elementary Volume (REV). The exact size of the REV depends on the geometry and mechanical properties of the DEM model. For the homogenization approach to hold, the REV of size $d$ within a system with a characteristic length $D$ and consisting of blocks with a characteristic diameter $\delta$, must satisfy scale separation \citep{hill_elastic_1963}:
+For the homogenization procedure to yield meaningful results, it should be applied to a \acrfull{rev}. The exact size of the \acrshort{rev} depends on the geometry and mechanical properties of the \acrshort{dem} model. For the homogenization approach to hold, the \acrshort{rev} of size $d$ within a system with a characteristic length $D$ and consisting of blocks with a characteristic diameter $\delta$, must satisfy scale separation \citep{hill_elastic_1963}:
  
 \begin{equation}
 \label{eqn:scalesep}
@@ -95,7 +95,7 @@ D\gg d\gg\delta
 
 In the following sections, all deformations are assumed to be small, such that there is no need to differentiate between the deformed and undeformed configurations.  
 
-I begin by defining a $L\times L$ square DEM simulation domain over which mixed-boundary conditions will be applied. The REV is taken as a circular domain of radius $R$, $2R<L$.  The REV is taken to be a subdomain of the actual DEM simulation domain to eliminate any boundary effects.  As will be seen below, it is convenient to take the boundary of the domain used for homogenization as a slightly larger domain encompassing the REV boundary. The boundary of the homogenization domain, denoted as $\Gamma_h$, is defined by the outer edges of the deformable blocks, i.e., the cohesive/contact surfaces between deformable blocks, which intersect a circle of radius $R$ located in the center of the DEM simulation domain. Let the homogenization domain, the domain bounded by $\Gamma_h$, be denoted by $\Omega_h$. These definitions are illustrated in Figure \ref{fig:homoarea} for a $10$m $\times$ $10$m DEM domain, where the deformable blocks are defined through a Voronoi tessellation. The radius of the REV domain is $2.5$m.  It can be seen that the actual domain used for homogenization is non-circular and larger than the REV domain. 
+Consider a $L\times L$ square \acrshort{dem} simulation domain over which mixed-boundary conditions will be applied. The \acrshort{rev} is taken as a circular domain of radius $R$, $2R<L$.  The \acrshort{rev} is taken to be a subdomain of the actual \acrshort{dem} simulation domain to eliminate any boundary effects.  As will be seen below, it is convenient to take the boundary of the domain used for homogenization as a slightly larger domain encompassing the \acrshort{rev} boundary. The boundary of the homogenization domain, denoted as $\Gamma_h$, is defined by the outer edges of the deformable blocks, i.e., the cohesive/contact surfaces between deformable blocks, which intersect a circle of radius $R$ located in the center of the \acrshort{dem} simulation domain. Let the homogenization domain, the domain bounded by $\Gamma_h$, be denoted by $\Omega_h$. These definitions are illustrated in Figure \ref{fig:homoarea} for a $10$m $\times$ $10$m \acrshort{dem} domain, where the deformable blocks are defined through a Voronoi tessellation. The radius of the \acrshort{rev} domain is $2.5$m.  It can be seen that the actual domain used for homogenization is non-circular and larger than the \acrshort{rev} domain. 
 
 \begin{figure}[!htb]
 \begin{center}
@@ -105,11 +105,11 @@ I begin by defining a $L\times L$ square DEM simulation domain over which mixed-
 \end{center}
 \end{figure}
 
-Given a circular REV, due to the discontinuous nature of the DEM simulations, the circular REV cannot be used directly. Because the calculated displacements and contact forces from the DEM are known at the block edges, the homogenization domain boundary must follow the block boundaries. The homogenization domain is characterized by a series of block corners which are identified at the initial (zero strain) state. These corners continue to define the homogenization domain once deformation occurs, allowing for a consistent homogenization domain definition as the model is deformed. An algorithm is developed here to assess the homogenization domain boundary: 
+Given a circular \acrshort{rev}, due to the discontinuous nature of the \acrshort{dem} simulations, the circular \acrshort{rev} cannot be used directly. Because the calculated displacements and contact forces from the \acrshort{dem} are known at the block edges, the homogenization domain boundary must follow the block boundaries. The homogenization domain is characterized by a series of block corners which are identified at the initial (zero strain) state. These corners continue to define the homogenization domain once deformation occurs, allowing for a consistent homogenization domain definition as the model is deformed. An algorithm is developed here to assess the homogenization domain boundary: 
 
 \begin{enumerate}
-\item \label{hli:1} Identify all blocks that intersect the circular REV boundary. 
-\item \label{hli:2} Identify all blocks that lie completely outside the REV boundary. 
+\item \label{hli:1} Identify all blocks that intersect the circular \acrshort{rev} boundary. 
+\item \label{hli:2} Identify all blocks that lie completely outside the \acrshort{rev} boundary. 
 \item \label{hli:3} Find all contacts corresponding to the intersection between blocks in \ref{hli:1} and \ref{hli:2}. 
 \item \label{hli:4} Find all corners corresponding to the contacts in \ref{hli:3}. 
 \item \label{hli:5} Find all contacts of blocks in \ref{hli:1}. 
@@ -119,16 +119,16 @@ Given a circular REV, due to the discontinuous nature of the DEM simulations, th
 \item \label{hli:9} Order corners from \ref{hli:8} such that they form the closed boundary of the homogenization area.
 \end{enumerate}
 
-This algorithm for defining the homogenization domain is developed to provide an unambiguous method for assessing a unique homogenization domain for a given circular REV at a specific location. In steps \ref{hli:1} and \ref{hli:2}, two mutually exclusive block sets are identified (Figures \ref{fig:step1} and \ref{fig:step2}), which necessarily share contacts. It is the boundary between these two block sets that is the homogenization domain boundary which is characterized by this algorithm. In the diagrams accompanying each step, the model is shown in both the original and deformed configuration for clarity. In some cases, the diagram of the deformed configuration helps illustrate the reason for the steps, though for the calculations, the original configuration is used. Furthermore, this algorithm is formulated to be able to be used for homogenization in the deformed configuration as well.
+This algorithm for defining the homogenization domain is developed to provide an unambiguous method for assessing a unique homogenization domain for a given circular \acrshort{rev} at a specific location. In steps \ref{hli:1} and \ref{hli:2}, two mutually exclusive block sets are identified (Figures \ref{fig:step1} and \ref{fig:step2}), which necessarily share contacts. It is the boundary between these two block sets that is the homogenization domain boundary which is characterized by this algorithm. In the diagrams accompanying each step, the model is shown in both the original and deformed configuration for clarity. In some cases, the diagram of the deformed configuration helps illustrate the reason for the steps, though for the calculations, the original configuration is used. Furthermore, this algorithm is formulated to be able to be used for homogenization in the deformed configuration as well.
 
 \begin{figure}[!htb]
     \centering
-    \begin{subfigure}[b]{0.42\textwidth}
+    \begin{subfigure}[b]{0.43\textwidth}
         \includegraphics[width=\textwidth]{figures/Chapter3/voronoiGranite(0.0)_homostep1.png}
         \caption{Undeformed configuration}
         \label{fig:hs1}
     \end{subfigure}
-    \begin{subfigure}[b]{0.42\textwidth}
+    \begin{subfigure}[b]{0.43\textwidth}
         \includegraphics[width=\textwidth]{figures/Chapter3/voronoiGranite(0.0)_homostep1l.png}
         \caption{Deformed configuration}
         \label{fig:hs1l}
@@ -138,12 +138,12 @@ This algorithm for defining the homogenization domain is developed to provide an
 
 \begin{figure}[!htb]
     \centering
-    \begin{subfigure}[b]{0.42\textwidth}
+    \begin{subfigure}[b]{0.43\textwidth}
         \includegraphics[width=\textwidth]{figures/Chapter3/voronoiGranite(0.0)_homostep2.png}
         \caption{Undeformed configuration}
         \label{fig:hs2}
     \end{subfigure}
-    \begin{subfigure}[b]{0.42\textwidth}
+    \begin{subfigure}[b]{0.43\textwidth}
         \includegraphics[width=\textwidth]{figures/Chapter3/voronoiGranite(0.0)_homostep2l.png}
         \caption{Deformed configuration}
         \label{fig:hs2l}
@@ -151,16 +151,16 @@ This algorithm for defining the homogenization domain is developed to provide an
     \caption{Homogenization boundary algorithm step 2 showing the set of blocks that lie outside the REV boundary in the undeformed configuration.}\label{fig:step2}
 \end{figure}
 
-Ultimately, the goal of this process is to identify the corners on this boundary that are on the blocks that intersect with the REV boundary and not the blocks that are outside the REV boundary. As such, the corners (step \ref{hli:4}, Figure \ref{fig:step4}) corresponding to the contacts (step \ref{hli:3}, Figure \ref{fig:step3}) between the two sets of blocks are determined. Step \ref{hli:5} (Figure \ref{fig:step5}) is necessary to help eliminate some blocks from the set of boundary block which intersect the REV boundary, but only have contact with blocks inside the homogenization domain boundary, and thus do not have any overall contribution to the definition. Step \ref{hli:6} (Figure \ref{fig:step6}) determines this resultant set of boundary blocks of which every member is connected to the boundary in some capacity. Finding the set of corners that is mutually shared by these blocks in step \ref{hli:7}  (Figure \ref{fig:step7}) and the boundary contact corners in step \ref{hli:4} allow for the determination of the initial set of boundary corners (step \ref{hli:8},  Figure \ref{fig:step8}). It is also necessary to order the corners (step \ref{hli:9}, Figure \ref{fig:step8}) to define a closed set of boundary segments along which integration can be performed.
+Ultimately, the goal of this process is to identify the corners on this boundary that are on the blocks that intersect with the \acrshort{rev} boundary and not the blocks that are outside the \acrshort{rev} boundary. As such, the corners (step \ref{hli:4}, Figure \ref{fig:step4}) corresponding to the contacts (step \ref{hli:3}, Figure \ref{fig:step3}) between the two sets of blocks are determined. Step \ref{hli:5} (Figure \ref{fig:step5}) is necessary to help eliminate some blocks from the set of boundary block which intersect the \acrshort{rev} boundary, but only have contact with blocks inside the homogenization domain boundary, and thus do not have any overall contribution to the definition. Step \ref{hli:6} (Figure \ref{fig:step6}) determines this resultant set of boundary blocks of which every member is connected to the boundary in some capacity. Finding the set of corners that is mutually shared by these blocks in step \ref{hli:7}  (Figure \ref{fig:step7}) and the boundary contact corners in step \ref{hli:4} allow for the determination of the initial set of boundary corners (step \ref{hli:8},  Figure \ref{fig:step8}). It is also necessary to order the corners (step \ref{hli:9}, Figure \ref{fig:step8}) to define a closed set of boundary segments along which integration can be performed.
 
 \begin{figure}[!htb]
     \centering
-    \begin{subfigure}[b]{0.42\textwidth}
+    \begin{subfigure}[b]{0.43\textwidth}
         \includegraphics[width=\textwidth]{figures/Chapter3/voronoiGranite(0.0)_homostep3.png}
         \caption{Undeformed configuration}
         \label{fig:hs3}
     \end{subfigure}
-    \begin{subfigure}[b]{0.42\textwidth}
+    \begin{subfigure}[b]{0.43\textwidth}
         \includegraphics[width=\textwidth]{figures/Chapter3/voronoiGranite(0.0)_homostep3l.png}
         \caption{Deformed configuration}
         \label{fig:hs3l}
@@ -170,12 +170,12 @@ Ultimately, the goal of this process is to identify the corners on this boundary
 
 \begin{figure}[!htb]
     \centering
-    \begin{subfigure}[b]{0.42\textwidth}
+    \begin{subfigure}[b]{0.43\textwidth}
         \includegraphics[width=\textwidth]{figures/Chapter3/voronoiGranite(0.0)_homostep4.png}
         \caption{Undeformed configuration}
         \label{fig:hs4}
     \end{subfigure}
-    \begin{subfigure}[b]{0.42\textwidth}
+    \begin{subfigure}[b]{0.43\textwidth}
         \includegraphics[width=\textwidth]{figures/Chapter3/voronoiGranite(0.0)_homostep4l.png}
         \caption{Deformed configuration}
         \label{fig:hs4l}
@@ -185,12 +185,12 @@ Ultimately, the goal of this process is to identify the corners on this boundary
 
 \begin{figure}[!htb]
     \centering
-    \begin{subfigure}[b]{0.42\textwidth}
+    \begin{subfigure}[b]{0.43\textwidth}
         \includegraphics[width=\textwidth]{figures/Chapter3/voronoiGranite(0.0)_homostep5.png}
         \caption{Undeformed configuration}
         \label{fig:hs5}
     \end{subfigure}
-    \begin{subfigure}[b]{0.42\textwidth}
+    \begin{subfigure}[b]{0.43\textwidth}
         \includegraphics[width=\textwidth]{figures/Chapter3/voronoiGranite(0.0)_homostep5l.png}
         \caption{Deformed configuration}
         \label{fig:hs5l}
@@ -200,12 +200,12 @@ Ultimately, the goal of this process is to identify the corners on this boundary
 
 \begin{figure}[!htb]
     \centering
-    \begin{subfigure}[b]{0.42\textwidth}
+    \begin{subfigure}[b]{0.43\textwidth}
         \includegraphics[width=\textwidth]{figures/Chapter3/voronoiGranite(0.0)_homostep6.png}
         \caption{Undeformed configuration}
         \label{fig:hs6}
     \end{subfigure}
-    \begin{subfigure}[b]{0.42\textwidth}
+    \begin{subfigure}[b]{0.43\textwidth}
         \includegraphics[width=\textwidth]{figures/Chapter3/voronoiGranite(0.0)_homostep6l.png}
         \caption{Deformed configuration}
         \label{fig:hs6l}
@@ -215,12 +215,12 @@ Ultimately, the goal of this process is to identify the corners on this boundary
 
 \begin{figure}[!htb]
     \centering
-    \begin{subfigure}[b]{0.42\textwidth}
+    \begin{subfigure}[b]{0.43\textwidth}
         \includegraphics[width=\textwidth]{figures/Chapter3/voronoiGranite(0.0)_homostep7.png}
         \caption{Undeformed configuration}
         \label{fig:hs7}
     \end{subfigure}
-    \begin{subfigure}[b]{0.42\textwidth}
+    \begin{subfigure}[b]{0.43\textwidth}
         \includegraphics[width=\textwidth]{figures/Chapter3/voronoiGranite(0.0)_homostep7l.png}
         \caption{Deformed configuration}
         \label{fig:hs7l}
@@ -230,12 +230,12 @@ Ultimately, the goal of this process is to identify the corners on this boundary
 
 \begin{figure}[!htb]
     \centering
-    \begin{subfigure}[b]{0.42\textwidth}
+    \begin{subfigure}[b]{0.43\textwidth}
         \includegraphics[width=\textwidth]{figures/Chapter3/voronoiGranite(0.0)_homostep8.png}
         \caption{Undeformed configuration}
         \label{fig:hs8}
     \end{subfigure}
-    \begin{subfigure}[b]{0.42\textwidth}
+    \begin{subfigure}[b]{0.43\textwidth}
         \includegraphics[width=\textwidth]{figures/Chapter3/voronoiGranite(0.0)_homostep8l.png}
         \caption{Deformed configuration}
         \label{fig:hs8l}
@@ -245,12 +245,12 @@ Ultimately, the goal of this process is to identify the corners on this boundary
 
 \begin{figure}[!htb]
     \centering
-    \begin{subfigure}[b]{0.42\textwidth}
+    \begin{subfigure}[b]{0.43\textwidth}
         \includegraphics[width=\textwidth]{figures/Chapter3/voronoiGranite(0.0)_homostep9.png}
         \caption{Undeformed configuration}
         \label{fig:hs9}
     \end{subfigure}
-    \begin{subfigure}[b]{0.42\textwidth}
+    \begin{subfigure}[b]{0.43\textwidth}
         \includegraphics[width=\textwidth]{figures/Chapter3/voronoiGranite(0.0)_homostep9l.png}
         \caption{Deformed configuration}
         \label{fig:hs9l}
@@ -267,7 +267,7 @@ A^{h}=\dfrac{1}{2}\sum_{i=1}^{n}x_{i}^{h}(y_{i+1}^{h}-y_{i-1}^{h})
 
 \subsection{Stress Homogenization}
 
-The homogenized Cauchy stress, $\langle\boldsymbol{\sigma}\rangle$, is derived from the definition of the spatial average of the microscale stress of the deformable blocks of the DEM simulation, $\boldsymbol{\sigma}^m$, over the homogenization domain $\Omega^{h}$ \citep{hill_elastic_1963}. 
+The homogenized Cauchy stress, $\langle\boldsymbol{\sigma}\rangle$, is derived from the definition of the spatial average of the microscale stress of the deformable blocks of the \acrshort{dem} simulation, $\boldsymbol{\sigma}^m$, over the homogenization domain $\Omega^{h}$ \citep{hill_elastic_1963}. 
 \begin{equation}
 \langle\boldsymbol{\sigma}\rangle=\frac{1}{A^{h}}\int_{\Omega^{h}}\boldsymbol{\sigma}^m dA\label{eqn:stress1}
 \end{equation}
@@ -324,17 +324,17 @@ In my implementation, (\ref{eqn:strain7}) is incorporated into the homogenizatio
 \section{Assessment of the REV Size}
 %----------------------------------------------------------------------
 
-Homogenizing DEM simulations requires the existence and determination of the REV for the given medium. Generally, the REV of a given domain can be described as the smallest subdomain that is statistically representative of the entire domain \citep{Kanit_2003, Gitman_2007}. This qualitative definition is insufficient to rigorously define an REV as it is subjective with respect to what "statistically representative" means. Hence, the assessment of the REV can be a contentious issue, fraught with ambiguity.
+Homogenizing \acrshort{dem} simulations requires the existence and determination of the \acrshort{rev} for the given medium. Generally, the \acrshort{rev} of a given domain can be described as the smallest subdomain that is statistically representative of the entire domain \citep{Kanit_2003, Gitman_2007}. This qualitative definition is insufficient to rigorously define an \acrshort{rev} as it is subjective with respect to what "statistically representative" means. Hence, the assessment of the \acrshort{rev} can be a contentious issue, fraught with ambiguity.
 
-One can conceptualize an REV to be "statistically representative" in two primarily different ways \citep{Drugan_1996}. The classically cited means for characterizing an REV suggests that the micro-scale heterogeneities (e.g., fractures, voids, grains, etc.) should be statistically representative within the REV such that the REV should contain a sufficiently large sample of these heterogeneities. This characterization of the REV is potentially problematic when attempting to quantify the REV as the descriptions of these heterogeneities tend to be nominally qualitative, and at best, quasi-quantitative.
+One can conceptualize an \acrshort{rev} to be "statistically representative" in two primarily different ways \citep{Drugan_1996}. The classically cited means for characterizing an \acrshort{rev} suggests that the micro-scale heterogeneities (e.g., fractures, voids, grains, etc.) should be statistically representative within the \acrshort{rev} such that the \acrshort{rev} should contain a sufficiently large sample of these heterogeneities. This characterization of the \acrshort{rev} is potentially problematic when attempting to quantify the \acrshort{rev} as the descriptions of these heterogeneities tend to be nominally qualitative, and at best, quasi-quantitative.
 
-The alternative means of conceptualizing "statistically representative", and arguably a more pragmatic way, proposes that the constitutive response of the REV should be statistically representative of the domain. In other words, as one increases the size of a sample domain, the point at which the constitutive response within the domain becomes sensibly constant can be referred to as the REV. Thus, the subdomain constitutive response is quantifiable through resultant model properties and parameters. This REV interpretation has been widely used because of its quantifiability \citep{Kanit_2003, Gitman_2005, Gusev_1997, M_ller_2010}, and is adopted for this work.
+The alternative means of conceptualizing "statistically representative", and arguably a more pragmatic way, proposes that the constitutive response of the \acrshort{rev} should be statistically representative of the domain. In other words, as one increases the size of a sample domain, the point at which the constitutive response within the domain becomes sensibly constant can be referred to as the \acrshort{rev}. Thus, the subdomain constitutive response is quantifiable through resultant model properties and parameters. This \acrshort{rev} interpretation has been widely used because of its quantifiability \citep{Kanit_2003, Gitman_2005, Gusev_1997, M_ller_2010}, and is adopted for this work.
 
-Here, the aim of this discussion is to present tools to help evaluate the size and existence of the REV for a given microscopically heterogeneous domain. The method of assessing the REV that is presented here is based on testing the statistical significance of the sample distribution parameters. In this method of REV assessment, only one numerical simulation is required if it is of sufficient size. Instead of running the numerical simulations for each realization, subsets of the larger simulation are extracted and analysed independently for their respective constitutive response. This method is far less computationally demanding and correspondingly much faster as a result. 
+Here, the aim of this discussion is to present tools to help evaluate the size and existence of the \acrshort{rev} for a given microscopically heterogeneous domain. The method of assessing the \acrshort{rev} that is presented here is based on testing the statistical significance of the sample distribution parameters. In this method of \acrshort{rev} assessment, only one numerical simulation is required if it is of sufficient size. Instead of running the numerical simulations for each realization, subsets of the larger simulation are extracted and analysed independently for their respective constitutive response. This method is far less computationally demanding and correspondingly much faster as a result. 
 
-For a given measurement of a material property (e.g., stress, strain, etc.) in an REV, one can assume that it is primarily variant within the heterogeneous domain with respect to two key parameters: the spatial location of the subdomain and the subdomain size. As such, these parameters can be modified to observe the changes in the measured properties of the subdomain. To clarify some terminology, the set of data that corresponds to a single location will be termed a realization. Whereas the set of data that corresponds to a single subdomain size will be referred to as a sample in the statistical sense. Therefore, the statistical population can be interpreted as the set of all possible material property measurements for a given subdomain size as the spatial location of the subdomain changes. 
+For a given measurement of a material property (e.g., stress, strain, etc.) in an \acrshort{rev}, one can assume that it is primarily variant within the heterogeneous domain with respect to two key parameters: the spatial location of the subdomain and the subdomain size. As such, these parameters can be modified to observe the changes in the measured properties of the subdomain. To clarify some terminology, the set of data that corresponds to a single location will be termed a realization. Whereas the set of data that corresponds to a single subdomain size will be referred to as a sample in the statistical sense. Therefore, the statistical population can be interpreted as the set of all possible material property measurements for a given subdomain size as the spatial location of the subdomain changes. 
 
-To assess the size of the REV for a given realization, a selection of subdomain sizes is chosen and the material property measurement is evaluated over each subdomain. The material property measurement can be plotted against the corresponding subdomain size as conceptually indicated in Figure \ref{fig:revConvergence}. In this plot, one can see that as the subdomain size increases, the variability in the material property measurement decreases such that it converges to a single value. It is at this convergence that one can say that the subdomain is statistically representative of the whole domain, and therefore represents the REV for that realization. Each realization is spatially static such the spatial variability is not sampled. As such, in order to account for the spatial variability of the material property measurement, multiple realizations are required to accurately define the REV.
+To assess the size of the \acrshort{rev} for a given realization, a selection of subdomain sizes is chosen and the material property measurement is evaluated over each subdomain. The material property measurement can be plotted against the corresponding subdomain size as conceptually indicated in Figure \ref{fig:revConvergence}. In this plot, one can see that as the subdomain size increases, the variability in the material property measurement decreases such that it converges to a single value. It is at this convergence that one can say that the subdomain is statistically representative of the whole domain, and therefore represents the \acrshort{rev} for that realization. Each realization is spatially static such the spatial variability is not sampled. As such, in order to account for the spatial variability of the material property measurement, multiple realizations are required to accurately define the \acrshort{rev}.
 
 \begin{figure}[!htb]
 \begin{center}
@@ -344,124 +344,15 @@ To assess the size of the REV for a given realization, a selection of subdomain 
 \end{center}
 \end{figure}
 
-To state the problem more formally, consider a heterogeneous domain, $\Omega$, in which an REV exists and is subject to a uniform loading. Now assume that this domain has a measurable property, $X_i$, which will be used to define the REV. This property, for a given sample, $i$, is represented as a random variable due to the spatial variability in the sampling domain. This parameter can be assumed to follow normal distribution, $N\left(\mu,\sigma^2 \right)$, where the subscript, $i$, represents each sample of a given subdomain size:
-
-\begin{equation}
-X_i \approx N\left(\bar{x}_i,s_i \right)
-\label{eqn:rev1}
-\end{equation}
-
-Given that $X_i$ is expected to be normally distributed within the sample, there exists two distribution parameters that completely describe the sample distribution: the mean, $\mu$, and the variance, $\sigma^2$. As such, the proposed method for assessing the REV relies on assessing whether the population mean, $\mu$, is statistically equivalent to the sample mean, $\bar{x}_i$, and whether the population variance, $\sigma^2$, is statistically equivalent to the sample variance, $s^2$. Because of the uniform loading, $X_i$ for the REV is expected to have the same value regardless of its location in the domain. As such, the statistical criteria to be fulfilled are such that the expected value of the mean, $E\left(\bar{x}\right)$, and the expected value of the variance, $E\left(s^2\right)$, are equivalent to the population mean and population variance:
-
-\begin{equation}
-E\left(\bar{x}\right) = \mu
-\label{eqn:rev2}
-\end{equation}
-
-\begin{equation}
-E\left(s^2\right) = \sigma^2
-\label{eqn:rev3}
-\end{equation}
-
-In order to assess these criteria for each sample, hypothesis testing is employed. In order to test (\ref{eqn:rev2}), the independent one sample t-test is used, while to test (\ref{eqn:rev3}), the chi-squared test for variance is used. In both tests, if the null hypothesis is not rejected, it can be said that the subdomain is statistically representative of the whole domain with respect to that parameter. As such, with this method, one can define the REV to be the minimum subdomain size for which both of the aforementioned null hypotheses are accepted.
-
-\subsection{Spatial Variance of the REV}
-
-The acceptability of the spatial variance of the sample can be tested with the chi-squared test for variance. The chi-squared test for the variance is a hypothesis testing method used to test whether or not a sample is statistically likely to have a specified population variance if the population belongs to a normal distribution \citep{walpole_probability_2007}. In this case, it is desirable to know whether or not a given samples variance is equivalent to a tolerable population variance, $\sigma^2_t$. As such, the null hypothesis, $H_0$, can be stated as follows:
-
-\begin{equation}
-H_0:s^2=\sigma_t^2
-\label{eqn:rev4}
-\end{equation}
-
-where in the case that the null hypothesis is rejected, the alternate hypothesis, $H_A$, for an upper one-tail test is specified to be the following
-
-\begin{equation}
-H_A:s^2>\sigma_t^2
-\label{eqn:rev5}
-\end{equation}
-
-This alternate hypothesis is specified because this is the only case in which the sample variance does not fulfill the criteria for the REV (if the variance is smaller than the population variance, a REV can still be defined). As such, when the null hypothesis is rejected, the capacity for the specified subdomain size to be a REV is also rejected. To test this hypothesis, the chi-squared test statistic, $T_{\chi^2}$, is given as follows \citep{walpole_probability_2007}:
-
-\begin{equation}
-T_{\chi^2}=\left[N-1\right]\left[\frac{s}{\sigma_t}\right]^2
-\label{eqn:rev6}
-\end{equation}
-
-where $N$ is the sample size. In (\ref{eqn:rev6}), the tolerable population standard deviation is unknown. This method estimates the tolerable standard deviation of the population based on a specified tolerance, $\alpha$, and the expected value of the realizations:
-
-\begin{equation}
-\sigma_t=\alpha E\left(\bar{x}_i\right)
-\label{eqn:rev7}
-\end{equation}
-
-Due to the fluctuations in the sample means for the samples corresponding to small subdomain sizes, the expected value of the realizations was taken to be the sample mean for the largest subdomain, $\bar{x}_n$:
-
-\begin{equation}
-E\left(\bar{x}_i\right) = \bar{x}_n
-\label{eqn:rev8}
-\end{equation}
-
-As such, one can substitute (\ref{eqn:rev7}) and (\ref{eqn:rev8}) into (\ref{eqn:rev6}) to rewrite the chi-squared test statistic as follows:
-
-\begin{equation}
-T_{\chi^2}=\left[N-1\right]\left[\frac{s}{\alpha \bar{x}_n}\right]^2
-\label{eqn:rev9}
-\end{equation}
-
-For the upper one-tailed chi squared test for variance, the following condition rejects the null hypothesis in favour of the alternative hypothesis where $\chi_{\left(\alpha, \nu\right)}$ is the critical chi distribution test statistic for a significance level, $\alpha$, and $N-1$ degrees of freedom, $\nu$ \citep{walpole_probability_2007}:
-
-\begin{equation}
-T_{\chi^2}>\chi^2_{\left(1-\alpha, N-1\right)}
-\label{eqn:rev10}
-\end{equation}
-
-\subsection{REV Size Convergence}
-
-The convergence of the REV constitutive response as the REV increases in size can be tested with the independent one sample t-test. The independent one sample t-test is a hypothesis testing method used to test whether or not a sample is statistically likely to have a specified population mean when the population variance is unknown if the population belongs to a normal distribution \citep{walpole_probability_2007}. Since the population variance is unknown, it has to be estimated by means of Student’s t-distribution. In this case, it is desireable to know whether or not a given sample mean is representative of the population mean. As such, the null hypothesis, $H_0$, can be stated as follows:
-
-\begin{equation}
-H_0:\bar{x}=\mu
-\label{eqn:rev11}
-\end{equation}
-
-where if the null hypothesis is rejected, the alternate hypothesis, $H_A$, for a two-tailed hypothesis test can be written as:
-
-\begin{equation}
-H_A:\bar{x}\neq\mu
-\label{eqn:rev12}
-\end{equation}
-
-such that in the case that the null hypothesis is rejected, the sample mean is not statistically representative of the population mean. The test statistic, $T_t$, for the t-test is \citep{walpole_probability_2007}:
-
-\begin{equation}
-T_t=\left[X-\mu\right]\frac{\sqrt{N}}{s}
-\label{eqn:rev13}
-\end{equation}
-
-Where $N$ is the size of the sample. The population mean, $\mu$, is prescribed in a similar manner as \ref{eqn:rev8} by assuming the expected population mean to be equivalent to the sample mean corresponding to the largest subdomain:
-
-\begin{equation}
-\mu=\bar{x}_n
-\label{eqn:rev14}
-\end{equation}
-
-To evaluate the null hypothesis and determine whether or not the means are statistically equivalent, the following criterion is employed, where $t_{\left(\alpha, \nu\right)}$ is the t-distribution test statistic for a significance level, $\alpha$, and $N-1$ degrees of freedom, $\nu$ \citep{walpole_probability_2007}:
-
-\begin{equation}
-\left|T_t\right|>\left|t_{\left(1-\frac{\alpha}{2}, N-1\right)}\right|
-\label{eqn:rev15}
-\end{equation}
-
 %----------------------------------------------------------------------
 \section{Macroscale Constitutive Model}
 %----------------------------------------------------------------------
 
-In this section the macroscale stress-strain relationships, $\dot{\boldsymbol{\sigma}}^M=\dot{\boldsymbol{\sigma}}^M\left(\dot{\boldsymbol{\epsilon}}^M, \boldsymbol{\chi},\mathbf{h}\right)$, used in the validation examples are described. The models are chosen to be complex enough to make the validation of the framework meaningful; however, I do not claim that these are the "best" macroscale models. The framework presented is general and the macroscale constitutive models described here can be replaced in particular applications by different ones. To simplify the discussion and notation in this section, the superscript "$M$" is omitted since all quantities defined describe macroscale behaviour.
+In this section the macroscale stress-strain relationships, $\dot{\boldsymbol{\sigma}}^M=\dot{\boldsymbol{\sigma}}^M\left(\dot{\boldsymbol{\epsilon}}^M, \boldsymbol{\chi},\mathbf{h}\right)$, used in the validation examples are described. The models are chosen to be complex enough to make the validation of the framework meaningful; however, these are not claimed to be the "best" macroscale models. The framework presented is general and the macroscale constitutive models described here can be replaced in particular applications by different ones. To simplify the discussion and notation in this section, the superscript "$M$" is omitted since all quantities defined describe macroscale behaviour.
 
-Continuum Damage Mechanics (CDM) constitutive models are chosen to represent the NFR at the macroscale. CDM is a branch of continuum mechanics that is concerned with modeling the progressive failure and stiffness degradation in solid materials \citep{zhang_continuum_2010}. CDM in this investigation is used to help describe the micro-mechanical degradation of the rock mass due to the nucleation and growth of cracks and voids. This micro-mechanical degradation is represented in a CDM model by using macroscopic state variables to represent a spatial average of the effects of this degradation \citep{krajcinovic_damage_1989}. These state variables used in this context with respect to CDM are known as damage variables. 
+\acrfull{cdm} constitutive models are chosen to represent the NFR at the macroscale. \acrshort{cdm} is a branch of continuum mechanics that is concerned with modeling the progressive failure and stiffness degradation in solid materials \citep{zhang_continuum_2010}. \acrshort{cdm} in this investigation is used to help describe the micro-mechanical degradation of the rock mass due to the nucleation and growth of cracks and voids. This micro-mechanical degradation is represented in a \acrshort{cdm} model by using macroscopic state variables to represent a spatial average of the effects of this degradation \citep{krajcinovic_damage_1989}. These state variables used in this context with respect to \acrshort{cdm} are known as damage variables. 
 
-The damage variables in a CDM model can be described in different capacities. Often, for mathematical and physical simplicity, a single scalar damage variable is used to characterize the state of damage in the material. In this case, the damage variable, $D$, takes a value between 0 and 1 to represent the degree of damage to the material, where $D=0$ represents a completely undamaged material (original stiffness) and $D=1$ represents a completely damaged material with no stiffness. A scalar damage description limits the applicability of the CDM model to an isotropically damaged state, which may not be appropriate in some circumstances. More sophisticated CDM models use 2\textsuperscript{nd} and 4\textsuperscript{th} order tensorial representations of the damage variables as well as distinguishing between compressive damage and tensile damage states in order to more accurately characterize anisotropic damage evolution. 
+The damage variables in a \acrshort{cdm} model can be described in different capacities. Often, for mathematical and physical simplicity, a single scalar damage variable is used to characterize the state of damage in the material. In this case, the damage variable, $D$, takes a value between 0 and 1 to represent the degree of damage to the material, where $D=0$ represents a completely undamaged material (original stiffness) and $D=1$ represents a completely damaged material with no stiffness. A scalar damage description limits the applicability of the \acrshort{cdm} model to an isotropically damaged state, which may not be appropriate in some circumstances. More sophisticated \acrshort{cdm} models use 2\textsuperscript{nd} and 4\textsuperscript{th} order tensorial representations of the damage variables as well as distinguishing between compressive damage and tensile damage states in order to more accurately characterize anisotropic damage evolution. 
 
 Consider the standard elastic relationship described by Hooke's law which relates the stress, $\boldsymbol{\sigma}$, and the elastic strain, $\boldsymbol{\epsilon}^{el}$ through an elastic stiffness tensor, $\mathbf{E}$:
 
@@ -470,7 +361,7 @@ Consider the standard elastic relationship described by Hooke's law which relate
 \label{eqn:const1}
 \end{equation}
 
-Introducing a scalar damage variable, $D$, to Hooke's law using CDM to describe the stiffness degredation of the material can be shown as:
+Introducing a scalar damage variable, $D$, to Hooke's law using \acrshort{cdm} to describe the stiffness degredation of the material can be shown as:
 
 \begin{equation}
 \boldsymbol{\sigma}=\left(1-D\right)\mathbf{E}:\boldsymbol{\epsilon}^{el}
@@ -484,7 +375,7 @@ Here, the damaged stiffness of the material, $\mathbf{E}^d$, is described as fol
 \label{eqn:const3}
 \end{equation}
 
-So the constitutive elastic CDM relationship is:
+So the constitutive elastic \acrshort{cdm} relationship is:
 
 \begin{equation}
 \boldsymbol{\sigma}=\mathbf{E}^d:\boldsymbol{\epsilon}^{el}
@@ -504,7 +395,7 @@ Here, an additive decomposition of the elastic and plastic strain associated wit
 \label{eqn:const6}
 \end{equation}
 
-In CDM, the notion of effective stress, $\bar{\boldsymbol{\sigma}}$, becomes useful to describe the mechanics of the system, as it refers to the stress that the system would be experiencing without damage. This effective stress can be related to the actual Cauchy stress through the scalar damage variable: 
+In \acrshort{cdm}, the notion of effective stress, $\bar{\boldsymbol{\sigma}}$, becomes useful to describe the mechanics of the system, as it refers to the stress that the system would be experiencing without damage. This effective stress can be related to the actual Cauchy stress through the scalar damage variable: 
 
 \begin{equation}
 \boldsymbol{\sigma}=\left(1-D\right)\bar{\boldsymbol{\sigma}}
@@ -577,7 +468,7 @@ In this constitutive model, a ductile isotropic damage formulation is prescribed
 
 The Drucker-Prager plasticity model was developed by \citet{drucker_implications_1950} for modelling frictional materials like granular soils and rock. An important aspect of this plasticity model is the use of a pressure dependent yield criterion to account for the increase in yield stress of geomaterials as the in-situ stresses increase. Specifically, the Drucker-Prager material model is formulated and used for materials with compressive yield strength much greater than the tensile yield strength such as one finds in soils and rocks. However, this material model is intended to simulate the material response under essentially monotonic loading which limits the capacity for modeling cyclic loading.
 
-In addition, the Drucker-Prager model is suitable for using in conjunction with progressive damage and failure models. In this formulation, the Johnson-Cook Damage model is used to model the damage evolution of the rock mass \citep{Johnson_1985}. At a sufficiently large scale, the damage response of NFR can be thought of as behaving in a ductile capacity. 
+In addition, the Drucker-Prager model is suitable for using in conjunction with progressive damage and failure models. In this formulation, the Johnson-Cook Damage model is used to model the damage evolution of the rock mass \citep{Johnson_1985}. At a sufficiently large scale, the damage response of \acrshort{nfr} can be thought of as behaving in a ductile capacity. 
 
 Here, for the extended Drucker-Prager plasticity model, a linear yield function, $F\left(\bar{\boldsymbol{\sigma}}, \bar{\epsilon}^{pl}\right)$, is assumed to be a function of three stress invariants: the Von-Mises equivalent stress, $p\left(\bar{\boldsymbol{\sigma}}\right)$, the hydrostatic stress, $q\left(\bar{\boldsymbol{\sigma}}\right)$, and the third invariant of deviatoric stress, $r\left(\bar{\boldsymbol{\sigma}}\right)$. In addition, the yield function is written in terms of the compressive yield stress, $\sigma_c^y\left(\bar{\epsilon}^{pl}\right)$, which is defined by the hardening function and two material parameters: the friction angle, $\phi$, and a parameter $K$, defined as the ratio of the yield stress in triaxial tension to the yield stress in triaxial compression:
 
@@ -683,7 +574,7 @@ Where $\sigma_t$ and $\sigma_c$ are the yield stresses in tension and compressio
 \label{eqn:dam1b}
 \end{equation}
 
-There exists a subtle but important distinction between these two strain measurements when considering CDM. The plastic strain refers to all the strain that is non-elastic (i.e. the remaining strain after the applied stress is unloaded in the damaged state), while the inelastic strain refers to the theoretical plastic strain that would remain if the material was unloaded with the original material stiffness (i.e. in an undamaged state).
+There exists a subtle but important distinction between these two strain measurements when considering \acrshort{cdm}. The plastic strain refers to all the strain that is non-elastic (i.e. the remaining strain after the applied stress is unloaded in the damaged state), while the inelastic strain refers to the theoretical plastic strain that would remain if the material was unloaded with the original material stiffness (i.e. in an undamaged state).
 
 The tensile hardening function has a fundamentally different behavior than the compressive hardening function, and is therefore approximated using an exponential function. This function is described by the initial tensile yield stress, $\sigma_{t}^{iy}$, and a decay parameter, $\lambda$. These parameters describe the relationship between the tensile yield stress, $\sigma_{t}$, and the cracking strain, $\bar{\epsilon}^{ck}$ which is the tensile portion of inelastic strain:
 
@@ -734,11 +625,11 @@ function of the equivalent plastic strains. For cyclic loading, both the compres
 \section{Parameter Estimation Algorithms}
 %----------------------------------------------------------------------
 
-Parameter estimation involves a process of obtaining a parameter set $\boldsymbol{\chi}$ of a CDM model that minimizes the difference between the model response($\boldsymbol{\sigma}^M$-$\boldsymbol{\epsilon}^M$) and the measured system response ($\left<\boldsymbol{\sigma}\right>$-$\left<\boldsymbol{\epsilon}\right>$) for all load paths. Herein, the parameter estimation was conducted using calibration algorithms, a subset of optimization methods which attempts to minimize a least-squares objective function \citep{matott_ostrich:_2008}. Optimization algorithms are often described as either deterministic, which find the local optimum precisely, or heuristic, which find the global optimum approximately.
+Parameter estimation involves a process of obtaining a parameter set $\boldsymbol{\chi}$ of a \acrshort{cdm} model that minimizes the difference between the model response($\boldsymbol{\sigma}^M$-$\boldsymbol{\epsilon}^M$) and the measured system response ($\left<\boldsymbol{\sigma}\right>$-$\left<\boldsymbol{\epsilon}\right>$) for all load paths. Herein, the parameter estimation was conducted with optimization methods which attempts to minimize a least-squares objective function. Optimization algorithms are often described as either deterministic, which find the same optimum each time, or stochastic, which may find different answers each time because of introduced randomness. Additionally, optimization algorithms can also be described as either heuristic, which find an approximate optimum, or exact, which find the precise optimum. 
 
-Deterministic optimization algorithms primarily focus on searching for the optima within the local parameter space by iteratively converging towards a solution. Heuristic optimization algorithms explore the entire parameter space approximately and provide an estimate of the global optima. Heuristic techniques are useful for highly non-linear problems, where there are numerous local optima within the parameter space. When searching the global parameter-space deterministically becomes too computationally demanding, heuristic methods are used, at the cost of completeness and accuracy. A compromise between speed and accuracy can be obtained by strategically using both types of algorithms.
+Deterministic optimization algorithms are often used to focus on searching for the optima within the local parameter space by iteratively converging towards a consistent solution because finding a global optima deterministically can be computationally prohibitive, depending on the complexity of the problem. Stochastic optimization algorithms can allow for more computationally effective exploration of the global parameter space by introducing some randomness in the solution, allowing for arbitrary exploration of the parameter space. Heuristic techniques are useful for highly non-linear problems, where there are numerous local optima within the parameter space. When searching the global parameter-space exactly becomes too computationally demanding, heuristic methods are used, at the cost of completeness and accuracy. A compromise between speed and accuracy can be obtained by strategically using different types of algorithms.
 
-A combination of two optimization algorithms is used to assess the optimal parameter set. An initial heuristic algorithm is applied to search for the approximate global optima, followed by a deterministic algorithm as a local refinement of the optimal parameter set. Particle Swarm Optimization (PSO) is used for the global heuristic search, and the Levenberg-Marquardt Algorithm (LMA) is used for the local deterministic search. 
+A combination of two optimization algorithms is used to assess the optimal parameter set. An initial stochastic heuristic algorithm is applied to search for the approximate global optima, followed by a deterministic algorithm as a local refinement of the optimal parameter set. \acrfull{pso} is used for the global heuristic search, and the \acrfull{lma} is used for the local deterministic search. 
 
 Let $s_j$ represent any arbitrary scalar stress component at any given simulation time where $j$ represents the stress measurement number. Consider any component of a homogenized stress tensor, $\left< s \right>_j$, which acts as the target solution for the macroscale model. The same stress measurement in the macroscale model, $s^M_j \left(\boldsymbol{\chi}, \left< e \right>\right)$, can be expressed as a function of the parameter set for the continuum constitutive model, $\boldsymbol{\chi}$, containing $n$ number of parameters, and the homogenized strain at the given load step, $\left< e \right>$. Here, the weighted least-squares objective function to be minimized, $\Psi$, can be written in terms of a weighting parameter, $w_j$, for $m$ number of stress measurements:
 
@@ -749,11 +640,11 @@ Let $s_j$ represent any arbitrary scalar stress component at any given simulatio
 
 The aim of the optimization algorithms is to minimize $\Psi$ with respect to $\boldsymbol{\chi}$, subject to the constraint that all parameters values within $\boldsymbol{\chi}$ are realistic and fall within specified bounds.
 
-The parameter estimation algorithms work by iteratively running a single element CDM model, subject to boundary conditions provided by the homogenized DEM simulations, with successive parameter sets that intelligently adapt in order to minimize $\Psi$. The approach used here is similar to the Least Squares method described briefly in \citet{marquardt_algorithm_1963}.
+The parameter estimation algorithms work by iteratively running a single element \acrshort{cdm} model, subject to boundary conditions provided by the homogenized \acrshort{dem} simulations, with successive parameter sets that intelligently adapt in order to minimize $\Psi$. The approach used here is similar to the Least Squares method described briefly in \citet{marquardt_algorithm_1963}.
 
 \subsection{Particle Swarm Optimization (PSO)}
 
-The PSO algorithm is a heuristic optimization algorithm that was developed by \citet{Kennedy} as a by-product of modeling the cooperative-competitive nature of social behaviour in birds as they flocked searching for food. The PSO algorithm, in a conceptual sense, consists of a series of 'particles' (birds) which 'swarm' through the entire parameter space (sky) searching for the global optima (food) using a combination of individual 'particle' knowledge and global 'swarm' (flock) knowledge.
+The \acrshort{pso} algorithm is a heuristic optimization algorithm that was developed by \citet{Kennedy} as a by-product of modeling the cooperative-competitive nature of social behaviour in birds as they flocked searching for food. The \acrshort{pso} algorithm, in a conceptual sense, consists of a series of 'particles' (birds) which 'swarm' through the entire parameter space (sky) searching for the global optima (food) using a combination of individual 'particle' knowledge and global 'swarm' (flock) knowledge.
 
 Consider a particle in an $n$ dimensional parameter space with an arbitrary velocity, $\vec{v}_i$, and position, $\vec{x}_i$. At each position in this parameter space, $\Psi$ can be evaluated with an attempt to find the position that minimizes $\Psi$. The motion of this particle allows the exploration of the parameter space to find a minimum value of $\Psi$ and the corresponding position. After a period of time, $\Delta t$, the new position of the particle, $\vec{x}_{i+1}$, can be written as a combination of the old position and the new velocity, $\vec{v}_{i+1}$. 
 
@@ -769,7 +660,7 @@ Here, $\vec{v}_{i+1}$, is considered to be influenced by $\vec{v}_i$, the positi
 \label{eqn:psobasic}
 \end{equation}
 
-As one would expect, the behaviour of the PSO is highly sensitive to the chosen values of $\phi_1$ and $\phi_2$. If these parameters are too small, then the optimization becomes "unresponsive" such that the initial velocity is maintained and successive iterations do not have the capacity to appreicably change their velocity to search the parameter space effectively. Alternatively, if these parameters are too large, the PSO has the capacity to become unstable such that the particle speeds keep increasing on successive iterations. Commonly accepted in most PSO algorithms is the assumption that $\phi_1 = \phi_2 = 2$. To overcome these limitations and control the scope of the search, \citet{Shi} introduced the inertial weight term, $\omega$:
+As one would expect, the behaviour of the \acrshort{pso} is highly sensitive to the chosen values of $\phi_1$ and $\phi_2$. If these parameters are too small, then the optimization becomes "unresponsive" such that the initial velocity is maintained and successive iterations do not have the capacity to appreicably change their velocity to search the parameter space effectively. Alternatively, if these parameters are too large, the \acrshort{pso} has the capacity to become unstable such that the particle speeds keep increasing on successive iterations. Commonly accepted in most \acrshort{pso} algorithms is the assumption that $\phi_1 = \phi_2 = 2$. To overcome these limitations and control the scope of the search, \citet{Shi} introduced the inertial weight term, $\omega$:
 
 \begin{equation}
 \vec{v}_{i+1} = \omega\vec{v}_i + \frac{\vec{U}_i\left(\phi_1\right)\odot\left[\vec{p}_l-\vec{x}_i\right] + \vec{U}_i\left(\phi_2\right)\odot\left[\vec{p}_g-\vec{x}_i\right]}{\Delta t}
@@ -799,7 +690,7 @@ In addition, with the desire to give more credence to either the local optimum o
 \label{eqn:psoposition}
 \end{equation}
 
-In terms of the up-scaling application, the position of the particle can be taken to represent an estimate of the optimal parameter set, $\boldsymbol{\chi}_i$, while the velocity of the particle represents the direction and magnitude of the change in the parameter set estimate for the next iteration $\Delta\boldsymbol{\chi}_{i+1}$. Furthermore, the time step is considered to be a unit iteratation step, which allows for (\ref{eqn:psoposition}) to be abstracted as follows in the context of up-scaling DEM simulations.
+In terms of the up-scaling application, the position of the particle can be taken to represent an estimate of the optimal parameter set, $\boldsymbol{\chi}_i$, while the velocity of the particle represents the direction and magnitude of the change in the parameter set estimate for the next iteration $\Delta\boldsymbol{\chi}_{i+1}$. Furthermore, the time step is considered to be a unit iteratation step, which allows for (\ref{eqn:psoposition}) to be abstracted as follows in the context of up-scaling \acrshort{dem} simulations.
 
 \begin{equation}
 \Delta\boldsymbol{\chi}_{i+1} = \zeta\left(\phi_1, \phi_2\right) \left[\omega\Delta\boldsymbol{\chi}_{i} + c_1\vec{U}_i\left(\phi_1\right)\odot\left[\boldsymbol{\chi}_l-\boldsymbol{\chi}_i\right] + c_2\vec{U}_i\left(\phi_2\right)\odot\left[\boldsymbol{\chi}_g-\boldsymbol{\chi}_i\right]\right]
@@ -813,7 +704,7 @@ Where $\boldsymbol{\chi}_l$ is the parameter set corresponding to the minimum va
 \label{eqn:psoupdate2}
 \end{equation}
 
-For a particle swarm containing an arbitrary number of particles, the optimal parameter set of the system, $\boldsymbol{\chi}$, is  considered to be $\boldsymbol{\chi}_g$ after a specified number of iterations, or once all the particles converge to a stable solution. The general PSO algorithm as described here is summarized as follows:
+For a particle swarm containing an arbitrary number of particles, the optimal parameter set of the system, $\boldsymbol{\chi}$, is  considered to be $\boldsymbol{\chi}_g$ after a specified number of iterations, or once all the particles converge to a stable solution. The general \acrshort{pso} algorithm as described here is summarized as follows:
 
 \begin{enumerate}
 \item Assign particles random positions and velocities in the parameter space
@@ -825,15 +716,15 @@ For a particle swarm containing an arbitrary number of particles, the optimal pa
 
 \subsection{Asynchronous Parallel PSO (APPSO)}
 
-The PSO described above possesses a large number of attractive qualities for parameter estimation which make it desirable for up-scaling.  However, the main drawback of the PSO is the large computational costs in terms of total elapsed time primarily due to the fact that the algorithm was originally designed for a serial implementation. The serial implementation, although effective in it's own right, can be dramatically improved through parallelization. 
+The \acrshort{pso} described above possesses a large number of attractive qualities for parameter estimation which make it desirable for up-scaling.  However, the main drawback of the \acrshort{pso} is the large computational costs in terms of total elapsed time primarily due to the fact that the algorithm was originally designed for a serial implementation. The serial implementation, although effective in it's own right, can be dramatically improved through parallelization. 
 
-The nature of the PSO lends itself to a fairly trivial implementation of a synchronous parallelization scheme which does not require changing the nature of the algorithm. Here, since all the particles at each iteration are treated independently, the updated positions and corresponding objective functions can be computed in parallel. This parallelization scheme waits for all the particles to complete their analysis before moving on to the next iteration. As a result, the parallel efficiency is often compromised due to processors having to wait for the final particle(s) to finish their analysis. This idleness of the processors can be caused by having a swarm size that is not an integer multiple of the number of processors, having a heterogeneous computing environment where processors have different computational speeds, or having a numerical simulation that requires different amount of computational time depending on the input parameters \citep{Venter_2006}. This inefficiency of this synchronous parallelization increases as the number of processors increases due to the increasing number of idle processors towards the end of the iteration.
+The nature of the \acrshort{pso} lends itself to a fairly trivial implementation of a synchronous parallelization scheme which does not require changing the nature of the algorithm. Here, since all the particles at each iteration are treated independently, the updated positions and corresponding objective functions can be computed in parallel. This parallelization scheme waits for all the particles to complete their analysis before moving on to the next iteration. As a result, the parallel efficiency is often compromised due to processors having to wait for the final particle(s) to finish their analysis. This idleness of the processors can be caused by having a swarm size that is not an integer multiple of the number of processors, having a heterogeneous computing environment where processors have different computational speeds, or having a numerical simulation that requires different amount of computational time depending on the input parameters \citep{Venter_2006}. This inefficiency of this synchronous parallelization increases as the number of processors increases due to the increasing number of idle processors towards the end of the iteration.
 
-To overcome these parallel inefficiencies, \citet{Venter_2006} introduced an Asynchronous Parallel Particle Swarm Optimization (APPSO) algorithm to continuously use the available processors with the goal of having no idle processors from one iteration to the next. The key here, is to separate the update calculations associated with each point and those associated with the swarm as a whole. Normally, in the synchronous scheme, the update calculations (i.e., updating $\boldsymbol{\chi}_l$ and $\boldsymbol{\chi}_g$) are done at the end of each iteration. In this asynchronous scheme, updating $\boldsymbol{\chi}_l$ remains the same, but updating $\boldsymbol{\chi}_g$ uses the best position from the previous iteration instead of the current iteration in order perform the update calculations immediately and allow the analyses to proceed without waiting for the rest of the particles to complete their analysis.
+To overcome these parallel inefficiencies, \citet{Venter_2006} introduced an \acrfull{appso} algorithm to continuously use the available processors with the goal of having no idle processors from one iteration to the next. The key here, is to separate the update calculations associated with each point and those associated with the swarm as a whole. Normally, in the synchronous scheme, the update calculations (i.e., updating $\boldsymbol{\chi}_l$ and $\boldsymbol{\chi}_g$) are done at the end of each iteration. In this asynchronous scheme, updating $\boldsymbol{\chi}_l$ remains the same, but updating $\boldsymbol{\chi}_g$ uses the best position from the previous iteration instead of the current iteration in order perform the update calculations immediately and allow the analyses to proceed without waiting for the rest of the particles to complete their analysis.
 
 \subsection{Levenburg-Marquardt Algorithm (LMA)}
 
-The Levenberg-Marquardt Algorithm (LMA) is a deterministic optimization algorithm that was proposed by \citet{marquardt_algorithm_1963} which builds on the work of \citet{levenberg_method_1944}. This calibration algorithm combines a quasi-Newton approach with a conjugate gradient technique in order to efficiently minimize non-linear least-squares problems. 
+\acrfull{lma} is a deterministic optimization algorithm that was proposed by \citet{marquardt_algorithm_1963} which builds on the work of \citet{levenberg_method_1944}. This calibration algorithm combines a quasi-Newton approach with a conjugate gradient technique in order to efficiently minimize non-linear least-squares problems. 
 
 For notational simplicity (\ref{eqn:lma2}) is rewritten in matrix form by considering a vector containing $m$ number of arbitrary homogenized stress measurements at any given time, $\left< \mathbf{s} \right>$, and a corresponding vector of stress measurements for the macroscale model, $\mathbf{s}^M$:
 
@@ -866,7 +757,7 @@ w_1^2 & 0     & \dots  & 0\\
 \label{eqn:lma6}
 \end{equation}
 
-The first step in the LMA formulation considers an arbitrary initial set of parameters, $\boldsymbol{\chi}_0$, and the corresponding macroscale stress measurements, $\mathbf{s}^M_0$. The relationship between $\boldsymbol{\chi}$ and $\mathbf{s}^M$ is generally highly non-linear, so the function is approximated with a taylor series expansion about $\boldsymbol{\chi}_0$, yielding the following linearization:
+The first step in the \acrshort{lma} formulation considers an arbitrary initial set of parameters, $\boldsymbol{\chi}_0$, and the corresponding macroscale stress measurements, $\mathbf{s}^M_0$. The relationship between $\boldsymbol{\chi}$ and $\mathbf{s}^M$ is generally highly non-linear, so the function is approximated with a taylor series expansion about $\boldsymbol{\chi}_0$, yielding the following linearization:
 
 \begin{equation}
 \mathbf{s}^M \approx \mathbf{s}^M_0 + \mathbf{J} \left[ \boldsymbol{\chi}-\boldsymbol{\chi}_0 \right]
@@ -906,7 +797,7 @@ The vector $\left[ \boldsymbol{\chi}_{i+1}-\boldsymbol{\chi}_0 \right]$, which r
 \label{eqn:lma10}
 \end{equation}
 
-Here, for convenience, the upgrade vector is written as $\mathbf{U}_{i} = \left[ \boldsymbol{\chi}_{i+1}-\boldsymbol{\chi}_i \right]$. Since (\ref{eqn:lma10}) is still an approximation of the upgrade vector, an iterative approach to finding $\boldsymbol{\chi}$ is required. The LMA further proposes that $\boldsymbol{U}_i$ be modified with the Marquardt parameter, $\alpha$:
+Here, for convenience, the upgrade vector is written as $\mathbf{U}_{i} = \left[ \boldsymbol{\chi}_{i+1}-\boldsymbol{\chi}_i \right]$. Since (\ref{eqn:lma10}) is still an approximation of the upgrade vector, an iterative approach to finding $\boldsymbol{\chi}$ is required. The \acrshort{lma} further proposes that $\boldsymbol{U}_i$ be modified with the Marquardt parameter, $\alpha$:
 
 \begin{equation}
 \mathbf{U}_{i} = \left[\mathbf{J}_i^T\mathbf{Q}\mathbf{J}_i+\alpha\mathbf{I}\right]^{-1}\mathbf{J}_i^T\mathbf{Q}\left[\left<\mathbf{s}\right>-\mathbf{s}^M_i\right]
@@ -915,7 +806,7 @@ Here, for convenience, the upgrade vector is written as $\mathbf{U}_{i} = \left[
 
 Here, $\mathbf{I}$ is the $n\times n$ identity matrix. The Marquardt parameter in (\ref{eqn:lma11}) allows $\mathbf{U}_{i}$ to approximate a Steepest-Descent Method (SDM) for large values of $\alpha$, while using a Taylor Series Approximation (TSA) for small values of alpha. This formulation allows for a smooth transition between a SDM when the parameter set estimate is far away from the optimal parameter set, and a TSA when the parameter set estimate is close to the optimal parameter set.
 
-Another key development in the LMA notes that for many calibration and parameter estimation problems, elements within $\mathbf{s}^M_i$ and $\left<\mathbf{s}\right>$ may differ by several orders of magnitude. Such large variations can lead to significant roundoff error during the calculation of $\mathbf{J}_i$. This error can be avoided by introducing a scaling matrix, $\mathbf{S}_i$:
+Another key development in the \acrshort{lma} notes that for many calibration and parameter estimation problems, elements within $\mathbf{s}^M_i$ and $\left<\mathbf{s}\right>$ may differ by several orders of magnitude. Such large variations can lead to significant roundoff error during the calculation of $\mathbf{J}_i$. This error can be avoided by introducing a scaling matrix, $\mathbf{S}_i$:
 
 \begin{equation}
 \mathbf{S}_i=\begin{bmatrix}
@@ -934,7 +825,7 @@ With (\ref{eqn:lma12}), the upgrade vector in (\ref{eqn:lma11}) can be rewritten
 \label{eqn:lma13}
 \end{equation}
 
-The final feature of the LMA is the introduction of the Marquardt Lambda, $\lambda$. The Marquardt Lambda is taken as the largest term in the matrix $\alpha\mathbf{S}^T\mathbf{S}$. Here, the adjustment of $\lambda$ provides control over the relative weighting of the SDM versus the TSA, such that for large values of $\lambda$, the SDM dominates, while for small values of $\lambda$, the TSA dominates. The iterative algorithm is summarized as follows \citep{matott_ostrich:_2008}:
+The final feature of the \acrshort{lma} is the introduction of the Marquardt Lambda, $\lambda$. The Marquardt Lambda is taken as the largest term in the matrix $\alpha\mathbf{S}^T\mathbf{S}$. Here, the adjustment of $\lambda$ provides control over the relative weighting of the SDM versus the TSA, such that for large values of $\lambda$, the SDM dominates, while for small values of $\lambda$, the TSA dominates. The iterative algorithm is summarized as follows \citep{matott_ostrich:_2008}:
 
 \begin{enumerate}
 \item Choose initial value for $\lambda$
@@ -961,7 +852,7 @@ The final feature of the LMA is the introduction of the Marquardt Lambda, $\lamb
 \section{Physically Meaningful Model Parameterization}
 %----------------------------------------------------------------------
 
-To accelerate the process of finding a near-optimal set of parameters, it is important to limit the search space of the parameterization algorithm. This is especially important when the number of parameters is large. I have found that it is beneficial for the parameters to have physical meaning in order to specify realistic bounds.
+To accelerate the process of finding a near-optimal set of parameters, it is important to limit the search space of the parameterization algorithm. This is especially important when the number of parameters is large. It was found to be beneficial for the parameters to have physical meaning in order to specify realistic bounds. This is the case, for example, with an exponential function where the . 
 
 Here, the parameterization of the two macroscale continuum models is presented. For both models, the approach to parameterization is the same, but the specific methods and resulting parameters are different due to the inherently different constitutive models. However, the elastic behaviour for both models is governed by the same constitutive relation. The elastic behaviour is parameterized by Young's modulus, $E$, and Poisson's ratio, $\nu$. Bounds on these quantities are well known. 
 
@@ -989,7 +880,7 @@ The hardening function (\ref{eqn:druc3}) is given in terms of two empirical coef
 \label{eqn:param2-3}
 \end{equation}
 
-Thus, I parameterize the hardening law in terms of $\sigma_{c}^{p}$, $\epsilon_c^{p}$, and  $\sigma_c^{iy}$ so that bounds can be more easily defined.
+Thus, the hardening law is parameterized in terms of $\sigma_{c}^{p}$, $\epsilon_c^{p}$, and  $\sigma_c^{iy}$ so that bounds can be more easily defined.
 
 Similarly, the Johnson-Cook damage initiation criterion from (\ref{eqn:druc4}) is described by two empirical coefficients ($D_2$, and $D_3$) which do not have intuitive physical meaning. To make setting the bounding limits during the parameter estimation simpler, the Johnson-Cook parameters were rewritten in terms of equivalent plastic strain at which damage is initiated at triaxialities of -0.5 and -0.6, $\bar{\epsilon}^{pl}_{y_{-0.5}}$ and $\bar{\epsilon}^{pl}_{y_{-0.6}}$, respectively:
 
@@ -1089,7 +980,7 @@ tension, the damage evolution curve starts at the origin and asymptotically appr
 D_{t}\left(\bar{\epsilon}^{ck}\right)=1-\frac{1}{\left[1+\bar{\epsilon}^{ck}\right]^{n}}\label{eqn:param4}
 \end{equation}
 
-Sample damage evolution curves for both tension and compression are illustrated in Fig \ref{fig:damageCurves}, where one can see that the rate at which the tensile damage evolves is far larger than the rate at which the compressive damage evolves. The combination of the elastic parameters, the hardening rule parameters, and the damage evolution parameters, yield a total of 11 parameters that must be identified by experiments or through up-scaling to define the behavior of CDM model.
+Sample damage evolution curves for both tension and compression are illustrated in Fig \ref{fig:damageCurves}, where one can see that the rate at which the tensile damage evolves is far larger than the rate at which the compressive damage evolves. The combination of the elastic parameters, the hardening rule parameters, and the damage evolution parameters, yield a total of 11 parameters that must be identified by experiments or through up-scaling to define the behavior of \acrshort{cdm} model.
 
 \begin{figure}[!htb]
 \begin{center}
@@ -1123,7 +1014,7 @@ The numerical issues with this formulation arise due to the fact that it is very
 \frac{d\bar{\epsilon}_{t}^{pl}}{dD_{t}}>0
 \end{equation}
 
-For the compressive damage evolution, I substitute (\ref{eqn:param3}) into (\ref{eqn:param11}) to get the following expression of plastic strain as a function of the compressive damage rate parameter:
+For the compressive damage evolution, (\ref{eqn:param3}) is substituted into (\ref{eqn:param11}) to get the following expression of plastic strain as a function of the compressive damage rate parameter:
 
 \begin{equation}
 \bar{\epsilon}_{c}^{pl}=\bar{\epsilon}^{in}-\frac{D_{c}}{1-D_{c}}\frac{\sigma_{c}^{iy}}{E}\\

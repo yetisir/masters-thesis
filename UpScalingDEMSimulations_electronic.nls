@@ -1,0 +1,8 @@
+\begin{thenomenclature} 
+
+ \nomgroup{A}
+
+  \item [{latex}]\begingroup name\nomeqref {0}\nompageref{i}
+  \item [{maths}]\begingroup namedddd\nomeqref {0}\nompageref{i}
+
+\end{thenomenclature}

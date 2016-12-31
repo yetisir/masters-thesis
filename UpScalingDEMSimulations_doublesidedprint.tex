@@ -30,11 +30,11 @@
 
 % Specify the document class, default style attributes, and page dimensions
 % For hyperlinked PDF, suitable for viewing on a computer, use this:
-\documentclass[12pt,titlepage,oneside,final]{book}
+%\documentclass[12pt,titlepage,oneside,final]{book}
  
 % For PDF, suitable for double-sided printing, change the PrintVersion variable below
 % to "true" and use this \documentclass line instead of the one above:
-%\documentclass[12pt,titlepage,openright,twoside,final]{book}
+\documentclass[12pt,titlepage,openright,twoside,final]{book}
 
 % Some LaTeX commands I define for my own nomenclature.
 % If you have to, it's better to change nomenclature once here than in a 
@@ -49,7 +49,7 @@
 % This package allows if-then-else control structures.
 \usepackage{ifthen}
 \newboolean{PrintVersion}
-\setboolean{PrintVersion}{false} 
+\setboolean{PrintVersion}{true} 
 % CHANGE THIS VALUE TO "true" as necessary, to improve printed results for hard copies
 % by overriding some options of the hyperref package below.
 
@@ -81,7 +81,10 @@
 \usepackage{showlabels}
 \usepackage{tabulary}
 \usepackage{tabularx}
-%\usepackage{glossaries}
+\usepackage{glossaries}
+\makeglossaries
+\renewcommand*\glspostdescription{\dotfill}
+\input{bibliography/glossary.tex}
 \usepackage{rotating}
 \newcolumntype{Y}{>{\centering\arraybackslash}X}
 
