@@ -79,21 +79,21 @@ The stress-strain curves from the \acrshort{dem} simulations used for the parame
 \begin{figure}[!htb]
 \begin{center}
 \includegraphics[width=0.7\textwidth]{figures/Chapter5/DruckerFittedCurves}
-\caption{{\label{fig:fitted1} Axial Stress-Strain curves of the monotonically loaded DEM simulations used for estimating the CDM parameter set under different confining stresses.%
+\caption{{\label{fig:fitted1} Axial Stress-Strain curves of the monotonically loaded DEM simulations used for estimating the Drucker-Prager CDM parameter set under different confining stresses.%
 }}
 \end{center}
 \end{figure}
 
 The optimal parameter set in Table \ref{tab:paramDrucker} represents the constitutive response of the rock mass. As expected, the elastic modulus of the rock mass ($1.9 GPa$) is substantially less than the elastic modulus of the intact rock ($65 GPA$) because of yielding in the joints. Additionally, Poisson's ratio of the rock mass ($0.15$) is less than Poisson's ratio of the intact rock ($0.2$) because of the compliance of the joints before yield, which limits the lateral strain. After yielding however, substantial lateral strain is observed because of dilation of the joints, resulting in a large dilation angle ($22^\circ$). This dilation response of the rock mass is larger than the the prescribed joint dilation ($5^\circ$) because of block rotation and geometry.
 
-There are additional minor sources of error from the homogenization algorithms that do not manifest themselves in this fitted relationship.  In addition, if the \acrshort{rev} is too small, it introduces it's error in the \acrshort{dem} data rather than in the fitted response. Furthermore, the global fitting algorithms are not completely exhaustive, so it is possible they do not find the actual globally optimal parameter set, potentially leading to some error. With the given \acrshort{pso} parameters, up to 2400 sets of simulations are conducted for the global parameter estimation, and replicate optimization trials with different random seeds tend to give results within $1\%$ deviation. This consistency and large search domain give confidence that the estimated parameter set is the globally optimal set. 
+There are additional minor sources of error from the homogenization algorithms that do not manifest themselves in this fitted relationship.  In addition, if the \acrshort{rev} is too small, it introduces its error in the \acrshort{dem} data rather than in the fitted response. Furthermore, the global fitting algorithms are not completely exhaustive, so it is possible they do not find the actual globally optimal parameter set, potentially leading to some error. With the given \acrshort{pso} parameters, up to 2400 sets of simulations are conducted for the global parameter estimation, and replicate optimization trials with different random seeds tend to give results within $1\%$ deviation. This consistency and large search domain give confidence that the estimated parameter set is the globally optimal set. 
 
 In addition to the loading response under the specified confining stresses, \acrshort{dem} simulations under confining stresses of $3MPa$, $6MPa$, $8MPa$ and $10MPa$ are compared to the the \acrshort{cdm} model using the previously estimated parameter set to see how well the constitutive behaviour is captured (Figure \ref{fig:fitted2}). These simulations demonstrate the interpolative ($3MPa$) and extrapolative ($6MPa$, $8MPa$ and $10MPa$) capacity of the fitted parameter set, and indeed a strong fit is obtained (\acrshort{rmse} of $2.83MPa$) for all confining stresses, with the error being more prominent for larger degrees of strain.
 
 \begin{figure}[!htb]
 \begin{center}
 \includegraphics[width=0.7\textwidth]{figures/Chapter5/DruckerVerificationCurves}
-\caption{{\label{fig:fitted2} Axial Stress-Strain curves of the verification simulations for the fractured granite rock mass under different confining stresses for both the DEM simulations and the fitted CDM simulations.%
+\caption{{\label{fig:fitted2} Axial Stress-Strain curves of the verification simulations for the fractured granite rock mass under different confining stresses for both the DEM simulations and the fitted Drucker-Prager CDM simulations.%
 }}
 \end{center}
 \end{figure}
@@ -131,7 +131,7 @@ The benefit of the damage plasticity model for quasi-brittle materials used here
 \begin{figure}[!htb]
 \begin{center}
 \includegraphics[width=0.7\textwidth]{figures/Chapter5/ConcreteFittedCurves}
-\caption{{\label{fig:concretefitted} Axial Stress-Strain curves of the monotonically loaded DEM simulations  used for estimating the CDM parameter set under different confining stresses using the damage-plasticity model for quasi-brittle materials.%
+\caption{{\label{fig:concretefitted} Axial Stress-Strain curves of the monotonically loaded DEM simulations used for estimating the CDM parameter set under different confining stresses using the damage-plasticity model for quasi-brittle materials.%
 }}
 \end{center}
 \end{figure}
@@ -231,7 +231,23 @@ An additional comparison of the surface deflection where the load was applied is
 
 \subsection{Up-Scaling Computational Efficiency}
 
-The \acrshort{cdm} model for this case requires about two orders of magnitude less computational effort than the \acrshort{dem} model (Table \ref{tab:computation}). The \acrshort{cdm} simulation uses a comparable number of continuum elements ($29,866$) as in the \acrshort{dem} simulation ($25,898$) for comparison and adequate convergence. The \acrshort{cdm} model efficiency can be improved by applying a \acrfull{srm} where only the areas with stress concentrations and large stress gradients have a strongly refined mesh. With the \acrshort{srm}, a converged \acrshort{cdm} solution is achievable with only $3,577$ elements leading to another order of magnitude reduction in computational effort. The \acrshort{srm} is verified to be accurate by comparing the results to the fully converged solution with $29,866$ elements. To obtain the \acrshort{srm}, the number of elements is selectively reduced until an appreciable divergence from the actual solution is noted.  
+The \acrshort{cdm} model for this case requires about two orders of magnitude less computational effort than the \acrshort{dem} model (Table \ref{tab:computation}). The \acrshort{cdm} simulation uses a comparable number of continuum elements ($29,866$) (Figure \ref{fig:NRM}) as in the \acrshort{dem} simulation ($25,898$) for comparison and adequate convergence. The \acrshort{cdm} model efficiency can be improved by applying a \acrfull{srm} (Figure \ref{fig:SRM}) where only the areas with stress concentrations and large stress gradients have a strongly refined mesh. With the \acrshort{srm}, a converged \acrshort{cdm} solution is achievable with only $3,577$ elements leading to another order of magnitude reduction in computational effort. The \acrshort{srm} is verified to be accurate by comparing the results to the fully converged solution with $29,866$ elements. To obtain the \acrshort{srm}, the number of elements is selectively reduced until an appreciable divergence from the actual solution is noted.  
+
+\begin{figure}[!htb]
+\begin{center}
+\includegraphics[width=0.6\textwidth]{figures/Chapter5/SlopeMeshNRM}
+\caption{{\label{fig:SRM} Mesh for converged Drucker-Prager CDM FEM slope failure simulation
+}}
+\end{center}
+\end{figure}
+
+\begin{figure}[!htb]
+\begin{center}
+\includegraphics[width=0.6\textwidth]{figures/Chapter5/SlopeMeshSRM}
+\caption{{\label{fig:NRM} Selectiverly Refined Mesh (SRM) for Drucker-Prager CDM FEM slope failure simulation.
+}}
+\end{center}
+\end{figure}
 
 \begin{table}[!htb]
 \centering
